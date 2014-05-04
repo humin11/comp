@@ -1,0 +1,66 @@
+<!-- 5. $UPLOADS_CHART =============================================================================
+
+                    Uploads chart
+    -->
+<!-- Javascript -->
+<script>
+init.push(function () {
+var uploads_data = [
+{ day: '2014-03-10', v: 20 },
+{ day: '2014-03-11', v: 10 },
+{ day: '2014-03-12', v: 15 },
+{ day: '2014-03-13', v: 12 },
+{ day: '2014-03-14', v: 5  },
+{ day: '2014-03-15', v: 5  },
+{ day: '2014-03-16', v: 20 }
+];
+Morris.Line({
+element: 'hero-graph',
+data: uploads_data,
+xkey: 'day',
+ykeys: ['v'],
+labels: ['Value'],
+lineColors: ['#fff'],
+lineWidth: 2,
+pointSize: 4,
+gridLineColor: 'rgba(255,255,255,.5)',
+resize: true,
+gridTextColor: '#fff',
+xLabels: "day",
+xLabelFormat: function(d) {
+return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov', 'Dec'][d.getMonth()] + ' ' + d.getDate();
+},
+});
+});
+</script>
+<!-- / Javascript -->
+
+<div class="stat-panel">
+    <div class="stat-row">
+            <!-- Small horizontal padding, bordered, without right border, top aligned text -->
+        <div class="stat-cell col-sm-4 padding-sm-hr bordered no-border-r valign-top">
+                <!-- Small padding, without top padding, extra small horizontal padding -->
+            <h4 class="padding-sm no-padding-t padding-xs-hr"><i class="fa fa-cloud-upload text-primary"></i>&nbsp;&nbsp;Uploads</h4>
+                <!-- Without margin -->
+            <ul class="list-group no-margin">
+                    <!-- Without left and right borders, extra small horizontal padding, without background, no border radius -->
+                <li class="list-group-item no-border-hr padding-xs-hr no-bg no-border-radius">
+                                Documents <span class="label label-pa-purple pull-right">34</span>
+                            </li> <!-- / .list-group-item -->
+                <!-- Without left and right borders, extra small horizontal padding, without background -->
+                <li class="list-group-item no-border-hr padding-xs-hr no-bg">
+                                Audio <span class="label label-danger pull-right">128</span>
+                            </li> <!-- / .list-group-item -->
+                <!-- Without left and right borders, without bottom border, extra small horizontal padding, without background -->
+                <li class="list-group-item no-border-hr no-border-b padding-xs-hr no-bg">
+                                Videos <span class="label label-success pull-right">12</span>
+                            </li> <!-- / .list-group-item -->
+            </ul>
+        </div> <!-- /.stat-cell -->
+        <!-- Primary background, small padding, vertically centered text -->
+        <div class="stat-cell col-sm-8 bg-primary padding-sm valign-middle">
+            <div id="hero-graph" class="graph" style="height: 230px;"></div>
+        </div>
+    </div>
+</div> <!-- /.stat-panel -->
+<!-- /5. $UPLOADS_CHART -->
