@@ -2,25 +2,11 @@
     <script type="text/javascript">
         $(function () {
             $('#kpi-timerange').datepicker({format:'yyyy-mm-dd 00:00',forceParse:false});
-            Highcharts.setOptions({
-                global: {useUTC: false},
-                lang: {
-                    shortMonths: ['一月', '二月', '三月', '四月', '五月', '六月',  '七月', '八月', '九月', '十月', '十一月', '十二月'],
-                    weekdays: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
-                }
-            });
-            $.ajax({cache:false,dataType: "json",type: "GET",url: "@routes.Charts.options()",
-                data: {
-                    type: 'line',
-                    kpi: 'subsystem',
-                    sub_kpi: 'iops',
-                    start_time: '',
-                    end_time: ''
-                },
-                success: function(json){
-                    $('#chart1').highcharts(json);
-                }
-            });
+            var url = '@routes.Charts.options()';
+            initchart(url,'chart1','subsystem','iops');
+            initchart(url,'chart2','subsystem','iops,response_time,cache_hits,kbps','table');
+            initchart(url,'chart3','subsystem','cache_hits');
+            initchart(url,'chart4','subsystem','response_time');
         });
     </script>
     <ul class="breadcrumb breadcrumb-page">
@@ -72,11 +58,11 @@
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Response Time
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;性能数据
                     </div>
                 </div>
                 <div class="stat-row">
-                    <div class="stat-cell bordered no-border-t no-padding-hr" id="chart2" style="height: 300px">
+                    <div class="stat-cell bordered no-border-t no-padding" id="chart2" style="height: 300px">
                     </div>
                 </div>
             </div>
@@ -100,7 +86,7 @@
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Translate Rate
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Response Time
                     </div>
                 </div>
                 <div class="stat-row">
