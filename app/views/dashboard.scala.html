@@ -1,0 +1,113 @@
+@main("Dashboard") {
+    <script type="text/javascript">
+        $(function () {
+            $('#kpi-timerange').datepicker({format:'yyyy-mm-dd 00:00',forceParse:false});
+            Highcharts.setOptions({
+                global: {useUTC: false},
+                lang: {
+                    shortMonths: ['一月', '二月', '三月', '四月', '五月', '六月',  '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    weekdays: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
+                }
+            });
+            $.ajax({cache:false,dataType: "json",type: "GET",url: "@routes.Charts.options()",
+                data: {
+                    type: 'line',
+                    kpi: 'subsystem',
+                    sub_kpi: 'iops',
+                    start_time: '',
+                    end_time: ''
+                },
+                success: function(json){
+                    $('#chart1').highcharts(json);
+                }
+            });
+        });
+    </script>
+    <ul class="breadcrumb breadcrumb-page">
+        <div class="breadcrumb-label text-light-gray">You are here: </div>
+        <li><a href="#">Home</a></li>
+        <li class="active"><a href="#">Dashboard</a></li>
+    </ul>
+    <div class="page-header">
+
+        <div class="row">
+                <!-- Page header, center on small screens -->
+            <h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><i class="fa fa-dashboard page-header-icon"></i>&nbsp;&nbsp;Dashboard</h1>
+
+            <div class="col-xs-12 col-sm-8">
+                <div class="row">
+                    <hr class="visible-xs no-grid-gutter-h">
+                        <!-- "Create project" button, width=auto on desktops -->
+                    <div class="pull-right col-xs-12 col-sm-auto"><a href="#" class="btn btn-primary btn-labeled" style="width: 100%;"><span class="btn-label icon fa fa-plus"></span>Create project</a></div>
+
+                        <!-- Margin -->
+                    <div class="visible-xs clearfix form-group-margin"></div>
+
+                    <div class="input-daterange input-group" id="kpi-timerange" style="width: 300px">
+                        <input type="text" class="input-sm form-control" id="starttime" name="start" placeholder="Start date">
+                        <span class="input-group-addon">to</span>
+                        <input type="text" class="input-sm form-control" id="endtime" name="end" placeholder="End date">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- / .page-header -->
+
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="stat-panel text-center">
+                <div class="stat-row">
+                    <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;IOPS
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <div class="stat-cell bordered no-border-t no-padding-hr" id="chart1" style="height: 300px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="stat-panel text-center">
+                <div class="stat-row">
+                    <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Response Time
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <div class="stat-cell bordered no-border-t no-padding-hr" id="chart2" style="height: 300px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="stat-panel text-center">
+                <div class="stat-row">
+                    <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Cache Hits
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <div class="stat-cell bordered no-border-t no-padding-hr" id="chart3" style="height: 300px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="stat-panel text-center">
+                <div class="stat-row">
+                    <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Translate Rate
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <div class="stat-cell bordered no-border-t no-padding-hr" id="chart4" style="height: 300px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

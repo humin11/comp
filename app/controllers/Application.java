@@ -2,6 +2,7 @@ package controllers;
 
 import discovery.DiscoverySMI;
 import play.mvc.*;
+import views.html.dashboard;
 import views.html.index;
 
 public class Application extends Controller {
@@ -16,6 +17,10 @@ public class Application extends Controller {
         //DiscoverySMI cs = new DiscoverySMI("http","10.1.11.35","5998","root/lsissi11","admin","admin");
 //        cs = new DiscoveryComputerSystem("http","10.1.11.35","5988","root/brocade1","admin","password");
         return ok(index.render(result));
+    }
+
+    public static Result dashboard() {
+        return ok(dashboard.render());
     }
 
 }

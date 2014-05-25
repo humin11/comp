@@ -1,0 +1,7 @@
+@(uid:String,options:String)
+<script type="text/javascript">
+    $(function () {
+        $('#'@{uid}'_container').highcharts($.parseJSON(decodeURIComponent('@{options}',true)));
+    });
+</script>
+<div id="@{uid}_container" style="height:300px;text-align: center; margin: 0 auto"></div>
