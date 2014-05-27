@@ -23,7 +23,7 @@ Highcharts.setOptions(
       $('#'+container).highcharts(json)
   )
 
-@inittable = (url,container,model,start_time = '',end_time = '') ->
+@inittable = (url,container,model,rowlen = 5,start_time = '',end_time = '') ->
   $.ajax(
     cache:false
     dataType: "json"
@@ -54,7 +54,7 @@ Highcharts.setOptions(
           table.dataTable(
             bSort: false
             bAutoWidth: false
-            iDisplayLength: 5
+            iDisplayLength: rowlen
             aLengthMenu: [5,10,20,50,100]
           )
         catch error
