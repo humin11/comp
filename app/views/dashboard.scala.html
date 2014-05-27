@@ -2,11 +2,10 @@
     <script type="text/javascript">
         $(function () {
             $('#kpi-timerange').datepicker({format:'yyyy-mm-dd 00:00',forceParse:false});
-            var url = '@routes.Charts.options()';
-            initchart(url,'chart1','subsystem','iops');
-            initchart(url,'chart2','subsystem','iops,response_time,cache_hits,kbps','table');
-            initchart(url,'chart3','subsystem','cache_hits');
-            initchart(url,'chart4','subsystem','response_time');
+            initchart('@routes.Charts.options()','chart1','subsystem','iops');
+            inittable('@routes.Datatables.options()','chart2','subsystem');
+            initchart('@routes.Charts.options()','chart3','subsystem','cache_hits');
+            initchart('@routes.Charts.options()','chart4','subsystem','response_time');
         });
     </script>
     <ul class="breadcrumb breadcrumb-page">
@@ -24,7 +23,7 @@
                 <div class="row">
                     <hr class="visible-xs no-grid-gutter-h">
                         <!-- "Create project" button, width=auto on desktops -->
-                    <div class="pull-right col-xs-12 col-sm-auto"><a href="#" class="btn btn-primary btn-labeled" style="width: 100%;"><span class="btn-label icon fa fa-plus"></span>Create project</a></div>
+                    <div class="pull-right col-xs-12 col-sm-auto"><a href="#" class="btn btn-primary btn-labeled" style="width: 100%;"><span class="btn-label icon fa fa-plus"></span>Add</a></div>
 
                         <!-- Margin -->
                     <div class="visible-xs clearfix form-group-margin"></div>
@@ -41,7 +40,7 @@
 
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
@@ -54,11 +53,11 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;性能数据
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Performance Summary
                     </div>
                 </div>
                 <div class="stat-row">
@@ -69,7 +68,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
@@ -82,7 +81,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">

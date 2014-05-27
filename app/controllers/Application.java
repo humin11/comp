@@ -2,13 +2,12 @@ package controllers;
 
 import discovery.DiscoverySMI;
 import play.mvc.*;
-import views.html.dashboard;
-import views.html.index;
+import views.html.*;
 
 public class Application extends Controller {
 
     public static Result index() {
-        String result="";
+        String result = "";
 //        DiscoveryVMWare vm = new DiscoveryVMWare();
 //
 //        DiscoveryVMWare.getHost();
@@ -21,6 +20,10 @@ public class Application extends Controller {
 
     public static Result dashboard() {
         return ok(dashboard.render());
+    }
+
+    public static Result configuration() {
+        return ok(configuration.render());
     }
 
 }

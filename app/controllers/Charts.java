@@ -18,29 +18,6 @@ import java.util.UUID;
 
 public class Charts extends Controller {
 
-    public static Result show() {
-        String uid = UUID.randomUUID().toString();
-        String id = request().getQueryString("id");
-        String type = request().getQueryString("type");
-        String title = request().getQueryString("title");
-        String kpi = request().getQueryString("kpi");
-        String sub_kpi = request().getQueryString("sub_kpi");
-        String start_time = request().getQueryString("start_time");
-        String end_time = request().getQueryString("end_time");
-        String refresh = request().getQueryString("refresh");
-        ObjectNode options = line(id,title,kpi,sub_kpi,start_time,end_time);
-        String jsonString = "{}";
-        try {
-            jsonString = URLEncoder.encode(options.toString().toString(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        };
-        if("line".equalsIgnoreCase(type))
-            return ok(line.render(uid, jsonString));
-        else
-            return ok();
-    }
-
     public static Result options() {
         String id = request().getQueryString("id");
         String title = request().getQueryString("title");
@@ -49,11 +26,7 @@ public class Charts extends Controller {
         String sub_kpi = request().getQueryString("sub_kpi");
         String start_time = request().getQueryString("start_time");
         String end_time = request().getQueryString("end_time");
-        ObjectNode options = null;
-        if("table".equalsIgnoreCase(type))
-            options = table(id,title,kpi,sub_kpi,start_time,end_time);
-        else
-            options = line(id,title,kpi,sub_kpi,start_time,end_time);
+        ObjectNode options = line(id,title,kpi,sub_kpi,start_time,end_time);
         return ok(options);
     }
 
@@ -74,33 +47,6 @@ public class Charts extends Controller {
         yAxis.put("min",0);
         ArrayNode series = options.putArray("series");
         getSubsystemSummary(id, sub_kpi, start_time, end_time, series);
-        return options;
-    }
-
-    private static ObjectNode table(String id, String title, String kpi, String sub_kpi, String start_time, String end_time) {
-        String name = "USPV.29846";
-        long testStartTime = 1400480760000L;
-        long interval = 60000;
-        int count = 50;
-        String[] testSubsystems = {"USPV.29846", "USPV.29416", "VSP.90873"};
-        Random random = new Random();
-
-        ObjectNode options = Json.newObject();
-        ArrayNode cols = options.putArray("cols");
-        ArrayNode rows = options.putArray("rows");
-        String[] kpiColumns = sub_kpi.split(",");
-        cols.add("名称");
-        cols.add("时间");
-        for (String colname : kpiColumns)
-            cols.add(colname);
-
-        for (int i = 0; i < count; i++){
-            ArrayNode obj = rows.addArray();
-            obj.add(testSubsystems[random.nextInt(2)]);
-            obj.add(Format.parseDateString(testStartTime + random.nextInt(50)*interval,"yyyy-MM-dd HH:mm:ss"));
-            for (String colname : kpiColumns)
-                obj.add(random.nextInt(130));
-        }
         return options;
     }
 

@@ -20,8 +20,22 @@ Highcharts.setOptions(
       end_time: end_time
     success: (json) ->
       $('#'+container).empty()
-      if type == 'table'
-        try
+      $('#'+container).highcharts(json)
+  )
+
+@inittable = (url,container,model,start_time = '',end_time = '') ->
+  $.ajax(
+    cache:false
+    dataType: "json"
+    type: "GET"
+    url: url
+    data:
+      model: model
+      start_time: start_time
+      end_time: end_time
+    success: (json) ->
+      $('#'+container).empty()
+      try
           table = $('<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered"></table>')
           thead = $('<thead></thead>')
           ttr = $('<tr></tr>')
@@ -30,7 +44,6 @@ Highcharts.setOptions(
           for row in json.rows
             tr = $('<tr></tr>')
             tr.append('<td>'+obj+'</td>') for obj in row
-            alert(row.length);
             tbody.append(tr)
           thead.append(ttr)
           table.append(thead)
@@ -46,6 +59,4 @@ Highcharts.setOptions(
           )
         catch error
           #{error}
-      else
-        $('#'+container).highcharts(json)
   )
