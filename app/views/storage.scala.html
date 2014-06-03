@@ -12,11 +12,12 @@
             initTable('@routes.Datatables.options()','table2','fcport_prf');
             initTable('@routes.Datatables.options()','table1','raidgroup_prf',10);
             $.each($('.components a'),function(idx,obj){
-                if(idx == 0){
-                    $(obj).click(function(){location.href='/storage?id='+id});
-                }else if(idx == 1){
-                    $(obj).click(function(){location.href='/storage/port?id='+id});
-                }
+                $(obj).click(function(){
+                    $('.components a').removeClass('btn-success');
+                    $('.components a').addClass('btn-pa-purple');
+                    $(this).removeClass('btn-pa-purple');
+                    $(this).addClass('btn-success');
+                });
             });
         });
     </script>
@@ -33,7 +34,7 @@
 
             <div class="col-xs-12 col-sm-8">
                 <div class="row components">
-                    <a href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa schedule16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Summary</a>
+                    <a href="#" class="btn btn-success btn-labeled"><div class="icon fa schedule16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Summary</a>
                     <a href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa port16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Port</a>
                     <a href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa database16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Cache</a>
                     <a href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa pool16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;RaidGroup</a>
