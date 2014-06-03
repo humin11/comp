@@ -22,10 +22,17 @@
 
         <div class="row">
                 <!-- Page header, center on small screens -->
-            <h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><i class="fa fa-dashboard page-header-icon"></i>&nbsp;&nbsp;@subsystem.get("name").asText()</h1>
+            <h1 class="col-xs-12 col-sm-4 text-center text-left-sm">&nbsp;&nbsp;@subsystem.get("name").asText()</h1>
 
             <div class="col-xs-12 col-sm-8">
-
+                <div class="row">
+                    <a href="#" class="btn btn-pa-purple btn-labeled"><span class="btn-label icon fa fa-dashboard"></span>Dashboard</a>
+                    <a href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa port16" style="margin-top: -4px"></div>&nbsp;&nbsp;Port</a>
+                    <a href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa database16" style="margin-top: -4px"></div>&nbsp;&nbsp;Cache</a>
+                    <a href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa pool16" style="margin-top: -4px"></div>&nbsp;&nbsp;RaidGroup</a>
+                    <a href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa thinVolume16" style="margin-top: -4px"></div>&nbsp;&nbsp;Volume</a>
+                    <a href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa disk16" style="margin-top: -4px"></div>&nbsp;&nbsp;Disk</a>
+                </div>
             </div>
         </div>
     </div> <!-- / .page-header -->
@@ -118,7 +125,7 @@
                         <i class="fa fa-cube"></i>&nbsp;&nbsp;Top 10 RaidGroup by Response (Last 24 hours)
                     </div>
                 </div>
-                <div class="stat-row"> 
+                <div class="stat-row">
                     <div class="stat-cell bordered no-border-t no-padding" id="chart5" style="height: 300px">
                     </div>
                 </div>
