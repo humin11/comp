@@ -12,7 +12,23 @@ public class Storages extends Controller {
         ObjectNode subsystem = Json.newObject();
         subsystem.put("id",id);
         subsystem.put("name",id);
-        return ok(views.html.storage.render(subsystem));
+        return ok(views.html.storage.index.render(subsystem));
+    }
+
+    public static Result summary() {
+        String id = request().getQueryString("id");
+        ObjectNode subsystem = Json.newObject();
+        subsystem.put("id",id);
+        subsystem.put("name",id);
+        return ok(views.html.storage.summary.render(subsystem));
+    }
+
+    public static Result port() {
+        String id = request().getQueryString("id");
+        ObjectNode subsystem = Json.newObject();
+        subsystem.put("id",id);
+        subsystem.put("name",id);
+        return ok(views.html.storage.port.render(subsystem));
     }
 
 }

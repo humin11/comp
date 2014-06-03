@@ -1,0 +1,49 @@
+@(subsystem:com.fasterxml.jackson.databind.node.ObjectNode)
+
+@main("Storage") {
+    <script type="text/javascript">
+        $(function () {
+            var id = '@subsystem.get("id").asText()';
+            var container = $('#page-content');
+            $.each($('.components a'),function(idx,obj){
+                $(obj).click(function(){
+                    $('.components a').removeClass('btn-success');
+                    $('.components a').addClass('btn-pa-purple');
+                    $(this).removeClass('btn-pa-purple');
+                    $(this).addClass('btn-success');
+                    if($(this).attr('id') == 'summaryBtn')
+                        container.load('@{routes.Storages.summary()}?id='+id);
+                    else if($(this).attr('id') == 'portBtn')
+                        container.load('@{routes.Storages.port()}?id='+id);
+                });
+            });
+            container.load('@{routes.Storages.summary()}?id='+id);
+        });
+    </script>
+    <ul class="breadcrumb breadcrumb-page">
+        <div class="breadcrumb-label text-light-gray">You are here: </div>
+        <li><a href="#">Storage</a></li>
+        <li class="active"><a href="#">@subsystem.get("name").asText()</a></li>
+    </ul>
+    <div class="page-header">
+
+        <div class="row">
+                <!-- Page header, center on small screens -->
+            <h1 class="col-xs-12 col-sm-4 text-center text-left-sm">&nbsp;&nbsp;@subsystem.get("name").asText()</h1>
+
+            <div class="col-xs-12 col-sm-8">
+                <div class="row components">
+                    <a id="summaryBtn" href="#" class="btn btn-success btn-labeled"><div class="icon fa schedule16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Summary</a>
+                    <a id="portBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa port16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Port</a>
+                    <a id="cacheBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa database16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Cache</a>
+                    <a id="raidgroupBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa pool16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;RaidGroup</a>
+                    <a id="volumeBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa thinVolume16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Volume</a>
+                    <a id="diskBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa disk16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Disk</a>
+                </div>
+            </div>
+        </div>
+    </div> <!-- / .page-header -->
+    <div id="page-content">
+
+    </div>
+}

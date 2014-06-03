@@ -1,0 +1,19 @@
+@(subsystem:com.fasterxml.jackson.databind.node.ObjectNode)
+
+<script type="text/javascript">
+    $(function () {
+        var id = '@subsystem.get("id").asText()';
+        initTable('@routes.Datatables.options()','table1','cfg_fcport',10,id);
+    });
+</script>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div class="stat-panel text-center">
+            <div class="stat-row">
+                <div class="stat-cell bordered no-border-t no-padding" id="table1" style="height: 500px">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

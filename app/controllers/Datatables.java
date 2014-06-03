@@ -24,16 +24,18 @@ public class Datatables extends Controller {
         String start_time = request().getQueryString("start_time");
         String end_time = request().getQueryString("end_time");
         ObjectNode options = null;
-        if("subsystem_prf".equals(model))
-            options = getSubsystemPrf(id,title,model,start_time,end_time);
-        else if("raidgroup_prf".equals(model))
-            options = getRaidGroupPrf(id,title,model,start_time,end_time);
-        else if("fcport_prf".equals(model))
-            options = getFCPortPrf(id,title,model,start_time,end_time);
+        if("prf_subsystem".equals(model))
+            options = getSubsystemPrf(id,title,start_time,end_time);
+        else if("prf_raidgroup".equals(model))
+            options = getRaidGroupPrf(id,title,start_time,end_time);
+        else if("prf_fcport".equals(model))
+            options = getFCPortPrf(id,title,start_time,end_time);
+        else if("cfg_fcport".equals(model))
+            options = getFCPortCfg(id,title);
         return ok(options);
     }
 
-    private static ObjectNode getSubsystemPrf(String id, String title, String model, String start_time, String end_time) {
+    private static ObjectNode getSubsystemPrf(String id, String title, String start_time, String end_time) {
         long testStartTime = 1400480760000L;
         long interval = 60000;
         int count = 50;
@@ -59,7 +61,7 @@ public class Datatables extends Controller {
         return options;
     }
 
-    private static ObjectNode getFCPortPrf(String id, String title, String model, String start_time, String end_time) {
+    private static ObjectNode getFCPortPrf(String id, String title, String start_time, String end_time) {
         String[] kpiColumns = {"IOPS","Transfer(mb)"};
         String chpNum = "ABCDEFGHIJKLMNOPQ";
         Random random = new Random();
@@ -81,7 +83,31 @@ public class Datatables extends Controller {
         return options;
     }
 
-    private static ObjectNode getRaidGroupPrf(String id, String title, String model, String start_time, String end_time) {
+    private static ObjectNode getFCPortCfg(String id, String title) {
+        String[] kpiColumns = {"Name","WWN","Type","Speed","Role","Number of LDEVs"};
+        String chpNum = "ABCDE";
+        Random random = new Random();
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for (int i=1;i < 10;i++) {
+            for (int j = 0; j < chpNum.length(); j++) {
+                String name = "CL" + i + "-" + chpNum.charAt(j);
+                ArrayNode obj = rows.addArray();
+                obj.add(name);
+                obj.add("50:06:0E:80:05:74:96:"+i+chpNum.charAt(j));
+                obj.add("FICON");
+                obj.add("Unknown");
+                obj.add("Initiator");
+                obj.add(random.nextInt(30));
+            }
+        }
+        return options;
+    }
+
+    private static ObjectNode getRaidGroupPrf(String id, String title, String start_time, String end_time) {
         String[] kpiColumns = {"IOPS","Transfer(mb)","Response Time(ms)","Cache Hits(%)"};
         Random random = new Random();
         ObjectNode options = Json.newObject();

@@ -67,7 +67,7 @@ Highcharts.setOptions(
           thead = $('<thead></thead>')
           ttr = $('<tr></tr>')
           tbody = $('<tbody></tbody>')
-          ttr.append('<td>'+colname+'</td>') for colname in json.cols
+          ttr.append('<th>'+colname+'</th>') for colname in json.cols
           for row in json.rows
             tr = $('<tr></tr>')
             tr.append('<td>'+obj+'</td>') for obj in row
@@ -79,7 +79,7 @@ Highcharts.setOptions(
           tableOuterDiv.append(table)
           $('#'+container).append(tableOuterDiv)
           table.dataTable(
-            bSort: false
+            bSort: true
             bAutoWidth: false
             iDisplayLength: rowlen
             aLengthMenu: [5,10,20,50,100]
