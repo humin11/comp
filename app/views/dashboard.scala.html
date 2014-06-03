@@ -2,10 +2,10 @@
     <script type="text/javascript">
         $(function () {
             $('#kpi-timerange').datepicker({format:'yyyy-mm-dd 00:00',forceParse:false});
-            initchart('@routes.Charts.options()','chart1','subsystem','iops');
-            inittable('@routes.Datatables.options()','chart2','subsystem');
-            initchart('@routes.Charts.options()','chart3','subsystem','cache_hits');
-            initchart('@routes.Charts.options()','chart4','subsystem','response_time');
+            initChart('@routes.Charts.options()','chart1','subsystem','iops');
+            initChart('@routes.Charts.options()','chart2','subsystem_cap');
+            initChart('@routes.Charts.options()','chart3','subsystem','cache_hits');
+            initChart('@routes.Charts.options()','chart4','subsystem','response_time');
         });
     </script>
     <ul class="breadcrumb breadcrumb-page">
@@ -23,8 +23,9 @@
                 <div class="row">
                     <hr class="visible-xs no-grid-gutter-h">
                         <!-- "Create project" button, width=auto on desktops -->
-                    <div class="pull-right col-xs-12 col-sm-auto"><a href="#" class="btn btn-primary btn-labeled" style="width: 100%;"><span class="btn-label icon fa fa-plus"></span>Add</a></div>
-
+                    <div class="pull-right col-xs-12 col-sm-auto">
+                        <a href="#" class="btn btn-primary btn-labeled" style="width: 100%;"><span class="btn-label icon fa fa-plus"></span>Add</a>
+                    </div>
                         <!-- Margin -->
                     <div class="visible-xs clearfix form-group-margin"></div>
 
@@ -57,7 +58,7 @@
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Performance Summary
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Capacity Summary ( TB )
                     </div>
                 </div>
                 <div class="stat-row">
@@ -72,7 +73,7 @@
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Cache Hits
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Cache Hits ( % )
                     </div>
                 </div>
                 <div class="stat-row">
@@ -85,7 +86,7 @@
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Response Time
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Response Time ( ms )
                     </div>
                 </div>
                 <div class="stat-row">

@@ -3,6 +3,7 @@ package utils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import play.Configuration;
 import play.libs.Json;
 
 import java.io.BufferedReader;
@@ -18,7 +19,8 @@ public class Highcharts {
     public static String export(ObjectNode chart){
         String lines = "";
         try {
-            URL url = new URL("http://127.0.0.1:3003/");
+            String phantomjs = Configuration.root().getString("phantomjs.url","http://127.0.0.1:3003/");
+            URL url = new URL(phantomjs);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);

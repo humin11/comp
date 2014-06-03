@@ -1,0 +1,711 @@
+.switch128, .fabric128, .server128, .agent128, .cluster128, .db128, .fileSystem128, .ethernet128,
+.directory128, .switchBlade128, .disk128, .hba128, .hypervisor128, .config128, .vmwareCenter128,
+.schedule128, .storageSystem128, .storageSystemL2128, .unknown128, .logicalSwitch128, .volumeTable128,
+.vDisk128, .vm128, .placeHolder128, .blade128, .xiv128, .storwize128, .sonas128, .ess800128, .ds8000128,
+.virtualFabric128, .nas128, .ds6000128, .alert128, .svc128, .tapeLibraryFrame128, .path128, .offlinePort,
+.raidArray128, .shares128, .thinVolumeTable128, .pool128, .port128, .zoneSet128, .LDAP128, .module128,
+.ioGroup128, .svcNode128, .controller128, .hostConnections128, .encryptedVolume128, .encryptableVolume128,
+.encryptedThinVolume128, .encryptableThinVolume128, .diskGroup128, .fileSet128, .export128, .nasCluster128,
+.clusterNode128, .clusterResourceGroup128, .dirGroup128, .capacityPool128, .serviceClass128, .volumeTable128Disabled,
+.ds4k5k128, .manualAddUnmanagedServer128, .fileAddUnmanagedServer128, .manualAddServer128, .discoveredServer128,
+.fileAddServer128, .storwizeV7000u128, .createBlockServiceClass128, .createFileServiceClass128, .ssd128,
+.unmanagedVM128, .unmanagedServer128, .userManagement128, .tier128, .dataCollection128, .dataStore128,
+.hypervisorCluster128, .specifyUser128, .volumeNotVisible128, .accessPort128, .mediaChanger128, .tapeLibrary128,
+.tapeDrive128, .poolMigration128{
+    background: transparent url("../images/Assets128.png") no-repeat center left;
+    width: 128px;
+    height: 128px;
+}
+
+.agent128 {
+    background-position: 0px -25px;
+    height: 103px;
+}
+
+.cluster128 {
+    background-position: -128px -26px;
+    height: 102px;
+}
+
+.db128 {
+    background-position: -256px -18px;
+    height: 110px;
+}
+
+.directory128 {
+    background-position: -384px -21px;
+    height: 107px;
+}
+
+.ethernet128 {
+    background-position: -512px -36px;
+    height: 94px;
+}
+
+.fileSystem128 {
+    background-position: -640px -24px;
+    height: 104px;
+}
+
+.encryptedThinVolume128 {
+    background-position: -768px -18px;
+    height: 110px;
+}
+
+.poolMigration128 {
+    background-position: -896px -44px;
+    height: 80px;
+}
+
+.ioGroup128 {
+    background-position: -1024px -81px;
+    height: 47px;
+}
+
+.blade128 {
+    background-position: 0px -137px;
+    height: 119px;
+}
+
+.disk128 {
+    background-position: -128px -147px;
+    height: 109px;
+}
+
+.hba128 {
+    background-position: -256px -137px;
+    height: 119px;
+}
+
+.hypervisor128 {
+    background-position: -384px -150px;
+    height: 106px;
+}
+
+.config128 {
+    background-position: -512px -128px;
+    height: 128px;
+}
+
+.vmwareCenter128 {
+    background-position: -640px -135px;
+    height: 118px;
+}
+
+.port128 {
+    background-position: -768px -165px;
+    height: 91px;
+}
+
+.mediaChanger128 {
+    background-position: -640px -420px;
+    height: 92px;
+}
+
+.svcNode128 {
+    background-position: -1024px -217px;
+    height: 39px;
+}
+
+.schedule128 {
+    background-position: 0px -279px;
+    height: 105px;
+}
+
+.storageSystem128 {
+    background-position: -128px -256px;
+    height: 128px;
+}
+
+.switch128 {
+    background-position: -256px -343px;
+    height: 41px;
+}
+
+.tapeLibrary128 {
+    background-position: -640px -420px;
+    height: 92px;
+}
+
+.unknown128 {
+    background-position: -512px -265px;
+    height: 119px;
+}
+
+.logicalSwitch128 {
+    background-position: -640px -342px;
+    height: 42px
+}
+
+.pool128 {
+    background-position: -768px -296px;
+    height: 88px;
+}
+
+.accessPort128 {
+    background-position: -640px -420px;
+    height: 92px;
+}
+
+.volumeTable128 {
+    background-position: 0px -402px;
+    height: 110px;
+}
+
+.encryptedVolume128 {
+    background-position: 0px -402px;
+    height: 110px;
+}
+
+.encryptableVolume128 {
+    background-position: 0px -402px;
+    height: 110px;
+}
+
+.vDisk128 {
+    background-position: -128px -403px;
+    height: 109px;
+}
+
+.fabric128 {
+    background-position: -256px -432px;
+    height: 80px;
+}
+
+.unmanagedVM128 {
+    background-position: -384px -405px;
+    height: 107px;
+}
+
+.unmanagedServer128 {
+    background-position: -512px -405px;
+    height: 107px;
+}
+
+.placeHolder128 {
+    background-position: -640px -420px;
+    height: 92px;
+}
+
+.tapeDrive128 {
+    background-position: -640px -420px;
+    height: 92px;
+}
+
+.raidArray128 {
+    background-position: -1024px -401px;
+    height: 111px;
+}
+
+.xiv128 {
+    background-position: 0px -518px;
+    height: 122px;
+}
+
+.storwize128 {
+    background-position: -128px -599px;
+    height: 41px;
+}
+
+.sonas128 {
+    background-position: -256px -516px;
+    height: 124px;
+}
+
+.ess800128 {
+    background-position: -384px -517px;
+    height: 123px;
+}
+
+.ds8000128 {
+    background-position: -512px -517px;
+    height: 123px;
+}
+
+.virtualFabric128 {
+    background-position: -640px -521px;
+    height: 119px;
+}
+
+.zoneSet128 {
+    background-position: -768px -545px;
+    height: 95px;
+}
+
+.export128 {
+    background-position: -1024px -538px;
+    height: 102px;
+}
+
+.shares128 {
+    background-position: -1024px -538px;
+    height: 102px;
+}
+
+.nas128 {
+    background-position: -0px -640px;
+    height: 128px;
+}
+
+.path128 {
+    background-position: -128px -672px;
+    height: 96px;
+}
+
+.offlinePort {
+    background-position: -256px -677px;
+    height: 91px;
+}
+
+.svc128 {
+    background-position: -384px -642px;
+    height: 126px;
+}
+
+.ds6000128 {
+    background-position: -512px -719px;
+    height: 49px;
+}
+
+.alert128 {
+    background-position: -640px -649px;
+    height: 119px;
+}
+
+.LDAP128 {
+    background-position: -768px -660px;
+    height: 108px;
+}
+
+.module128 {
+    background-position: -896px -726px;
+    height: 42px;
+}
+
+.fileSet128 {
+    background-position: -1024px -673px;
+    height: 95px;
+}
+
+.hostConnections128 {
+    background-position: 0px -801px;
+    height: 95px;
+}
+
+.diskGroup128 {
+    background-position: -128px -786px;
+    height: 110px;
+}
+
+.controller128 {
+    background-position: -256px -847px;
+    height: 49px;
+}
+
+.clusterResourceGroup128 {
+    background-position: -384px -790px;
+    height: 106px;
+}
+
+.storageSystemL2128 {
+    background-position: -512px -775px;
+    height: 121px;
+}
+
+.dirGroup128 {
+    background-position: -640px -791px;
+    height: 105px;
+}
+
+.nasCluster128 {
+    background-position: -768px -768px;
+    height: 128px;
+}
+
+.ds4k5k128 {
+    background-position: -896px -838px;
+    height: 58px;
+}
+
+.manualAddUnmanagedServer128 {
+    background-position: -1024px -784px;
+    height: 112px;
+}
+
+.fileAddUnmanagedServer128 {
+    background-position: 0px -912px;
+    height: 112px;
+}
+
+.manualAddServer128 {
+    background-position: -128px -912px;
+    height: 112px;
+}
+
+.discoveredServer128 {
+    background-position: -256px -912px;
+    height: 112px;
+}
+
+.fileAddServer128 {
+    background-position: -384px -912px;
+    height: 112px;
+}
+
+.storwizeV7000u128 {
+    background-position: -512px -940px;
+    height: 84px;
+}
+
+.vm128 {
+    background-position: -640px -917px;
+    height: 107px;
+}
+
+.server128 {
+    background-position: -768px -917px;
+    height: 107px;
+}
+
+.serviceClass128 {
+    background-position: -896px -896px;
+    height: 128px;
+}
+
+.createBlockServiceClass128 {
+    background-position: -896px -896px;
+    height: 128px;
+}
+
+.createFileServiceClass128 {
+    background-position: -896px -896px;
+    height: 128px;
+}
+
+.ssd128 {
+    background-position: -1024px -896px;
+    height: 128px;
+}
+
+.capacityPool128 {
+    background-position: 0 -1036px;
+    height: 110px;
+}
+
+.tier128 {
+    background-position: -128px -1024px;
+}
+
+.dataCollection128 {
+    background-position: -256px -1024px;
+}
+
+.dataStore128 {
+    background-position: -384px -1024px;
+}
+
+.hypervisorCluster128 {
+    background-position: -512px -1036px;
+    height: 110px;
+}
+
+.userManagement128 {
+    background-position: -640px -1039px;
+    height: 107px;
+}
+
+.volumeNotVisible128 {
+    background-position: -768px -1024px;
+    height: 110px;
+}
+
+.clusterNode128 {
+    background-position: -640px -384px;
+}
+
+.volumeTable128Disabled, .specifyUser128 {
+    background-position: -640px -420px;
+    height: 92px;
+}
+
+.accessPort16, .alert16, .agent16, .blade16, .cartridge16, .cluster16, .clusterNode16, .computerDisk16, .config16, .computerController16, .controller16, .database16, .directory16, .dirGroup16, .disk16, .diskGroup16, .ds600016, .ds800016, .ethernet16, .ess80016, .export16, .fabric16, .fileset16, .fileSystem16, .frame16, .hba16, .hostConnections16, .hypervisor16, .jobs16, .iogroup16, .LDAP16, .logicalSwitch16, .mediaChanger16, .module16, .nas16, .node16, .offlinePort16, .other16, .switch16, .partner16, .path16, .pool16, .placeHolder16, .port16, .pool16, .raidArray16, .replication16, .report16, .san16, .schedule16, .server16, .session16, .shares16, .sonas16, .storageSystem16, .storwize16, .svc16, .tapeDrive16, .tapelibrary16, .thinVolume16, .unknown16, .vDisk16, .virtualFabric16, .vm16, .volume16, .xiv16, .zoneSet16, .nasCluster16, .clusterResourceGroup16, .sybase16, .db216, .oracle16, .sqlServer16, .repSession16, .repServer16, .repSubsystem16, .repPath16, .dbInstance16, .dbTablepace16, .dbTable16, .dbNetworkStorage16, .dbDevice16, .paused16, .storwizeV7000u16, .ds4k5k16, .addServerDisabledIcon16, .unmanagedServer16, .unmanagedVM16, .serviceClass16, .ssd16, .capacityPool16, .dataCollection16, .dataStore16, .hypervisorCluster16, .user16, .volumeNotVisible16, .discoveredServer16, .discoveredVM16, .performance16, .exportTable16 {
+    background: transparent url("../images/Assets16.png") no-repeat center left;
+    width: 16px;
+    height: 16px;
+}
+
+.agent16 {
+    background-position: 0px 0px;
+}
+
+.cluster16 {
+    background-position: -16px 0px;
+}
+
+.database16 {
+    background-position: -32px 0px;
+}
+
+.directory16 {
+    background-position: -48px 0px;
+}
+
+.ethernet16 {
+    background-position: -64px 0px;
+}
+
+.fileSystem16 {
+    background-position: -80px 0px;
+}
+
+.thinVolume16 {
+    background-position: -96px 0px;
+}
+
+.frame16 {
+    background-position: -112px 0px;
+}
+
+.iogroup16 {
+    background-position: -128px 0px;
+}
+
+.blade16 {
+    background-position: 0px -16px;
+}
+
+.disk16 {
+    background-position: -16px -16px;
+}
+
+.hba16 {
+    background-position: -32px -16px;
+}
+
+.hypervisor16 {
+    background-position: -48px -16px;
+}
+
+.config16 {
+    background-position: -64px -16px;
+}
+
+.report16 {
+    background-position: -80px -16px;
+}
+
+.port16 {
+    background-position: -96px -16px;
+}
+
+.mediaChanger16 {
+    background-position: -112px -16px;
+}
+
+.node16 {
+    background-position: -128px -16px;
+}
+
+.schedule16 {
+    background-position: 0px -32px;
+}
+
+.storageSystem16 {
+    background-position: -16px -32px;
+}
+
+.switch16 {
+    background-position: -32px -32px;
+}
+
+.tapelibrary16 {
+    background-position: -48px -32px;
+}
+
+.unknown16 {
+    background-position: -64px -32px;
+}
+
+.logicalSwitch16 {
+    background-position: -80px -32px;
+}
+
+.pool16 {
+    background-position: -96px -32px;
+}
+
+.accessPort16 {
+    background-position: -112px -32px;
+}
+
+.partner16 {
+    background-position: -128px -32px;
+}
+
+.volume16 {
+    background-position: 0px -48px;
+}
+
+.vDisk16 {
+    background-position: -16px -48px;
+}
+
+.fabric16 {
+    background-position: -32px -48px;
+}
+
+.unmanagedVM16 {
+    background-position: -48px -48px;
+}
+
+.unmanagedServer16 {
+    background-position: -64px -48px;
+}
+
+.placeHolder16 {
+    background-position: -80px -48px;
+}
+
+.replication16 {
+    background-position: -96px -48px;
+}
+
+.tapeDrive16 {
+    background-position: -112px -48px;
+}
+
+.raidArray16 {
+    background-position: -128px -48px;
+}
+
+.xiv16 {
+    background-position: 0px -64px;
+}
+
+.storwize16 {
+    background-position: -16px -64px;
+}
+
+.sonas16 {
+    background-position: -32px -64px;
+}
+
+.ess80016 {
+    background-position: -48px -64px;
+}
+
+.ds800016 {
+    background-position: -64px -64px;
+}
+
+.virtualFabric16 {
+    background-position: -80px -64px;
+}
+
+.zoneSet16 {
+    background-position: -96px -64px;
+}
+
+.cartridge16 {
+    background-position: -112px -64px;
+}
+
+.export16 {
+    background-position: -128px -64px;
+}
+
+.nas16 {
+    background-position: -0px -80px;
+}
+
+.path16 {
+    background-position: -16px -80px;
+}
+
+.offlinePort16 {
+    background-position: -32px -80px;
+}
+
+.svc16 {
+    background-position: -48px -80px;
+}
+
+.ds600016 {
+    background-position: -64px -80px;
+}
+
+.alert16 {
+    background-position: -80px -80px;
+}
+
+.LDAP16 {
+    background-position: -96px -80px;
+}
+
+.module16 {
+    background-position: -112px -80px;
+}
+
+.fileset16 {
+    background-position: -128px -80px;
+}
+
+.hostConnections16 {
+    background-position: 0px -96px;
+}
+
+.diskGroup16 {
+    background-position: -16px -96px;
+}
+
+.controller16 {
+    background-position: -32px -96px;
+}
+
+.clusterResourceGroup16 {
+    background-position: -48px -96px;
+}
+
+.dirGroup16 {
+    background-position: -80px -96px;
+}
+
+.san16 {
+    background-position: -96px -96px;
+}
+
+.nasCluster16 {
+    background-position: -96px -96px;
+}
+
+.storwizeV7000u16 {
+    background-position: -112px -96px;
+}
+
+.ds4k5k16 {
+    background-position: -128px -96px;
+}
+
+.server16 {
+    background-position: 0px -112px;
+}
+
+.vm16 {
+    background-position: -16px -112px;
+}
+
+.serviceClass16 {
+    background-position: -32px -112px;
+}
+
+.ssd16 {
+    background-position: -48px -112px;
+}
+
+.discoveredServer16 {
+    background-position: -64px -112px;
+}
+
+.discoveredVM16 {
+    background-position: -80px -112px;
+}

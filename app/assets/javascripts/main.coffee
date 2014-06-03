@@ -6,7 +6,32 @@ Highcharts.setOptions(
       weekdays: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
   )
 
-@initchart = (url,container,kpi,sub_kpi,type = 'line',start_time = '',end_time = '') ->
+@initMenu = (url,container) ->
+  $.ajax(
+    cache:false
+    dataType: "json"
+    type: "GET"
+    url: url
+    success: (json) ->
+      root = $('#'+container)
+      root.empty()
+      for node in json
+        fetchMenu(node,root)
+  )
+
+@fetchMenu = (node,container) ->
+  col = $('<li><a href="'+node.url+'"><i class="icon16 fa '+node.icon+'"></i><span class="mm-text">'+node.name+'</span></a></li>')
+  if !node.children || node.children.length == 0
+    container.append(col)
+  else
+    col.addClass('mm-dropdown')
+    container.append(col)
+    ul = $('<ul></ul>')
+    col.append(ul)
+    for child in node.children
+      fetchMenu(child,ul)
+
+@initChart = (url,container,kpi,sub_kpi,type = 'line',start_time = '',end_time = '') ->
   $.ajax(
     cache:false
     dataType: "json"
@@ -23,7 +48,7 @@ Highcharts.setOptions(
       $('#'+container).highcharts(json)
   )
 
-@inittable = (url,container,model,rowlen = 5,start_time = '',end_time = '') ->
+@initTable = (url,container,model,rowlen = 5,start_time = '',end_time = '') ->
   $.ajax(
     cache:false
     dataType: "json"
@@ -52,7 +77,7 @@ Highcharts.setOptions(
           tableOuterDiv.append(table)
           $('#'+container).append(tableOuterDiv)
           table.dataTable(
-            bSort: false
+            bSort: true
             bAutoWidth: false
             iDisplayLength: rowlen
             aLengthMenu: [5,10,20,50,100]

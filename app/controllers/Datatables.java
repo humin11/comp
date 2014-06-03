@@ -25,12 +25,12 @@ public class Datatables extends Controller {
         String start_time = request().getQueryString("start_time");
         String end_time = request().getQueryString("end_time");
         ObjectNode options = null;
-        if("subsystem".equals(model))
-            options = getSubsystemSummary(id,title,model,start_time,end_time);
+        if("subsystem_prf".equals(model))
+            options = getSubsystemPrf(id,title,model,start_time,end_time);
         return ok(options);
     }
 
-    private static ObjectNode getSubsystemSummary(String id, String title, String model, String start_time, String end_time) {
+    private static ObjectNode getSubsystemPrf(String id, String title, String model, String start_time, String end_time) {
 
         long testStartTime = 1400480760000L;
         long interval = 60000;

@@ -1,0 +1,60 @@
+@base: #1874CD;
+
+.box-shadow(@style, @c) when (iscolor(@c)) {
+  box-shadow:         @style @c;
+  -webkit-box-shadow: @style @c;
+  -moz-box-shadow:    @style @c;
+}
+
+.box-shadow(@style, @alpha: 20%) when (isnumber(@alpha)) {
+  .box-shadow(@style, rgba(0, 0, 0, @alpha));
+}
+
+.rounded-corners (@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.box-sizing {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.border-transition(@sec: .218s) {
+  .transition(border,@sec);
+}
+
+.color-transition(@sec: .218s) {
+  .transition(color,@sec);
+}
+
+.opacity-transition(@sec: .218s) {
+  .transition(opacity,@sec);
+}
+
+.transition(@property, @sec: .218s) {
+  -moz-transition: @property @sec;
+  -webkit-transition: @property @sec;
+  -ms-transition: @property @sec;
+  -o-transition: @property @sec;
+  transition: @property @sec;
+}
+
+.linear-gradient(@point: bottom, @color: #fff, @alpha: .05) {
+  background-color: @color;
+  background-image: -webkit-linear-gradient(@point,rgba(0,0,0,@alpha),transparent 20px);
+  background-image: -moz-linear-gradient(@point,rgba(0,0,0,@alpha),transparent 20px);
+  background-image: -o-linear-gradient(@point,rgba(0,0,0,@alpha),transparent 20px);
+  background-image: linear-gradient(@point,rgba(0,0,0,@alpha),transparent 20px);
+  background-repeat: repeat-x;
+}
+
+.anchorBL{
+  display:none;
+}
