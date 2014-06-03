@@ -20,7 +20,7 @@ Highcharts.setOptions(
   )
 
 @fetchMenu = (node,container) ->
-  col = $('<li><a href="'+node.url+'"><i class="icon16 fa '+node.icon+'"></i><span class="mm-text">'+node.name+'</span></a></li>')
+  col = $('<li><a href="'+node.url+'"><i class="icon16 fa '+node.icon+'" style="margin-bottom:-3px"></i><span class="mm-text">'+node.name+'</span></a></li>')
   if !node.children || node.children.length == 0
     container.append(col)
   else
