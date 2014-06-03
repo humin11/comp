@@ -6,7 +6,7 @@
 GET        /                          controllers.Application.index()
 GET        /menu                      controllers.Application.menu()
 GET        /dashboard                 controllers.Application.dashboard()
-GET        /storage                   controllers.Application.storage()
+GET        /storage                   controllers.Storages.index()
 GET        /charts/options            controllers.Charts.options()
 GET        /datatables/options        controllers.Datatables.options()
 GET        /reports/daily             controllers.Reports.daily()

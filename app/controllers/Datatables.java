@@ -13,8 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class Datatables extends Controller {
 
@@ -27,11 +26,14 @@ public class Datatables extends Controller {
         ObjectNode options = null;
         if("subsystem_prf".equals(model))
             options = getSubsystemPrf(id,title,model,start_time,end_time);
+        else if("raidgroup_prf".equals(model))
+            options = getRaidGroupPrf(id,title,model,start_time,end_time);
+        else if("fcport_prf".equals(model))
+            options = getFCPortPrf(id,title,model,start_time,end_time);
         return ok(options);
     }
 
     private static ObjectNode getSubsystemPrf(String id, String title, String model, String start_time, String end_time) {
-
         long testStartTime = 1400480760000L;
         long interval = 60000;
         int count = 50;
@@ -53,6 +55,53 @@ public class Datatables extends Controller {
             obj.add(Format.parseDateString(testStartTime + random.nextInt(50)*interval,"yyyy-MM-dd HH:mm:ss"));
             for (String colname : kpiColumns)
                 obj.add(random.nextInt(130));
+        }
+        return options;
+    }
+
+    private static ObjectNode getFCPortPrf(String id, String title, String model, String start_time, String end_time) {
+        String[] kpiColumns = {"IOPS","Transfer(mb)"};
+        String chpNum = "ABCDEFGHIJKLMNOPQ";
+        Random random = new Random();
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        cols.add("名称");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for (int i=1;i < 12;i++) {
+            for (int j = 0; j < chpNum.length(); j++) {
+                String name = "CL" + i + "-" + chpNum.charAt(j);
+                ArrayNode obj = rows.addArray();
+                obj.add(name);
+                for (String colname : kpiColumns)
+                    obj.add(random.nextInt(130));
+            }
+        }
+        return options;
+    }
+
+    private static ObjectNode getRaidGroupPrf(String id, String title, String model, String start_time, String end_time) {
+        String[] kpiColumns = {"IOPS","Transfer(mb)","Response Time(ms)","Cache Hits(%)"};
+        Random random = new Random();
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        cols.add("名称");
+        cols.add("类型");
+        cols.add("Raid Level");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for (int i=1;i < 12;i++) {
+            for (int j = 1; j < 12; j++) {
+                String name = "1-" + i + "-" + j;
+                ArrayNode obj = rows.addArray();
+                obj.add(name);
+                obj.add("FC");
+                obj.add("RAID5(3D+1P)");
+                for (String colname : kpiColumns)
+                    obj.add(random.nextInt(130));
+            }
         }
         return options;
     }

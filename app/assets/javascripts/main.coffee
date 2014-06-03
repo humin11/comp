@@ -31,14 +31,15 @@ Highcharts.setOptions(
     for child in node.children
       fetchMenu(child,ul)
 
-@initChart = (url,container,kpi,sub_kpi,type = 'line',start_time = '',end_time = '') ->
+@initChart = (url,container,kpi,sub_kpi,title = '',id = '',start_time = '',end_time = '') ->
   $.ajax(
     cache:false
     dataType: "json"
     type: "GET"
     url: url
     data:
-      type: type
+      id: id
+      title: title
       kpi: kpi
       sub_kpi: sub_kpi
       start_time: start_time
@@ -48,13 +49,14 @@ Highcharts.setOptions(
       $('#'+container).highcharts(json)
   )
 
-@initTable = (url,container,model,rowlen = 5,start_time = '',end_time = '') ->
+@initTable = (url,container,model,rowlen = 5,id = '',start_time = '',end_time = '') ->
   $.ajax(
     cache:false
     dataType: "json"
     type: "GET"
     url: url
     data:
+      id: id
       model: model
       start_time: start_time
       end_time: end_time
@@ -77,7 +79,7 @@ Highcharts.setOptions(
           tableOuterDiv.append(table)
           $('#'+container).append(tableOuterDiv)
           table.dataTable(
-            bSort: true
+            bSort: false
             bAutoWidth: false
             iDisplayLength: rowlen
             aLengthMenu: [5,10,20,50,100]

@@ -3,7 +3,7 @@
         $(function () {
             $('#kpi-timerange').datepicker({format:'yyyy-mm-dd 00:00',forceParse:false});
             initChart('@routes.Charts.options()','chart1','subsystem','iops');
-            initChart('@routes.Charts.options()','chart2','subsystem_cap');
+            initChart('@routes.Charts.options()','chart2','subsystem','capacity');
             initChart('@routes.Charts.options()','chart3','subsystem','cache_hits');
             initChart('@routes.Charts.options()','chart4','subsystem','response_time');
         });

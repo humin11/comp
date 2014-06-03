@@ -33,67 +33,119 @@ public class Application extends Controller {
         c11.put("id",11);
         c11.put("name","存储阵列");
         c11.put("url","");
-        c11.put("icon","xiv16");
+        c11.put("icon","storageSystem16");
         ArrayNode c11c = c11.putArray("children");
-        ObjectNode c110 = c11c.addObject();
-        c110.put("id",110);
-        c110.put("name","概览");
-        c110.put("url","/storage");
-        c110.put("icon","fa-dashboard");
-        ObjectNode c111 = c11c.addObject();
-        c111.put("id",111);
-        c111.put("name","端口");
-        c111.put("url","");
-        c111.put("icon","port16");
-        ObjectNode c112 = c11c.addObject();
-        c112.put("id",112);
-        c112.put("name","RaidGroup");
-        c112.put("url","");
-        c112.put("icon","pool16");
-        ObjectNode c113 = c11c.addObject();
-        c113.put("id",113);
-        c113.put("name","卷");
-        c113.put("url","");
-        c113.put("icon","thinVolume16");
-        ObjectNode c114 = c11c.addObject();
-        c114.put("id",114);
-        c114.put("name","磁盘");
-        c114.put("url","");
-        c114.put("icon","disk16");
+        initStorageSubMenu(c11c,"USPV.29846","USPV.29846");
+        initStorageSubMenu(c11c,"USPV.29416","USPV.29416");
+        initStorageSubMenu(c11c,"VSP.90873","VSP.90873");
         ObjectNode c12 = c1c.addObject();
         c12.put("id",12);
         c12.put("name","交换机");
         c12.put("url","");
-        c12.put("icon","storwize16");
+        c12.put("icon","iogroup16");
+        ArrayNode c12c = c12.putArray("children");
+        initSwitchSubMenu(c12c,"FW44","FW44");
+        initSwitchSubMenu(c12c,"hy_pro_sw9","hy_pro_sw9");
         ObjectNode c13 = c1c.addObject();
         c13.put("id",13);
         c13.put("name","主机");
         c13.put("url","");
-        c13.put("icon","unmanagedServer16");
+        c13.put("icon","cluster16");
+        ArrayNode c13c = c13.putArray("children");
+        initHostSubMenu(c13c,"BA0226","BA0226");
+        initHostSubMenu(c13c,"BA0126","BA0126");
         ObjectNode c2 = root.addObject();
         c2.put("id",2);
         c2.put("name","拓扑");
-        c2.put("url","");
+        c2.put("url","/topology");
         c2.put("icon","fa-sitemap");
         ObjectNode c3 = root.addObject();
         c3.put("id",3);
         c3.put("name","告警");
-        c3.put("url","");
+        c3.put("url","/alarm");
         c3.put("icon","fa-warning");
         ObjectNode c4 = root.addObject();
         c4.put("id",4);
         c4.put("name","报表");
-        c4.put("url","");
+        c4.put("url","/reports");
         c4.put("icon","fa-bar-chart-o");
         return ok(root);
     }
 
-    public static Result dashboard() {
-        return ok(dashboard.render());
+    private static void initStorageSubMenu(ArrayNode storages,String id,String name){
+        ObjectNode storage = storages.addObject();
+        storage.put("id",id);
+        storage.put("name",name);
+        storage.put("url","");
+        storage.put("icon","ds800016");
+        ArrayNode storageSub = storage.putArray("children");
+        ObjectNode dashboard = storageSub.addObject();
+        dashboard.put("id",110);
+        dashboard.put("name","概览");
+        dashboard.put("url","/storage?id="+id);
+        dashboard.put("icon","fa-dashboard");
+        ObjectNode port = storageSub.addObject();
+        port.put("id",111);
+        port.put("name","端口");
+        port.put("url","/storage/port?id="+id);
+        port.put("icon","port16");
+        ObjectNode raidgroup = storageSub.addObject();
+        raidgroup.put("id",112);
+        raidgroup.put("name","RaidGroup");
+        raidgroup.put("url","/storage/raidgroup?id="+id);
+        raidgroup.put("icon","pool16");
+        ObjectNode volume = storageSub.addObject();
+        volume.put("id",113);
+        volume.put("name","卷");
+        volume.put("url","/storage/volume?id="+id);
+        volume.put("icon","thinVolume16");
+        ObjectNode disk = storageSub.addObject();
+        disk.put("id",114);
+        disk.put("name","磁盘");
+        disk.put("url","/storage/disk?id="+id);
+        disk.put("icon","disk16");
     }
 
-    public static Result storage() {
-        return ok(storage.render());
+    private static void initSwitchSubMenu(ArrayNode switchs,String id,String name){
+        ObjectNode switch1 = switchs.addObject();
+        switch1.put("id",id);
+        switch1.put("name",name);
+        switch1.put("url","");
+        switch1.put("icon","storwize16");
+        ArrayNode switchSub = switch1.putArray("children");
+        ObjectNode dashboard = switchSub.addObject();
+        dashboard.put("id",110);
+        dashboard.put("name","概览");
+        dashboard.put("url","/switch?id="+id);
+        dashboard.put("icon","fa-dashboard");
+        ObjectNode port = switchSub.addObject();
+        port.put("id",111);
+        port.put("name","端口");
+        port.put("url","/switch/port?id="+id);
+        port.put("icon","zoneSet16");
+    }
+
+    private static void initHostSubMenu(ArrayNode hosts,String id,String name){
+        ObjectNode host = hosts.addObject();
+        host.put("id",id);
+        host.put("name",name);
+        host.put("url","");
+        host.put("icon","unmanagedServer16");
+        ArrayNode hostSub = host.putArray("children");
+        ObjectNode dashboard = hostSub.addObject();
+        dashboard.put("id",110);
+        dashboard.put("name","概览");
+        dashboard.put("url","/host?id="+id);
+        dashboard.put("icon","fa-dashboard");
+        ObjectNode port = hostSub.addObject();
+        port.put("id",111);
+        port.put("name","端口");
+        port.put("url","/host/port?id="+id);
+        port.put("icon","hba16");
+    }
+
+    public static Result dashboard() {
+        return ok(dashboard.render());
     }
 
 }
