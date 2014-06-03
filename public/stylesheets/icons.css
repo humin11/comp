@@ -12,7 +12,7 @@
 .unmanagedVM128, .unmanagedServer128, .userManagement128, .tier128, .dataCollection128, .dataStore128,
 .hypervisorCluster128, .specifyUser128, .volumeNotVisible128, .accessPort128, .mediaChanger128, .tapeLibrary128,
 .tapeDrive128, .poolMigration128{
-    background: transparent url("../images/Assets128.png") no-repeat center left;
+    background: transparent url("../images/icons128.png") no-repeat center left;
     width: 128px;
     height: 128px;
 }
@@ -429,7 +429,7 @@
 }
 
 .accessPort16, .alert16, .agent16, .blade16, .cartridge16, .cluster16, .clusterNode16, .computerDisk16, .config16, .computerController16, .controller16, .database16, .directory16, .dirGroup16, .disk16, .diskGroup16, .ds600016, .ds800016, .ethernet16, .ess80016, .export16, .fabric16, .fileset16, .fileSystem16, .frame16, .hba16, .hostConnections16, .hypervisor16, .jobs16, .iogroup16, .LDAP16, .logicalSwitch16, .mediaChanger16, .module16, .nas16, .node16, .offlinePort16, .other16, .switch16, .partner16, .path16, .pool16, .placeHolder16, .port16, .pool16, .raidArray16, .replication16, .report16, .san16, .schedule16, .server16, .session16, .shares16, .sonas16, .storageSystem16, .storwize16, .svc16, .tapeDrive16, .tapelibrary16, .thinVolume16, .unknown16, .vDisk16, .virtualFabric16, .vm16, .volume16, .xiv16, .zoneSet16, .nasCluster16, .clusterResourceGroup16, .sybase16, .db216, .oracle16, .sqlServer16, .repSession16, .repServer16, .repSubsystem16, .repPath16, .dbInstance16, .dbTablepace16, .dbTable16, .dbNetworkStorage16, .dbDevice16, .paused16, .storwizeV7000u16, .ds4k5k16, .addServerDisabledIcon16, .unmanagedServer16, .unmanagedVM16, .serviceClass16, .ssd16, .capacityPool16, .dataCollection16, .dataStore16, .hypervisorCluster16, .user16, .volumeNotVisible16, .discoveredServer16, .discoveredVM16, .performance16, .exportTable16 {
-    background: transparent url("../images/Assets16.png") no-repeat center left;
+    background: transparent url("../images/icons16.png") no-repeat center left;
     width: 16px;
     height: 16px;
 }
