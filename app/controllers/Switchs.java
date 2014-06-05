@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.TResPort;
 import models.TResSwitch;
 import models.TResVendor;
 import play.libs.Json;
@@ -25,6 +26,7 @@ public class Switchs extends Controller {
         String id = request().getQueryString("id");
         TResSwitch tResSwitch = TResSwitch.findById(id);
         ObjectNode device = (ObjectNode)Json.toJson(tResSwitch);
+        device.put("N_PORT", TResPort.findBySubsystemId(id).size());
         return ok(views.html.switchs.summary.render(device));
     }
 

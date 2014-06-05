@@ -39,6 +39,8 @@ public class Datatables extends Controller {
             options = getVolumeCfg(id);
         else if("cfg_disk".equals(model))
             options = getDiskCfg(id);
+        else if("cfg_port".equals(model))
+            options = getPortCfg(id);
         else if("alarm".equals(model))
             options = getAlarm(id, title, start_time, end_time);
         return ok(options);
@@ -106,6 +108,24 @@ public class Datatables extends Controller {
             obj.add(Format.splitWWN(port.NAME));
             obj.add(port.USAGE_RESTRICTION == null ? "FICON": "Fibre");
             obj.add(port.PORT_NUMBER == null ? "no data" : port.PORT_NUMBER);
+            obj.add(port.PORT_SPEED == null ? "no data" : Format.parserCapacity(port.PORT_SPEED));
+        }
+        return options;
+    }
+
+    private static ObjectNode getPortCfg(String id) {
+        String[] kpiColumns = {"WWN","端口号","类型","Speed"};
+        List<TResPort> ports = TResPort.findBySubsystemId(id);
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for(TResPort port : ports){
+            ArrayNode obj = rows.addArray();
+            obj.add(Format.splitWWN(port.NAME));
+            obj.add(port.PORT_NUMBER == null ? "no data" : port.PORT_NUMBER);
+            obj.add("Fibre");
             obj.add(port.PORT_SPEED == null ? "no data" : Format.parserCapacity(port.PORT_SPEED));
         }
         return options;

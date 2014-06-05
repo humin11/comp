@@ -1,1 +1,34 @@
 @(device:com.fasterxml.jackson.databind.node.ObjectNode)
+
+<script type="text/javascript">
+    $(function () {
+        var id = '@device.get("ID").asText()';
+    });
+</script>
+<div class="row">
+    <div class="col-sm-3 col-md-3">
+        <div class="stat-panel text-center">
+            <div class="stat-row">
+                <div class="stat-cell col-sm-4 padding-sm-hr bordered valign-top">
+                    <ul class="list-group no-margin">
+                        <li class="list-group-item no-border-hr no-border-t padding-xs-hr no-bg no-border-radius">
+                            <span class="col-sm-4 label label-pa-purple pull-left">IP地址</span> @device.get("IP_ADDRESS").asText()
+                        </li>
+                        <li class="list-group-item no-border-hr no-border-b padding-xs-hr no-bg">
+                            <span class="col-sm-4 label label-pa-purple pull-left">序列号</span> @device.get("SERIAL_NUMBER").asText()
+                        </li>
+                        <li class="list-group-item no-border-hr padding-xs-hr no-bg">
+                            <span class="col-sm-4 label label-pa-purple pull-left">Domain</span> @device.get("DOMAIN").asText()
+                        </li>
+                        <li class="list-group-item no-border-hr no-border-b padding-xs-hr no-bg">
+                            <span class="col-sm-4 label label-pa-purple pull-left">版本</span> @device.get("VERSION").asText()
+                        </li>
+                        <li class="list-group-item no-border-hr no-border-b padding-xs-hr no-bg">
+                            <span class="col-sm-4 label label-pa-purple pull-left">端口数量</span> @device.get("N_PORT").asText()
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
