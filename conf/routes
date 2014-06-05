@@ -6,6 +6,7 @@
 GET        /                          controllers.Application.index()
 GET        /menu                      controllers.Application.menu()
 GET        /dashboard                 controllers.Application.dashboard()
+GET        /alarm                     controllers.Application.alarm()
 GET        /storage                   controllers.Storages.index()
 GET        /storage/summary           controllers.Storages.summary()
 GET        /storage/port              controllers.Storages.port()

@@ -12,6 +12,7 @@ public class Storages extends Controller {
         ObjectNode subsystem = Json.newObject();
         subsystem.put("id",id);
         subsystem.put("name",id);
+        subsystem.put("icon","hitachi_small.png");
         return ok(views.html.storage.index.render(subsystem));
     }
 

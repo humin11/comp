@@ -153,4 +153,6 @@ public class Application extends Controller {
         return ok(dashboard.render());
     }
 
+    public static Result alarm() { return ok(alarm.render()); }
+
 }

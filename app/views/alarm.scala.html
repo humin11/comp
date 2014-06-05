@@ -1,0 +1,18 @@
+@main("Alarm") {
+    <script type="text/javascript">
+        $(function () {
+            initTable('@routes.Datatables.options()','table1','alarm',20);
+        });
+    </script>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="stat-panel text-center">
+                <div class="stat-row">
+                    <div class="stat-cell bordered no-border-t no-padding" id="table1" style="height: 500px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

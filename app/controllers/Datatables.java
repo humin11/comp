@@ -32,6 +32,8 @@ public class Datatables extends Controller {
             options = getFCPortPrf(id,title,start_time,end_time);
         else if("cfg_fcport".equals(model))
             options = getFCPortCfg(id,title);
+        else if("alarm".equals(model))
+            options = getAlarm(id,title,start_time,end_time);
         return ok(options);
     }
 
@@ -128,6 +130,32 @@ public class Datatables extends Controller {
                 for (String colname : kpiColumns)
                     obj.add(random.nextInt(130));
             }
+        }
+        return options;
+    }
+
+    private static ObjectNode getAlarm(String id, String title, String start_time, String end_time) {
+        String[] testSubsystems = {"USPV.29846", "USPV.29416", "VSP.90873"};
+        String[] severity = {"Fatal","Critical","Major","Minor","Warning"};
+        String[] colors = {"btn-dark-gray","btn-danger","btn-warning","btn-info","btn-light-green"};
+        int count = 100;
+        Random random = new Random();
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        cols.add("设备");
+        cols.add("级别");
+        cols.add("描述");
+        cols.add("分类");
+        cols.add("开始时间");
+        for(int i = 0; i < count; i++){
+            ArrayNode obj = rows.addArray();
+            obj.add(testSubsystems[random.nextInt(3)]);
+            int r = random.nextInt(5);
+            obj.add("<a class='btn btn-sm "+colors[r]+" btn-labeled'>"+severity[r]+"</a>");
+            obj.add("V1TRAP[reqestID=0,timestamp=0:00:43.14,enterprise=1.3.6.1.4.1.232,genericTrap=6,specificTrap=3034, VBS[1.3.6.1.2.1.1.5.0 = STOR_HY_SERVER1;");
+            obj.add("Storage");
+            obj.add(Format.parseString(new Date(),"yyyy-MM-dd HH:mm:ss"));
         }
         return options;
     }
