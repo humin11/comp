@@ -1,9 +1,11 @@
-@(subsystem:com.fasterxml.jackson.databind.node.ObjectNode)
+@(id:String,model:String,count:Int = 10)
 
 <script type="text/javascript">
     $(function () {
-        var id = '@subsystem.get("id").asText()';
-        initTable('@routes.Datatables.options()','table1','cfg_fcport',10,id);
+        var id = '@id';
+        var model = '@model';
+        var count = @count;
+        initTable('@routes.Datatables.options()','table1',model,count,id);
     });
 </script>
 

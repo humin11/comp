@@ -83,7 +83,7 @@ public class Application extends Controller {
         dashboard.put("id",110);
         dashboard.put("name","概览");
         dashboard.put("url","/storage?id="+id);
-        dashboard.put("icon","schedule16");
+        dashboard.put("icon","fa-dashboard");
         ObjectNode port = storageSub.addObject();
         port.put("id",111);
         port.put("name","端口");
@@ -154,5 +154,9 @@ public class Application extends Controller {
     }
 
     public static Result alarm() { return ok(alarm.render()); }
+
+    public static Result reports() { return ok(report.render()); }
+
+    public static Result topology() { return ok(topology.render()); }
 
 }

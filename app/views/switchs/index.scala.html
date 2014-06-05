@@ -1,0 +1,44 @@
+@(device:com.fasterxml.jackson.databind.node.ObjectNode)
+
+@main("Storage") {
+    <script type="text/javascript">
+        $(function () {
+            var id = '@device.get("id").asText()';
+            var container = $('#page-content');
+            $.each($('.components a'),function(idx,obj){
+                $(obj).click(function(){
+                    $('.components a').removeClass('btn-success');
+                    $('.components a').addClass('btn-pa-purple');
+                    $(this).removeClass('btn-pa-purple');
+                    $(this).addClass('btn-success');
+                    if($(this).attr('id') == 'summaryBtn')
+                        container.load('@{routes.Switchs.summary()}?id='+id);
+                    else if($(this).attr('id') == 'portBtn')
+                        container.load('@{routes.Switchs.port()}?id='+id);
+                });
+            });
+            container.load('@{routes.Switchs.summary()}?id='+id);
+        });
+    </script>
+    <ul class="breadcrumb breadcrumb-page">
+        <div class="breadcrumb-label text-light-gray">You are here: </div>
+        <li><a href="#">Switch</a></li>
+        <li class="active"><a href="#">@device.get("name").asText()</a></li>
+    </ul>
+    <div class="page-header">
+
+        <div class="row">
+            <h1 class="col-xs-12 col-sm-4 text-center text-left-sm">
+            <img src="assets/images/vendor/@device.get("icon").asText()">&nbsp;&nbsp;@device.get("name").asText()</h1>
+            <div class="col-xs-12 col-sm-8">
+                <div class="row components">
+                    <a id="summaryBtn" href="#" class="btn btn-success btn-labeled"><div class="icon fa fa-dashboard" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Summary</a>
+                    <a id="portBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa zoneSet16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Port</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="page-content">
+
+    </div>
+}

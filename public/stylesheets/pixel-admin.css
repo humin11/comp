@@ -5813,6 +5813,7 @@ body.no-main-menu #main-navbar .navbar-inner {
   border-bottom-width: 2px !important;
 }
 .btn.btn-labeled {
+  max-height: 31px;
   position: relative;
 }
 .btn.btn-labeled .btn-label {
