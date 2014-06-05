@@ -9,7 +9,8 @@
  */
 package models;
 
-import models.core.Model;
+import models.core.ResModel;
+import play.db.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -31,6 +32,15 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name="T_RES_VENDOR",uniqueConstraints={@UniqueConstraint(columnNames={"NAME"})})
-public class TResVendor extends Model {
+public class TResVendor extends models.core.Model {
 	public String VENDOR_DESCRIPTION;
+
+    public static Model.Finder<String, TResVendor> find = new Model.Finder<String, TResVendor>(
+            String.class, TResVendor.class
+    );
+
+    public static TResVendor findById(String id){
+        return find.byId(id);
+    }
+
 }

@@ -2,10 +2,12 @@
     <script type="text/javascript">
         $(function () {
             $('#kpi-timerange').datepicker({format:'yyyy-mm-dd 00:00',forceParse:false});
-            initChart('@routes.Charts.options()','chart1','subsystem','iops');
-            initChart('@routes.Charts.options()','chart2','subsystem','capacity');
-            initChart('@routes.Charts.options()','chart3','subsystem','cache_hits');
-            initChart('@routes.Charts.options()','chart4','subsystem','response_time');
+            initChart('@routes.Charts.options()','chart1','subsystem','chp_usage','avg','平均值');
+            initChart('@routes.Charts.options()','chart2','subsystem','pg_response','sum','总和');
+            initChart('@routes.Charts.options()','chart3','subsystem','capacity');
+            initChart('@routes.Charts.options()','chart4','subsystem','pg_io','sum','总和');
+            initChart('@routes.Charts.options()','chart5','subsystem','pg_usage','max','最大值');
+            initChart('@routes.Charts.options()','chart6','subsystem','cache_write_pending','max','最大值');
         });
     </script>
     <ul class="breadcrumb breadcrumb-page">
@@ -41,11 +43,11 @@
 
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Overall IOPS
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Overall CHP Usage (%)
                     </div>
                 </div>
                 <div class="stat-row">
@@ -54,7 +56,20 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <div class="stat-panel text-center">
+                <div class="stat-row">
+                    <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Overall RaidGroup Response ( ms )
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <div class="stat-cell bordered no-border-t no-padding-hr" id="chart2" style="height: 300px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
@@ -62,35 +77,48 @@
                     </div>
                 </div>
                 <div class="stat-row">
-                    <div class="stat-cell bordered no-border-t no-padding" id="chart2" style="height: 300px">
+                    <div class="stat-cell bordered no-border-t no-padding" id="chart3" style="height: 300px">
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="stat-panel text-center">
                 <div class="stat-row">
                     <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Overall Cache Hits ( % )
-                    </div>
-                </div>
-                <div class="stat-row">
-                    <div class="stat-cell bordered no-border-t no-padding-hr" id="chart3" style="height: 300px">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="stat-panel text-center">
-                <div class="stat-row">
-                    <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Overall Response Time ( ms )
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Overall RaidGroup IOPS
                     </div>
                 </div>
                 <div class="stat-row">
                     <div class="stat-cell bordered no-border-t no-padding-hr" id="chart4" style="height: 300px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-panel text-center">
+                <div class="stat-row">
+                    <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Overall RaidGroup Usage (%)
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <div class="stat-cell bordered no-border-t no-padding-hr" id="chart5" style="height: 300px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-panel text-center">
+                <div class="stat-row">
+                    <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                        <i class="fa fa-cloud"></i>&nbsp;&nbsp;Overall Cache Write Pending ( % )
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <div class="stat-cell bordered no-border-t no-padding-hr" id="chart6" style="height: 300px">
                     </div>
                 </div>
             </div>

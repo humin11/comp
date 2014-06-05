@@ -63,7 +63,7 @@ public class Reports extends Controller {
         }
         String today = Format.parseString(new Date(),"yyyy年MM月dd日");
         result = result.replaceAll(Pattern.quote("${timerange}"), today);
-        String chartPNG = Highcharts.export(Charts.line("", "IO Usage", "", "", "", ""));
+        String chartPNG = Highcharts.export(Charts.line("", "IO Usage", "","", "", "", ""));
         result = result.replaceAll(Pattern.quote("${chart1}"), chartPNG);
         return result;
     }

@@ -3,7 +3,7 @@
 @main("Storage") {
     <script type="text/javascript">
         $(function () {
-            var id = '@device.get("id").asText()';
+            var id = '@device.get("ID").asText()';
             var container = $('#page-content');
             $.each($('.components a'),function(idx,obj){
                 $(obj).click(function(){
@@ -23,13 +23,13 @@
     <ul class="breadcrumb breadcrumb-page">
         <div class="breadcrumb-label text-light-gray">You are here: </div>
         <li><a href="#">Switch</a></li>
-        <li class="active"><a href="#">@device.get("name").asText()</a></li>
+        <li class="active"><a href="#">@device.get("ELEMENT_NAME").asText()</a></li>
     </ul>
     <div class="page-header">
 
         <div class="row">
             <h1 class="col-xs-12 col-sm-4 text-center text-left-sm">
-            <img src="assets/images/vendor/@device.get("icon").asText()">&nbsp;&nbsp;@device.get("name").asText()</h1>
+            <img src="assets/images/vendor/@device.get("ICON").asText()">&nbsp;&nbsp;@device.get("ELEMENT_NAME").asText() ( @device.get("IP_ADDRESS").asText() )</h1>
             <div class="col-xs-12 col-sm-8">
                 <div class="row components">
                     <a id="summaryBtn" href="#" class="btn btn-success btn-labeled"><div class="icon fa fa-dashboard" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Summary</a>

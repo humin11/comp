@@ -10,10 +10,12 @@
 package models;
 
 import models.core.ResModel;
+import play.db.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.util.List;
 
 /**
  * 
@@ -69,4 +71,18 @@ public class TResHost extends ResModel {
 	public Integer CPU_MHZ;
 	public Integer CPU_USAGE;
 	public String USER_ATTRIB4;
+
+    public static Model.Finder<String, TResHost> find = new Model.Finder<String, TResHost>(
+            String.class, TResHost.class
+    );
+
+    public static List<TResHost> findAll() { return find.all(); }
+
+    public static List<TResHost> find(String hql) {
+        return find.where(hql).findList();
+    }
+
+    public static TResHost findById(String id) {
+        return find.byId(id);
+    }
 }

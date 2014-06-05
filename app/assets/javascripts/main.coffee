@@ -31,7 +31,7 @@ Highcharts.setOptions(
     for child in node.children
       fetchMenu(child,ul)
 
-@initChart = (url,container,kpi,sub_kpi,title = '',id = '',start_time = '',end_time = '') ->
+@initChart = (url,container,kpi,sub_kpi,math = 'max',title = '',id = '',start_time = '',end_time = '') ->
   $.ajax(
     cache:false
     dataType: "json"
@@ -42,6 +42,7 @@ Highcharts.setOptions(
       title: title
       kpi: kpi
       sub_kpi: sub_kpi
+      math: math
       start_time: start_time
       end_time: end_time
     success: (json) ->

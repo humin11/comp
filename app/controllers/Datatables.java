@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.*;
 import play.libs.Json;
 import play.mvc.*;
 import utils.Format;
@@ -31,17 +32,15 @@ public class Datatables extends Controller {
         else if("prf_fcport".equals(model))
             options = getFCPortPrf(id,title,start_time,end_time);
         else if("cfg_fcport".equals(model))
-            options = getFCPortCfg(id,title);
-        else if("cfg_cache".equals(model))
-            options = getFCPortCfg(id,title);
+            options = getFCPortCfg(id);
         else if("cfg_raidgroup".equals(model))
-            options = getFCPortCfg(id,title);
+            options = getRaidGroupCfg(id);
         else if("cfg_volume".equals(model))
-            options = getFCPortCfg(id,title);
+            options = getVolumeCfg(id);
         else if("cfg_disk".equals(model))
-            options = getFCPortCfg(id,title);
+            options = getDiskCfg(id);
         else if("alarm".equals(model))
-            options = getAlarm(id,title,start_time,end_time);
+            options = getAlarm(id, title, start_time, end_time);
         return ok(options);
     }
 
@@ -93,26 +92,82 @@ public class Datatables extends Controller {
         return options;
     }
 
-    private static ObjectNode getFCPortCfg(String id, String title) {
-        String[] kpiColumns = {"Name","WWN","Type","Speed","Role","Number of LDEVs"};
-        String chpNum = "ABCDE";
-        Random random = new Random();
+    private static ObjectNode getFCPortCfg(String id) {
+        String[] kpiColumns = {"名称","WWN","类型","端口号","Speed"};
+        List<TResPort> ports = TResPort.findBySubsystemId(id);
         ObjectNode options = Json.newObject();
         ArrayNode cols = options.putArray("cols");
         ArrayNode rows = options.putArray("rows");
         for (String colname : kpiColumns)
             cols.add(colname);
-        for (int i=1;i < 10;i++) {
-            for (int j = 0; j < chpNum.length(); j++) {
-                String name = "CL" + i + "-" + chpNum.charAt(j);
-                ArrayNode obj = rows.addArray();
-                obj.add(name);
-                obj.add("50:06:0E:80:05:74:96:"+i+chpNum.charAt(j));
-                obj.add("FICON");
-                obj.add("Unknown");
-                obj.add("Initiator");
-                obj.add(random.nextInt(30));
-            }
+        for(TResPort port : ports){
+            ArrayNode obj = rows.addArray();
+            obj.add(port.ELEMENT_NAME);
+            obj.add(Format.splitWWN(port.NAME));
+            obj.add(port.USAGE_RESTRICTION == null ? "FICON": "Fibre");
+            obj.add(port.PORT_NUMBER == null ? "no data" : port.PORT_NUMBER);
+            obj.add(port.PORT_SPEED == null ? "no data" : Format.parserCapacity(port.PORT_SPEED));
+        }
+        return options;
+    }
+
+    private static ObjectNode getRaidGroupCfg(String id) {
+        String[] kpiColumns = {"名称","Raid Level","容量","类型","卷数量"};
+        List<TResRaidGroup> raidgroups = TResRaidGroup.findBySubsystemId(id);
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for(TResRaidGroup raidgroup : raidgroups){
+            ArrayNode obj = rows.addArray();
+            obj.add(raidgroup.NAME);
+            obj.add(raidgroup.RAID_LEVEL);
+            obj.add(Format.parserCapacity(raidgroup.DDM_CAP));
+            obj.add("FC");
+            obj.add(TResRaidGroup2Vol.countByRaidGroupId(raidgroup.ID));
+        }
+        return options;
+    }
+
+    private static ObjectNode getVolumeCfg(String id) {
+        String[] kpiColumns = {"名称","Raid Level","容量","类型","Raid组","Num of Blocks"};
+        List<TResStorageVolume> volumes = TResStorageVolume.findBySubsystemId(id);
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for(TResStorageVolume volume : volumes){
+            ArrayNode obj = rows.addArray();
+            obj.add(volume.NAME);
+            obj.add(volume.RAID_LEVEL == null ? "no data":volume.RAID_LEVEL);
+            obj.add(Format.parserCapacity(volume.CAPACITY));
+            obj.add("FC");
+            TResRaidGroup2Vol rd2v = null;
+            obj.add(rd2v == null ? "no data" : TResRaidGroup.findById(rd2v.RAIDGROUP_ID).NAME);
+            obj.add(volume.NUMBER_OF_BLOCKS == null?"no data":volume.NUMBER_OF_BLOCKS+"");
+        }
+        return options;
+    }
+
+    private static ObjectNode getDiskCfg(String id) {
+        String[] kpiColumns = {"名称","Raid Level","容量","类型","厂商","序列号","Slot"};
+        List<TResDisk> disks = TResDisk.findBySubsystemId(id);
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for(TResDisk disk : disks){
+            ArrayNode obj = rows.addArray();
+            obj.add(disk.NAME);
+            obj.add(disk.RAID_LEVEL == null ? "no data":disk.RAID_LEVEL);
+            obj.add(Format.parserCapacity(disk.CAPACITY));
+            obj.add("FC");
+            obj.add(TResVendor.findById(disk.VENDOR_ID).NAME);
+            obj.add(disk.SERIAL_NUMBER);
+            obj.add(disk.SLOT);
         }
         return options;
     }

@@ -3,7 +3,7 @@
 @main("Storage") {
     <script type="text/javascript">
         $(function () {
-            var id = '@device.get("id").asText()';
+            var id = '@device.get("ID").asText()';
             var container = $('#page-content');
             $.each($('.components a'),function(idx,obj){
                 $(obj).click(function(){
@@ -31,21 +31,21 @@
     <ul class="breadcrumb breadcrumb-page">
         <div class="breadcrumb-label text-light-gray">You are here: </div>
         <li><a href="#">Storage</a></li>
-        <li class="active"><a href="#">@device.get("name").asText()</a></li>
+        <li class="active"><a href="#">@device.get("NAME").asText()</a></li>
     </ul>
     <div class="page-header">
 
         <div class="row">
             <h1 class="col-xs-12 col-sm-4 text-center text-left-sm">
-            <img src="assets/images/vendor/@device.get("icon").asText()">&nbsp;&nbsp;@device.get("name").asText()</h1>
+            <img src="assets/images/vendor/@device.get("ICON").asText()">&nbsp;&nbsp;@device.get("NAME").asText()</h1>
             <div class="col-xs-12 col-sm-8">
                 <div class="row components">
-                    <a id="summaryBtn" href="#" class="btn btn-success btn-labeled"><div class="icon fa fa-dashboard" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Summary</a>
-                    <a id="portBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa port16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Port</a>
-                    <a id="cacheBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa database16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Cache</a>
-                    <a id="raidgroupBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa pool16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;RaidGroup</a>
-                    <a id="volumeBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa thinVolume16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Volume</a>
-                    <a id="diskBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa disk16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Disk</a>
+                    <a id="summaryBtn" href="#" class="btn btn-success btn-labeled"><div class="icon fa fa-dashboard" style="margin-bottom: -3px"></div>&nbsp;&nbsp;概述</a>
+                    <a id="portBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa port16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;端口</a>
+                    <a id="cacheBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa database16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;缓存</a>
+                    <a id="raidgroupBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa pool16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Raid组</a>
+                    <a id="volumeBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa thinVolume16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;卷</a>
+                    <a id="diskBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa disk16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;磁盘</a>
                 </div>
             </div>
         </div>

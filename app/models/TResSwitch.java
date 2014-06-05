@@ -10,10 +10,12 @@
 package models;
 
 import models.core.ResModel;
+import play.db.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.util.List;
 
 /**
  * 
@@ -50,4 +52,18 @@ public class TResSwitch extends ResModel {
 	public String DEDICATED;
 	public Short SWITCH_MODE;
 	public String PHYSICAL_PACKAGE_ID;
+
+    public static Model.Finder<String, TResSwitch> find = new Model.Finder<String, TResSwitch>(
+            String.class, TResSwitch.class
+    );
+
+    public static List<TResSwitch> findAll() { return find.all(); }
+
+    public static List<TResSwitch> find(String hql) {
+        return find.where(hql).findList();
+    }
+
+    public static TResSwitch findById(String id) {
+        return find.byId(id);
+    }
 }

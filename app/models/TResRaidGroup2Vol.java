@@ -9,7 +9,10 @@
  */
 package models;
 
+import play.db.ebean.Model;
+
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -40,4 +43,16 @@ public class TResRaidGroup2Vol {
 	public Timestamp CREATE_TIME;
 	public Timestamp UPDATE_TIME;
 	public Short OPERATIONAL_STATUS;
+
+    public static Model.Finder<String, TResRaidGroup2Vol> find = new Model.Finder<String, TResRaidGroup2Vol>(
+            String.class, TResRaidGroup2Vol.class
+    );
+
+    public static int countByRaidGroupId(String raidgroupId){
+        return find.where().eq("RAIDGROUP_ID",raidgroupId).findRowCount();
+    }
+
+    public static TResRaidGroup2Vol findByVolumeId(String volumeId){
+        return find.where().eq("VOLUME_ID",volumeId).findUnique();
+    }
 }

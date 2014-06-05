@@ -2,12 +2,12 @@
 
 <script type="text/javascript">
     $(function () {
-        var id = '@subsystem.get("id").asText()';
-        initChart('@routes.Charts.options()','chart1','subsystem','capacity','',id);
-        initChart('@routes.Charts.options()','chart2','subsystem','iops','',id);
-        initChart('@routes.Charts.options()','chart3','subsystem','transfer','',id);
-        initChart('@routes.Charts.options()','chart4','subsystem_raidgroup_topn','usage','',id);
-        initChart('@routes.Charts.options()','chart5','subsystem_raidgroup_topn','response','',id);
+        var id = '@subsystem.get("ID").asText()';
+        initChart('@routes.Charts.options()','chart1','subsystem','capacity','sum','',id);
+        initChart('@routes.Charts.options()','chart2','subsystem','pg_io','sum','',id);
+        initChart('@routes.Charts.options()','chart3','subsystem','pg_transfer','sum','',id);
+        initChart('@routes.Charts.options()','chart4','subsystem_topn','pg_io','max','',id);
+        initChart('@routes.Charts.options()','chart5','subsystem_topn','pg_response','max','',id);
         initTable('@routes.Datatables.options()','table2','prf_fcport');
         initTable('@routes.Datatables.options()','table1','prf_raidgroup',10);
     });
@@ -18,20 +18,20 @@
             <div class="stat-row">
                 <div class="stat-cell col-sm-4 padding-sm-hr bordered valign-top">
                     <ul class="list-group no-margin">
-                        <li class="list-group-item no-border-hr padding-xs-hr no-bg">
-                            <span class="label label-pa-purple pull-left">IP地址</span> 11.28.68.81
-                        </li>
                         <li class="list-group-item no-border-hr no-border-t padding-xs-hr no-bg no-border-radius">
-                            <span class="label label-pa-purple pull-left">序列号</span> 29846
+                            <span class="col-sm-4 label label-pa-purple pull-left">IP地址</span> @subsystem.get("IP_ADDRESS").asText()
+                        </li>
+                        <li class="list-group-item no-border-hr padding-xs-hr no-bg">
+                            <span class="col-sm-4 label label-pa-purple pull-left">序列号</span> @subsystem.get("SERIAL_NUMBER").asText()
                         </li>
                         <li class="list-group-item no-border-hr no-border-b padding-xs-hr no-bg">
-                            <span class="label label-pa-purple pull-left">微码版本</span> 06.60.02.00
+                            <span class="col-sm-4 label label-pa-purple pull-left">RaidGroup</span> @subsystem.get("N_RAIDGROUP").asText()
                         </li>
                         <li class="list-group-item no-border-hr no-border-b padding-xs-hr no-bg">
-                            <span class="label label-pa-purple pull-left">设备地点</span> 海鹰机房103
+                            <span class="col-sm-4 label label-pa-purple pull-left">卷</span> @subsystem.get("N_VOL").asText()
                         </li>
                         <li class="list-group-item no-border-hr no-border-b padding-xs-hr no-bg">
-                            <span class="label label-pa-purple pull-left">管理员电话</span> 37842912
+                            <span class="col-sm-4 label label-pa-purple pull-left">磁盘</span> @subsystem.get("N_DISK").asText()
                         </li>
                     </ul>
                 </div>
@@ -84,7 +84,7 @@
         <div class="stat-panel text-center">
             <div class="stat-row">
                 <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                    <i class="fa fa-cube"></i>&nbsp;&nbsp;Top 10 RaidGroup by Usage (Last 24 hours)
+                    <i class="fa fa-cube"></i>&nbsp;&nbsp;Top 10 RaidGroup by IOPS (Last 24 hours)
                 </div>
             </div>
             <div class="stat-row">

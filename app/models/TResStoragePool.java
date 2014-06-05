@@ -10,10 +10,12 @@
 package models;
 
 import models.core.ResModel;
+import play.db.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.util.List;
 
 /**
  *
@@ -72,4 +74,16 @@ public class TResStoragePool extends ResModel {
 	public Short IS_ENCRYPTED;
 	public Short IS_ENCRYPTABLE;
 	public Short IS_SOLID_STATE;
+
+    public static Model.Finder<String, TResStoragePool> find = new Model.Finder<String, TResStoragePool>(
+            String.class, TResStoragePool.class
+    );
+
+    public static List<TResStoragePool> findBySubsystemId(String subsystemId){
+        return find.where().eq("SUBSYSTEM_ID",subsystemId).findList();
+    }
+
+    public static TResStoragePool findById(String id){
+        return find.byId(id);
+    }
 }
