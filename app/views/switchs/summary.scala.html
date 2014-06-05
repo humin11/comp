@@ -3,10 +3,13 @@
 <script type="text/javascript">
     $(function () {
         var id = '@device.get("ID").asText()';
+        initChart('@routes.Charts.options()','chart1','switchs','pkgs','sum','',id);
+        initChart('@routes.Charts.options()','chart2','switchs','kb','sum','',id);
+        initTable('@routes.Datatables.options()','table2','cfg_port',10,id);
     });
 </script>
 <div class="row">
-    <div class="col-sm-3 col-md-3">
+    <div class="col-sm-4 col-md-4">
         <div class="stat-panel text-center">
             <div class="stat-row">
                 <div class="stat-cell col-sm-4 padding-sm-hr bordered valign-top">
@@ -31,4 +34,45 @@
             </div>
         </div>
     </div>
+    <div class="col-sm-4 col-md-4">
+        <div class="stat-panel text-center">
+            <div class="stat-row">
+                <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                    <i class="fa fa-cloud"></i>&nbsp;&nbsp;包流量 (Last 24 hours)
+                </div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-cell bordered no-border-t no-padding" id="chart1" style="height: 200px">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 col-md-4">
+        <div class="stat-panel text-center">
+            <div class="stat-row">
+                <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                    <i class="fa fa-cloud"></i>&nbsp;&nbsp;数据流量 (Last 24 hours)
+                </div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-cell bordered no-border-t no-padding" id="chart2" style="height: 200px">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<div class="row">
+     <div class="col-sm-12 col-md-12">
+        <div class="stat-panel text-center">
+            <div class="stat-row">
+                <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                    <i class="fa fa-cube"></i>&nbsp;&nbsp;端口列表
+                </div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-cell bordered no-border-t no-padding" id="table2" style="height: 300px">
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>

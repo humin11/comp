@@ -6,7 +6,9 @@ import com.avaje.ebean.SqlRow;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.TResRaidGroup;
 import models.TResStorageSubsystem;
+import models.TResSwitch;
 import play.libs.Json;
 import play.mvc.*;
 import utils.Format;
@@ -64,6 +66,8 @@ public class Charts extends Controller {
             getSubsystemPrf(id, sub_kpi,math, start_time, end_time, series);
         else if("raidgroup".equalsIgnoreCase(kpi))
             getRaidGroupPrf(id, sub_kpi, start_time, end_time, series);
+        else if("switchs".equalsIgnoreCase(kpi))
+            getSwitchPrf(id, sub_kpi, start_time, end_time, series);
         return options;
     }
 
@@ -315,31 +319,71 @@ public class Charts extends Controller {
         SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
         List<SqlRow> results = sqlQuery.findList();
         for(SqlRow row : results){
-            ObjectNode serie = serieMap.get(row.getString("ID"));
-            ArrayNode data = (ArrayNode)serie.findValue("data");
-            ObjectNode xy = data.addObject();
-            xy.put("x",row.getLong("DEV_TIME"));
-            xy.put("y",row.getDouble("VAL"));
+            if(serieMap.containsKey(row.getString("ID"))) {
+                ObjectNode serie = serieMap.get(row.getString("ID"));
+                ArrayNode data = (ArrayNode) serie.findValue("data");
+                ObjectNode xy = data.addObject();
+                xy.put("x", row.getLong("DEV_TIME"));
+                xy.put("y", row.getDouble("VAL"));
+            }
         }
     }
 
     private static void getRaidGroupPrf(String id, String sub_kpi, String start_time, String end_time, ArrayNode series) {
-        long testStartTime = 1400480760000L;
-        long interval = 60000;
-        int count = 60;
-        Random random = new Random();
-        for (int i=1;i < 5;i++) {
-            for (int j=1;j<5;j++){
-                String name = "1-"+i+"-"+j;
-                ObjectNode serie = series.addObject();
-                serie.put("id", name);
-                serie.put("name", name);
-                ArrayNode data = serie.putArray("data");
-                for (int k = 0; k < count; k++){
-                    ObjectNode xy = data.addObject();
-                    xy.put("x",testStartTime +  k * interval);
-                    xy.put("y",random.nextInt(130));
-                }
+        HashMap<String,ObjectNode> serieMap = new HashMap<String,ObjectNode>();
+        List<TResRaidGroup> rdList = TResRaidGroup.findBySubsystemId(id);
+        for (TResRaidGroup rd : rdList) {
+            ObjectNode serie = series.addObject();
+            serie.put("id", rd.ID);
+            serie.put("name", rd.NAME);
+            serie.putArray("data");
+            serieMap.put(rd.ID, serie);
+        }
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, -2);
+        String startTime = c.getTimeInMillis()+"";
+        String endTime = "";
+        if(!start_time.equals("")){
+            startTime = Format.parseDate(start_time,"yyyyMMddHHmm").getTime()+"";
+        }
+        if(!end_time.equals("")) {
+            endTime = Format.parseDate(end_time, "yyyyMMddHHmm").getTime()+"";
+        }
+        String timescope = " and c.DEV_TIME>"+startTime;
+        if(!"".equals(endTime))
+            timescope += (" and c.DEV_TIME<"+endTime);
+        String column = "c.UTILIZATION";
+        if("usage".equalsIgnoreCase(sub_kpi)){
+            column = "c.UTILIZATION";
+        }else if("io".equalsIgnoreCase(sub_kpi)){
+            column = "c.TOTAL_IO";
+        }else if("io".equalsIgnoreCase(sub_kpi)){
+            column = "c.TOTAL_IO";
+        }else if("transfer".equalsIgnoreCase(sub_kpi)){
+            column = "c.TOTAL_KB";
+        }else if("response".equalsIgnoreCase(sub_kpi)){
+            column = "c.TOTAL_TIME";
+        }else if("response".equalsIgnoreCase(sub_kpi)){
+            column = "c.TOTAL_TIME";
+        }else if("read_hits".equalsIgnoreCase(sub_kpi)){
+            column = "c.READ_HITS";
+        }else if("write_hits".equalsIgnoreCase(sub_kpi)){
+            column = "c.WRITE_HITS";
+        }
+        String sql = "select c.DEV_TIME,c.ELEMENT_ID,"+column+" as VAL " +
+                "from T_Prf_Dsraidgroup c "+
+                "where c.SUBSYSTEM_ID='"+id+"' " +
+                timescope +
+                " order by c.DEV_TIME,c.ELEMENT_ID asc";
+        SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+        List<SqlRow> results = sqlQuery.findList();
+        for(SqlRow row : results){
+            if(serieMap.containsKey(row.getString("ELEMENT_ID"))) {
+                ObjectNode serie = serieMap.get(row.getString("ELEMENT_ID"));
+                ArrayNode data = (ArrayNode) serie.findValue("data");
+                ObjectNode xy = data.addObject();
+                xy.put("x", row.getLong("DEV_TIME"));
+                xy.put("y", row.getDouble("VAL"));
             }
         }
     }
@@ -400,7 +444,6 @@ public class Charts extends Controller {
                 idscope +
                 " group by b.ID,b.NAME " +
                 "order by VAL desc";
-            System.out.println(sql);
         }else if("chp_usage".equalsIgnoreCase(sub_kpi)||"dkp_usage".equalsIgnoreCase(sub_kpi)){
             if("chp_usage".equalsIgnoreCase(sub_kpi)) {
                 column = "ROUND("+math+"(c.UTILIZATION),1)";
@@ -426,6 +469,59 @@ public class Charts extends Controller {
         for(SqlRow row : results){
             categories.add(row.getString("NAME"));
             data.add(row.getDouble("VAL"));
+        }
+    }
+
+    private static void getSwitchPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, -20);
+        String startTime = c.getTimeInMillis()+"";
+        String endTime = "";
+        if(!start_time.equals("")){
+            startTime = Format.parseDate(start_time,"yyyyMMddHHmm").getTime()+"";
+        }
+        if(!end_time.equals("")) {
+            endTime = Format.parseDate(end_time, "yyyyMMddHHmm").getTime()+"";
+        }
+        String sql = "select a.ELEMENT_NAME,t.stoptime as time," +
+                "p.PEAK_TX_RATE/p.INTERVAL_LEN as TX_RATE,p.PEAK_RX_RATE/p.INTERVAL_LEN as RX_RATE," +
+                "p.SEND_KB/p.INTERVAL_LEN as S_KB,p.RECV_KB/p.INTERVAL_LEN as R_KB," +
+                "p.SEND_PKTS/p.INTERVAL_LEN as S_PKTS,p.RECV_PKTS/p.INTERVAL_LEN as R_PKTS from " +
+                "T_Res_Switch a,T_Prf_Switch p, V_Prf_TimeStamp t where a.ID=p.ELEMENT_ID and " +
+                "p.ELEMENT_ID=:ELEMENT_ID and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
+                "t.stoptime<=:END_TIME order by t.stoptime asc";
+        SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+        sqlQuery.setParameter("ELEMENT_ID",id);
+        sqlQuery.setParameter("START_TIME",c.getTime());
+        sqlQuery.setParameter("END_TIME",new Date());
+        List<SqlRow> results = sqlQuery.findList();
+        ObjectNode send = series.addObject();
+        ArrayNode sendData = send.putArray("data");
+        ObjectNode recv = series.addObject();
+        ArrayNode recvData = recv.putArray("data");
+        if("pkgs".equalsIgnoreCase(sub_kpi)){
+            send.put("id", "send_pkgs");
+            send.put("name", "发送包");
+            recv.put("id", "recv_pkgs");
+            recv.put("name", "接收包");
+        }else{
+            send.put("id", "send_kb");
+            send.put("name", "发送数据");
+            recv.put("id", "recv_kb");
+            recv.put("name", "接收数据");
+        }
+        for(SqlRow row : results){
+            ObjectNode sendXY = sendData.addObject();
+            ObjectNode recvXY = recvData.addObject();
+            sendXY.put("x",row.getDate("time").getTime());
+            recvXY.put("x",row.getDate("time").getTime());
+            if("pkgs".equalsIgnoreCase(sub_kpi)){
+                sendXY.put("y",row.getDouble("S_PKTS"));
+                recvXY.put("y",row.getDouble("R_PKTS"));
+            }else{
+                sendXY.put("y",row.getDouble("S_KB"));
+                recvXY.put("y",row.getDouble("R_KB"));
+            }
         }
     }
 

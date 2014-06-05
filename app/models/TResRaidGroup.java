@@ -52,7 +52,7 @@ public class TResRaidGroup extends ResModel {
     );
 
     public static List<TResRaidGroup> findBySubsystemId(String subsystemId){
-        return find.where().eq("SUBSYSTEM_ID",subsystemId).findList();
+        return find.where().eq("SUBSYSTEM_ID",subsystemId).orderBy("NAME").findList();
     }
 
     public static TResRaidGroup findById(String id){

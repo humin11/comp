@@ -1,9 +1,10 @@
-@(device:com.fasterxml.jackson.databind.node.ObjectNode)
+@(device:com.fasterxml.jackson.databind.node.ObjectNode,tab:String)
 
 @main("Storage") {
     <script type="text/javascript">
         $(function () {
             var id = '@device.get("ID").asText()';
+            var tab = '@tab';
             var container = $('#page-content');
             $.each($('.components a'),function(idx,obj){
                 $(obj).click(function(){
@@ -23,9 +24,24 @@
                         container.load('@{routes.Storages.volume()}?id='+id);
                     else if($(this).attr('id') == 'diskBtn')
                         container.load('@{routes.Storages.disk()}?id='+id);
+                    else if($(this).attr('id') == 'rdpBtn')
+                        container.load('@{routes.Storages.prf()}?id='+id);
                 });
             });
-            container.load('@{routes.Storages.summary()}?id='+id);
+            if(tab == 'summary')
+                container.load('@{routes.Storages.summary()}?id='+id);
+            else if(tab == 'port')
+                container.load('@{routes.Storages.port()}?id='+id);
+            else if(tab == 'cache')
+                container.load('@{routes.Storages.cache()}?id='+id);
+            else if(tab == 'raidgroup')
+                container.load('@{routes.Storages.raidgroup()}?id='+id);
+            else if(tab == 'volume')
+                container.load('@{routes.Storages.volume()}?id='+id);
+            else if(tab == 'disk')
+                container.load('@{routes.Storages.disk()}?id='+id);
+            $('#'+tab+'Btn').removeClass('btn-pa-purple');
+            $('#'+tab+'Btn').addClass('btn-success');
         });
     </script>
     <ul class="breadcrumb breadcrumb-page">
@@ -40,12 +56,13 @@
             <img src="assets/images/vendor/@device.get("ICON").asText()">&nbsp;&nbsp;@device.get("NAME").asText()</h1>
             <div class="col-xs-12 col-sm-8">
                 <div class="row components">
-                    <a id="summaryBtn" href="#" class="btn btn-success btn-labeled"><div class="icon fa fa-dashboard" style="margin-bottom: -3px"></div>&nbsp;&nbsp;概述</a>
+                    <a id="summaryBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa fa-dashboard" style="margin-bottom: -3px"></div>&nbsp;&nbsp;概述</a>
                     <a id="portBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa port16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;端口</a>
                     <a id="cacheBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa database16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;缓存</a>
                     <a id="raidgroupBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa pool16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Raid组</a>
                     <a id="volumeBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa thinVolume16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;卷</a>
                     <a id="diskBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa disk16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;磁盘</a>
+                    <a id="rdpBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa fa-bar-chart-o" style="margin-bottom: -3px"></div>&nbsp;&nbsp;性能视图</a>
                 </div>
             </div>
         </div>

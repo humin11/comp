@@ -10,6 +10,7 @@ public class Storages extends Controller {
 
     public static Result index() {
         String id = request().getQueryString("id");
+        String tab = request().getQueryString("tab");
         TResStorageSubsystem subsystem = TResStorageSubsystem.findById(id);
         ObjectNode device = (ObjectNode)Json.toJson(subsystem);
         String vendorName = TResVendor.findById(subsystem.VENDOR_ID).NAME;
@@ -21,7 +22,7 @@ public class Storages extends Controller {
             device.put("ICON","netapp_small.png");
         else if(vendorName.contains("Cisco"))
             device.put("ICON","cisco_small.png");
-        return ok(views.html.storage.index.render(device));
+        return ok(views.html.storage.index.render(device,tab));
     }
 
     public static Result summary() {
@@ -57,6 +58,13 @@ public class Storages extends Controller {
     public static Result disk() {
         String id = request().getQueryString("id");
         return ok(views.html.widgets.table.render(id,"cfg_disk",10));
+    }
+
+    public static Result prf() {
+        String id = request().getQueryString("id");
+        TResStorageSubsystem subsystem = TResStorageSubsystem.findById(id);
+        ObjectNode device = (ObjectNode)Json.toJson(subsystem);
+        return ok(views.html.storage.prfview.render(device));
     }
 
 }

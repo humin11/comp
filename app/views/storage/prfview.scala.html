@@ -1,0 +1,20 @@
+@(device:com.fasterxml.jackson.databind.node.ObjectNode)
+
+<script type="text/javascript">
+    $(function () {
+        var id = '@device.get("ID").asText()';
+        var name = '@device.get("NAME").asText()';
+        initChart('@routes.Charts.options()','chart1','raidgroup','io','',name+' IOPS',id);
+    });
+</script>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div class="stat-panel text-center">
+            <div class="stat-row">
+                <div class="stat-cell bordered no-border-t no-padding" id="chart1" style="height: 500px">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

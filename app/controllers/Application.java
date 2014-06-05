@@ -93,32 +93,32 @@ public class Application extends Controller {
         ObjectNode dashboard = storageSub.addObject();
         dashboard.put("id",110);
         dashboard.put("name","概览");
-        dashboard.put("url","/storage?id="+id);
+        dashboard.put("url","/storage?id="+id+"&tab=summary");
         dashboard.put("icon","schedule16");
         ObjectNode port = storageSub.addObject();
         port.put("id",111);
         port.put("name","端口");
-        port.put("url","/storage/port?id="+id);
+        port.put("url","/storage?id="+id+"&tab=port");
         port.put("icon","port16");
         ObjectNode cache = storageSub.addObject();
         cache.put("id",112);
         cache.put("name","缓存");
-        cache.put("url","/storage/cache?id="+id);
+        cache.put("url","/storage?id="+id+"&tab=cache");
         cache.put("icon","database16");
         ObjectNode raidgroup = storageSub.addObject();
         raidgroup.put("id",113);
         raidgroup.put("name","RaidGroup");
-        raidgroup.put("url","/storage/raidgroup?id="+id);
+        raidgroup.put("url","/storage?id="+id+"&tab=raidgroup");
         raidgroup.put("icon","pool16");
         ObjectNode volume = storageSub.addObject();
         volume.put("id",114);
         volume.put("name","卷");
-        volume.put("url","/storage/volume?id="+id);
+        volume.put("url","/storage?id="+id+"&tab=volume");
         volume.put("icon","thinVolume16");
         ObjectNode disk = storageSub.addObject();
         disk.put("id",115);
         disk.put("name","磁盘");
-        disk.put("url","/storage/disk?id="+id);
+        disk.put("url","/storage?id="+id+"&tab=disk");
         disk.put("icon","disk16");
     }
 
