@@ -1,59 +1,53 @@
+/**
+ * File Name：TResSwitch.java
+ *
+ * Version：
+ * Date：2012-3-2
+ * Copyright CloudWei Dev Team 2012 
+ * All Rights Reserved.
+ *
+ */
 package models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import play.libs.Json;
+import models.core.ResModel;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.Iterator;
+import javax.persistence.UniqueConstraint;
 
 /**
- * Created by Humin on 4/26/14.
+ * 
+ * Project Name：com.cldouwei.monitor.model
+ * Class Name：TResSwitch
+ * Class Desc：
+ * Author：tigaly
+ * Create Date：2012-3-2 上午12:04:40
+ * Last Modified By：tigaly
+ * Last Modified：2012-3-2 上午12:04:40
+ * Remarks：
+ * @version 
+ * 
  */
 @Entity
-@Table(name="t_res_switch")
-@Access(AccessType.FIELD)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class TResSwitch extends AssetModel {
-
-    public String domain_id;
-    public String domain_name;
-
-    public String reboot_reason;
-
-    public String switch_id;
-
-    public String switch_role;
-
-
-    public static Finder<Long, TResSwitch> find = new Finder<Long, TResSwitch>(
-            Long.class, TResSwitch.class
-    );
-
-    public static void create(JsonNode node){
-        TResSwitch obj = find.where().eq("name",node.get("name").asText()).findUnique();
-        if(obj==null){
-            obj = new TResSwitch();
-            obj = Json.fromJson(node, TResSwitch.class);
-            obj.save();
-        } else {
-            Long id = obj.id;
-            obj = Json.fromJson(node, TResSwitch.class);
-            obj.update(id);
-        }
-    }
-
-    public static void createAll(ArrayNode nodes){
-        Iterator<JsonNode> it = nodes.elements();
-        JsonNode node = null;
-        while(it.hasNext()){
-            node = it.next();
-            create(node);
-        }
-    }
-
+@Table(name="T_RES_SWITCH",uniqueConstraints={@UniqueConstraint(columnNames={"NAME"})})
+public class TResSwitch extends ResModel {
+	public String PARENT_SWITCH_WWN;
+	public String SERIAL_NUMBER;
+	public String CONTACT;
+	public String LOCATION;
+	public String IP_ADDRESS;
+	/**
+	 *  1 - Physical Device<br>
+	 *  2 - Virtual Device
+	 */
+	public Short IS_PHYSICAL;
+	public String DOMAIN;
+	public String MANAGEMENT_ID;
+	public String MGMT_TEL_ADDR;
+	public String MGMT_SNMP_ADDR;
+	public String MGMT_URL_ADDR;
+	public String VERSION;
+	public String DEDICATED;
+	public Short SWITCH_MODE;
+	public String PHYSICAL_PACKAGE_ID;
 }

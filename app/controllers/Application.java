@@ -1,6 +1,5 @@
 package controllers;
 
-import discovery.DiscoverySMI;
 import play.mvc.*;
 import views.html.index;
 

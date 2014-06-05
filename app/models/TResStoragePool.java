@@ -1,71 +1,75 @@
+/**
+ * File Name：TResStoragePool.java
+ *
+ * Version：
+ * Date：2012-2-29
+ * Copyright CloudWei Dev Team 2012 
+ * All Rights Reserved.
+ *
+ */
 package models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
-import play.db.ebean.Model;
-import play.libs.Json;
+import models.core.ResModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.Iterator;
+import javax.persistence.UniqueConstraint;
 
 /**
- * Created by Humin on 4/28/14.
+ *
+ * Project Name：com.cldouwei.monitor.model
+ * Class Name：TResStoragePool
+ * Class Desc：
+ * Author：tigaly
+ * Create Date：2012-2-29 上午11:42:45
+ * Last Modified By：tigaly
+ * Last Modified：2012-2-29 上午11:42:45
+ * Remarks：
+ * @version 
+ * 
  */
+
 @Entity
-@Table(name="t_res_storage_pool")
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class TResStoragePool extends GenericModel {
-
-    public String instance_id;
-
-    public String pool_id;
-
-    public Boolean primordial;
-
-    public Long total_managed_space;
-
-    public Long capacity;
-
-    public Long remaining_managed_space;
-
-    public Long free_capacity;
-
-    public Long block_size;
-
-    public Long number_blocks;
-
-    public String raid_level;
-
-    public Long consumable_blocks;
-
-    public static Model.Finder<Long, TResStoragePool> find = new Model.Finder<Long, TResStoragePool>(
-            Long.class, TResStoragePool.class
-    );
-
-    public static void create(JsonNode node){
-        TResStoragePool obj = find.where().eq("name",node.get("name").asText()).eq("instance_id",node.get("instance_id").asText()).eq("system_name", node.get("system_name").asText()).findUnique();
-        if(obj==null){
-            obj = new TResStoragePool();
-            obj = Json.fromJson(node, TResStoragePool.class);
-            obj.save();
-        } else {
-            Long id = obj.id;
-            obj = Json.fromJson(node, TResStoragePool.class);
-            obj.update(id);
-        }
-    }
-
-    public static void createAll(JsonNode nodes){
-        if(nodes.isArray()) {
-            Iterator<JsonNode> it = nodes.elements();
-            JsonNode node = null;
-            while (it.hasNext()) {
-                node = it.next();
-                create(node);
-            }
-        } else {
-            create(nodes);
-        }
-    }
+@Table(name="T_RES_STORAGE_POOL",uniqueConstraints={@UniqueConstraint(columnNames={"NAME","SUBSYSTEM_ID"})})
+public class TResStoragePool extends ResModel {
+	public Long TOTAL_MANAGED_SPACE;
+	public Long REMAINING_MANAGED_SPACE;
+	/**
+	 * 0 - Not Primordial <br />
+	 * 1 - Primordial
+	 */
+	public Short PRIMORDIAL;
+	public Long CAPACITY;
+	public Integer EXTENT_SIZE;
+	public Short NATIVE_STATUS;
+	public Long TOTAL_AVAILABLE_SPACE;
+	public Short ELEMENT_TYPE;
+	public String RAID_LEVEL;
+	public String INSTANCE_ID;
+	public Integer LSS;
+	public Short CONFIG;
+	public Long RAID_GROUP_ID;
+	public Short FORMAT;
+	public Long SURFACED_LUN_CAP;
+	public Long UNSURFACED_LUN_CAP;
+	public Integer DATA_REDUNDANCY_MIN;
+	public Integer DATA_REDUNDANCY_MAX;
+	public Integer DATA_REDUNDANCY_DEF;
+	public Integer PCK_REDUNDANCY_MIN;
+	public Integer PCK_REDUNDANCY_MAX;
+	public Integer PCK_REDUNDANCY_DEF;
+	public Integer DELTA_RES_MIN;
+	public Integer DELTA_RES_MAX;
+	public Integer DELTA_RES_DEF;
+	public Short RANK_GROUP;
+	public Short CLASS_NAME_ID;
+	/**
+	 * 0 - Not SE POOL <br />
+	 * 1 - SE POOL
+	 */
+	public Short IS_SE_POOL;
+	public Double CONFIGURED_SPACE;
+	public Short IS_ENCRYPTED;
+	public Short IS_ENCRYPTABLE;
+	public Short IS_SOLID_STATE;
 }

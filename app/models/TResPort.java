@@ -1,74 +1,58 @@
+/**
+ * File Name：TResPort.java
+ *
+ * Version：
+ * Date：2012-2-29
+ * Copyright CloudWei Dev Team 2012 
+ * All Rights Reserved.
+ *
+ */
 package models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import play.db.ebean.Model;
-import play.libs.Json;
+import models.core.ResModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.Iterator;
+import javax.persistence.UniqueConstraint;
 
 /**
- * Created by Humin on 4/28/14.
+ * 
+ * Project Name：com.cldouwei.monitor.model
+ * Class Name：TResPort
+ * Class Desc：
+ * Author：tigaly
+ * Create Date：2012-2-29 下午2:53:22
+ * Last Modified By：tigaly
+ * Last Modified：2012-2-29 下午2:53:22
+ * Remarks：
+ * @version 
+ * 
  */
 @Entity
-@Table(name="t_res_port")
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class TResPort extends GenericModel {
-
-    public String permanent_address;
-
-    public String device_id;
-
-    public String usage_restriction;
-
-    public Long speed;
-
-    public Long max_speed;
-
-    public String port_type;
-
-    public String link_technology;
-
-    public String subsystem_name;
-
-    //storage/tape/switch/host
-    public String device_type;
-
-    //controller/sfp/blade/hba
-    public String subdevice_type;
-
-    public Long supported_maximum_transmission_unit;
-
-    public static Model.Finder<Long, TResPort> find = new Model.Finder<Long, TResPort>(
-            Long.class, TResPort.class
-    );
-
-    public static void create(JsonNode node){
-        TResPort obj = find.where().eq("name",node.get("name").asText()).findUnique();
-        if(obj==null){
-            obj = new TResPort();
-            obj = Json.fromJson(node, TResPort.class);
-            obj.save();
-        } else {
-            Long id = obj.id;
-            obj = Json.fromJson(node, TResPort.class);
-            obj.update(id);
-        }
-    }
-
-    public static void createAll(JsonNode nodes){
-        if(nodes.isArray()) {
-            Iterator<JsonNode> it = nodes.elements();
-            JsonNode node = null;
-            while (it.hasNext()) {
-                node = it.next();
-                create(node);
-            }
-        } else {
-            create(nodes);
-        }
-    }
+@Table(name="T_RES_PORT",uniqueConstraints={@UniqueConstraint(columnNames={"NAME"})})
+public class TResPort extends ResModel {
+	public Short SLOT_NUMBER;
+	public String PORT_NUMBER;
+	public String PORT_INDEX;
+	public Long PORT_SPEED;
+	public Long MAX_SPEED;
+	public String PORT_TYPE;
+	public String FUNCTION_TYPE;
+	public String DEVICE_TYPE;
+	public Integer NODE_ID;
+	public Short DISPLAY_ICON_TYPE;
+	public Integer RIO_LOOP_ID;
+	public Short DETECTABLE;
+	public String CONTROLLER_ID;
+	public String HBA_ID;
+	public String SWITCHBLADE_ID;
+	public String LOCATION_ID;
+	public String PHYSICAL_STATE;
+	public String PHYSICAL_STATUS;
+	public Short ENABLED_STATE;
+	public Short USAGE_RESTRICTION;
+	public Short ACTIVE_FC4TYPES;
+	public String IS_LICENSED;
+	public String IS_VIRTUAL;
+	public String STATUS;
 }
