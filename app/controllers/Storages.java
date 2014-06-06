@@ -6,6 +6,8 @@ import models.*;
 import play.libs.Json;
 import play.mvc.*;
 
+import java.util.List;
+
 public class Storages extends Controller {
 
     public static Result index() {
@@ -60,11 +62,10 @@ public class Storages extends Controller {
         return ok(views.html.widgets.table.render(id,"cfg_disk",10));
     }
 
-    public static Result prf() {
-        String id = request().getQueryString("id");
-        TResStorageSubsystem subsystem = TResStorageSubsystem.findById(id);
-        ObjectNode device = (ObjectNode)Json.toJson(subsystem);
-        return ok(views.html.storage.prfview.render(device));
+    public static Result json() {
+        List<TResStorageSubsystem> subsystemList= TResStorageSubsystem.findAll();
+        ArrayNode json = (ArrayNode)Json.toJson(subsystemList);
+        return ok(json);
     }
 
 }

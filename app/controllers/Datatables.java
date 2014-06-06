@@ -114,7 +114,7 @@ public class Datatables extends Controller {
     }
 
     private static ObjectNode getPortCfg(String id) {
-        String[] kpiColumns = {"WWN","端口号","类型","Speed"};
+        String[] kpiColumns = {"名称","WWN","端口号","类型","Speed"};
         List<TResPort> ports = TResPort.findBySubsystemId(id);
         ObjectNode options = Json.newObject();
         ArrayNode cols = options.putArray("cols");
@@ -123,6 +123,7 @@ public class Datatables extends Controller {
             cols.add(colname);
         for(TResPort port : ports){
             ArrayNode obj = rows.addArray();
+            obj.add(port.ELEMENT_NAME);
             obj.add(Format.splitWWN(port.NAME));
             obj.add(port.PORT_NUMBER == null ? "no data" : port.PORT_NUMBER);
             obj.add("Fibre");

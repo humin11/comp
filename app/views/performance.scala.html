@@ -1,0 +1,199 @@
+@main("Performance") {
+    <script type="text/javascript">
+        $(function () {
+
+            $('#kpi-timerange').datepicker({format:'yyyy-mm-dd 00:00',forceParse:false});
+            $('#globa-btn').switcher({
+                theme: 'square',
+                off_state_content :'全局',
+                on_state_content:'单设备'
+            });
+            $('#globa-btn').change(function(){
+                var checked = $(this).is(':checked');
+                if(checked) {
+                    $('#select-device').select2('enable');
+                }else{
+                    $('#select-device').select2('clear');
+                    $('#select-device').select2('disable');
+                }
+            });
+            $('#select-device').select2({
+                allowClear: true,
+                placeholder: "选择设备"
+            });
+            $("#select-kpi").select2({
+                allowClear: true,
+                placeholder: "选择KPI"
+            });
+            $('#cb-section input[type="checkbox"]').click(function(){
+                var cbId = $(this).attr('id');
+                if(cbId == 'storageCb'){
+                    $('#switchCb').removeAttr('checked');
+                    $('#hostCb').removeAttr('checked');
+                    loadStorages();
+                }else if(cbId == 'switchCb'){
+                    $('#storageCb').removeAttr('checked');
+                    $('#hostCb').removeAttr('checked');
+                    loadSwitchs();
+                }else if(cbId == 'hostCb'){
+                    $('#switchCb').removeAttr('checked');
+                    $('#storageCb').removeAttr('checked');
+                }
+                $(this).attr('checked','checked');
+            });
+
+            $('#exec').click(function(){
+                var deviceType = $('#cb-section input[checked]').attr('id');
+                var kpi = 'subsystem';
+                if(deviceType == 'switchCb')
+                    kpi = 'switchs';
+                var sub_kpi = $('#select-kpi').select2('val');
+                var kpiName = $('option[value='+sub_kpi+']').text();
+                var id = $('#select-device').select2('val');
+                var deviceName = '';
+                if(id.length>0) {
+                    deviceName = $('option[value='+id+']').text()+' ';
+                    if(sub_kpi.indexOf('pg_') == 0){
+                        kpi = 'raidgroup';
+                        sub_kpi = sub_kpi.split('pg_')[1];
+                    }
+                }
+                var title = deviceName+kpiName;
+                var start_time = $('#starttime').val();
+                var end_time = $('#endtime').val();
+                initChart('@routes.Charts.options()','chart1',kpi,sub_kpi,'max',title,id,start_time,end_time);
+            });
+            loadStorages();
+            function loadStorages(){
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    url: '@routes.Storages.json()',
+                    success:function(data){
+                        $('#select-device').empty();
+                        $('#select-device').append('<option></option>');
+                        $.each(data,function(idx,obj){
+                            var option = $('<option value='+obj.ID+'>'+obj.NAME+'</option>');
+                            $('#select-device').append(option);
+                        });
+                    }
+                });
+            }
+            function loadSwitchs(){
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    url: '@routes.Switchs.json()',
+                    success:function(data){
+                        $('#select-device').empty();
+                        $('#select-device').append('<option></option>');
+                        $.each(data,function(idx,obj){
+                            var option = $('<option value='+obj.ID+'>'+obj.ELEMENT_NAME+'</option>');
+                            $('#select-device').append(option);
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+    <div class="page-header">
+        <h1 class="col-xs-12 col-sm-2 text-center text-left-sm"><i class="fa fa-bar-chart-o page-header-icon"></i>&nbsp;&nbsp;性能查询</h1>
+        <div class="col-xs-12 col-sm-8">
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="input-daterange input-group" id="kpi-timerange" style="width: 300px">
+                        <input type="text" class="input-sm form-control" id="starttime" name="start" placeholder="Start date">
+                        <span class="input-group-addon">to</span>
+                        <input type="text" class="input-sm form-control" id="endtime" name="end" placeholder="End date">
+                    </div>
+                </div>
+                <div class="col-sm-2 col-md-2">
+                    <div class="input-group" style="width: 100px">
+                        <input type="checkbox" data-class="switcher-lg" id="globa-btn">
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4" id="cb-section">
+                    <label class="checkbox-inline">
+                        <input id="storageCb" type="checkbox" class="px" checked="checked">
+                        <span class="lbl">存储</span>
+                    </label>
+                    <label class="checkbox-inline">
+                        <input id="switchCb" type="checkbox" class="px">
+                        <span class="lbl">交换机</span>
+                    </label>
+                    <label class="checkbox-inline">
+                        <input id="hostCb" type="checkbox" class="px">
+                        <span class="lbl">主机</span>
+                    </label>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 5px">
+                <div class="col-sm-6 col-md-6">
+                    <select id="select-kpi" class="form-control" style="width: 300px">
+                        <option></option>
+                        <optgroup label="Raid组">
+                            <option value="pg_io">Raid组IOPS</option>
+                            <option value="pg_transfer">Raid组传输率</option>
+                            <option value="pg_response">Raid组响应时间</option>
+                            <option value="pg_read_hits">Raid组读命中率</option>
+                            <option value="pg_write_hits">Raid组写命中率</option>
+                        </optgroup>
+                        <optgroup label="卷">
+                            <option value="ldev_iops">卷IOPS</option>
+                            <option value="ldev_transfer">卷数据量</option>
+                            <option value="ldev_response">卷响应时间</option>
+                            <option value="ldev_read_hits">卷读命中率</option>
+                            <option value="ldev_write_hits">卷写命中率</option>
+                        </optgroup>
+                        <optgroup label="缓存">
+                            <option value="cache_write_pending">缓存写等待率</option>
+                        </optgroup>
+                        <optgroup label="端口">
+                            <option value="port_io">端口IOPS</option>
+                            <option value="port_response">端口响应时间</option>
+                        </optgroup>
+                        <optgroup label="处理器">
+                            <option value="chp_usage">前端处理器繁忙度</option>
+                            <option value="dkp_usage">后端处理器繁忙度</option>
+                        </optgroup>
+                        <optgroup label="Remote Copy">
+                            <option value="tc_response">TC响应时间</option>
+                        </optgroup>
+                        <optgroup label="Universal Replicator">
+                            <option value="ur_response">UR响应时间</option>
+                        </optgroup>
+                        <optgroup label="交换机">
+                            <option value="pkgs">包数量</option>
+                            <option value="kb">流量</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <div class="input-group" style="width: 200px">
+                        <select id="select-device" class="form-control" style="width: 200px" disabled="disabled">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-2">
+            <div class="pull-right col-xs-12 col-sm-auto">
+                <a id="exec" href="#" class="btn btn-primary btn-labeled" style="width: 100%;"><span class="btn-label icon fa fa-paper-plane-o"></span>执行</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="stat-panel text-center">
+                <div class="stat-row">
+                    <div class="stat-cell bordered no-border-t no-padding" id="chart1" style="height: 500px">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

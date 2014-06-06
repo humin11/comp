@@ -8,6 +8,8 @@ import models.TResVendor;
 import play.libs.Json;
 import play.mvc.*;
 
+import java.util.List;
+
 public class Switchs extends Controller {
 
     public static Result index() {
@@ -33,6 +35,13 @@ public class Switchs extends Controller {
     public static Result port() {
         String id = request().getQueryString("id");
         return ok(views.html.widgets.table.render(id, "cfg_port", 10));
+    }
+
+
+    public static Result json() {
+        List<TResSwitch> switchList= TResSwitch.findAll();
+        ArrayNode json = (ArrayNode)Json.toJson(switchList);
+        return ok(json);
     }
 
 

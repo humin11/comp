@@ -65,6 +65,11 @@ public class Application extends Controller {
         for(TResHost host : hostList){
             initHostSubMenu(c13c,host.ID,host.NAME);
         }
+        ObjectNode c5 = root.addObject();
+        c5.put("id",5);
+        c5.put("name","性能");
+        c5.put("url","/performance");
+        c5.put("icon","fa-bar-chart-o");
         ObjectNode c2 = root.addObject();
         c2.put("id",2);
         c2.put("name","拓扑");
@@ -79,7 +84,7 @@ public class Application extends Controller {
         c4.put("id",4);
         c4.put("name","报表");
         c4.put("url","/reports");
-        c4.put("icon","fa-bar-chart-o");
+        c4.put("icon","fa-file-pdf-o");
         return ok(root);
     }
 
@@ -169,5 +174,7 @@ public class Application extends Controller {
     public static Result reports() { return ok(report.render()); }
 
     public static Result topology() { return ok(topology.render()); }
+
+    public static Result performance() { return ok(performance.render()); }
 
 }

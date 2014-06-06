@@ -68,6 +68,8 @@ public class Charts extends Controller {
             getRaidGroupPrf(id, sub_kpi, start_time, end_time, series);
         else if("switchs".equalsIgnoreCase(kpi))
             getSwitchPrf(id, sub_kpi, start_time, end_time, series);
+        else if("host".equalsIgnoreCase(kpi))
+            getHostPrf(id, sub_kpi, start_time, end_time, series);
         return options;
     }
 
@@ -216,14 +218,14 @@ public class Charts extends Controller {
 
     private static void getSubsystemPrf(String id, String sub_kpi,String math, String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -2);
+        c.add(Calendar.DAY_OF_MONTH, -3);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
-            startTime = Format.parseDate(start_time,"yyyyMMddHHmm").getTime()+"";
+            startTime = Format.parseDate(start_time,"yyyy-MM-dd HH:mm").getTime()+"";
         }
         if(!end_time.equals("")) {
-            endTime = Format.parseDate(end_time, "yyyyMMddHHmm").getTime()+"";
+            endTime = Format.parseDate(end_time, "yyyy-MM-dd HH:mm").getTime()+"";
         }
         String timescope = " and c.DEV_TIME>"+startTime;
         if(!"".equals(endTime))
@@ -315,6 +317,8 @@ public class Charts extends Controller {
                 idscope +
                 " group by c.DEV_TIME,a.ID " +
                 "order by c.DEV_TIME asc";
+        }else if("tc_response".equalsIgnoreCase(sub_kpi)||"ur_response".equalsIgnoreCase(sub_kpi)){
+            return;
         }
         SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
         List<SqlRow> results = sqlQuery.findList();
@@ -344,10 +348,10 @@ public class Charts extends Controller {
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
-            startTime = Format.parseDate(start_time,"yyyyMMddHHmm").getTime()+"";
+            startTime = Format.parseDate(start_time,"yyyy-MM-dd HH:mm").getTime()+"";
         }
         if(!end_time.equals("")) {
-            endTime = Format.parseDate(end_time, "yyyyMMddHHmm").getTime()+"";
+            endTime = Format.parseDate(end_time, "yyyy-MM-dd HH:mm").getTime()+"";
         }
         String timescope = " and c.DEV_TIME>"+startTime;
         if(!"".equals(endTime))
@@ -361,8 +365,6 @@ public class Charts extends Controller {
             column = "c.TOTAL_IO";
         }else if("transfer".equalsIgnoreCase(sub_kpi)){
             column = "c.TOTAL_KB";
-        }else if("response".equalsIgnoreCase(sub_kpi)){
-            column = "c.TOTAL_TIME";
         }else if("response".equalsIgnoreCase(sub_kpi)){
             column = "c.TOTAL_TIME";
         }else if("read_hits".equalsIgnoreCase(sub_kpi)){
@@ -394,15 +396,11 @@ public class Charts extends Controller {
         c.add(Calendar.DAY_OF_MONTH, -5);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
-        String startTimeDisplay = Format.parseString(c.getTime(),"yyyy-MM-dd HH:mm");
-        String endTimeDisplay = "now";
         if(!start_time.equals("")){
-            startTimeDisplay = Format.parseString(Format.parseDate(start_time,"yyyyMMddHHmm"),"yyyy-MM-dd HH:mm");
-            startTime = Format.parseDate(start_time,"yyyyMMddHHmm").getTime()+"";
+            startTime = Format.parseDate(start_time,"yyyy-MM-dd HH:mm").getTime()+"";
         }
         if(!end_time.equals("")) {
-            endTimeDisplay = Format.parseString(Format.parseDate(end_time,"yyyyMMddHHmm"),"yyyy-MM-dd HH:mm");
-            endTime = Format.parseDate(end_time, "yyyyMMddHHmm").getTime()+"";
+            endTime = Format.parseDate(end_time, "yyyy-MM-dd HH:mm").getTime()+"";
         }
         String timescope = "and c.DEV_TIME>"+startTime;
         if(!"".equals(endTime))
@@ -475,13 +473,13 @@ public class Charts extends Controller {
     private static void getSwitchPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, -20);
-        String startTime = c.getTimeInMillis()+"";
-        String endTime = "";
+        Date startTime = c.getTime();
+        Date endTime = new Date();
         if(!start_time.equals("")){
-            startTime = Format.parseDate(start_time,"yyyyMMddHHmm").getTime()+"";
+            startTime = Format.parseDate(start_time,"yyyy-MM-dd HH:mm");
         }
         if(!end_time.equals("")) {
-            endTime = Format.parseDate(end_time, "yyyyMMddHHmm").getTime()+"";
+            endTime = Format.parseDate(end_time, "yyyy-MM-dd HH:mm");
         }
         String sql = "select a.ELEMENT_NAME,t.stoptime as time," +
                 "p.PEAK_TX_RATE/p.INTERVAL_LEN as TX_RATE,p.PEAK_RX_RATE/p.INTERVAL_LEN as RX_RATE," +
@@ -492,8 +490,8 @@ public class Charts extends Controller {
                 "t.stoptime<=:END_TIME order by t.stoptime asc";
         SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
         sqlQuery.setParameter("ELEMENT_ID",id);
-        sqlQuery.setParameter("START_TIME",c.getTime());
-        sqlQuery.setParameter("END_TIME",new Date());
+        sqlQuery.setParameter("START_TIME",startTime);
+        sqlQuery.setParameter("END_TIME",endTime);
         List<SqlRow> results = sqlQuery.findList();
         ObjectNode send = series.addObject();
         ArrayNode sendData = send.putArray("data");
@@ -521,6 +519,58 @@ public class Charts extends Controller {
             }else{
                 sendXY.put("y",row.getDouble("S_KB"));
                 recvXY.put("y",row.getDouble("R_KB"));
+            }
+        }
+    }
+
+    private static void getHostPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, -20);
+        Date startTime = c.getTime();
+        Date endTime = new Date();
+        if(!start_time.equals("")){
+            startTime = Format.parseDate(start_time,"yyyy-MM-dd HH:mm");
+        }
+        if(!end_time.equals("")) {
+            endTime = Format.parseDate(end_time, "yyyy-MM-dd HH:mm");
+        }
+        String sql = "select t.stoptime as time," +
+                "SUM(p.READ_IO/p.INTERVAL_LEN) as R_IO,SUM(p.WRITE_IO/p.INTERVAL_LEN) as W_IO," +
+                "SUM(p.READ_KB/p.INTERVAL_LEN) as R_KB,SUM(p.WRITE_KB/p.INTERVAL_LEN) as W_KB from " +
+                "T_Prf_Hba_port p,V_Prf_TimeStamp t where " +
+                "p.SUBSYSTEM_ID=:ELEMENT_ID and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
+                "t.stoptime<=:END_TIME group by p.SUBSYSTEM_ID,t.stoptime order by t.stoptime asc";
+        SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+        sqlQuery.setParameter("ELEMENT_ID",id);
+        sqlQuery.setParameter("START_TIME",startTime);
+        sqlQuery.setParameter("END_TIME",endTime);
+        List<SqlRow> results = sqlQuery.findList();
+        ObjectNode read = series.addObject();
+        ArrayNode readData = read.putArray("data");
+        ObjectNode write = series.addObject();
+        ArrayNode writeData = write.putArray("data");
+        if("io".equalsIgnoreCase(sub_kpi)){
+            read.put("id", "read_io");
+            read.put("name", "读IO");
+            write.put("id", "write_io");
+            write.put("name", "写IO");
+        }else{
+            read.put("id", "read_kb");
+            read.put("name", "读流量");
+            write.put("id", "write_kb");
+            write.put("name", "写流量");
+        }
+        for(SqlRow row : results){
+            ObjectNode readXY = readData.addObject();
+            ObjectNode writeXY = writeData.addObject();
+            readXY.put("x",row.getDate("time").getTime());
+            writeXY.put("x",row.getDate("time").getTime());
+            if("io".equalsIgnoreCase(sub_kpi)){
+                readXY.put("y",row.getDouble("R_IO"));
+                writeXY.put("y",row.getDouble("W_IO"));
+            }else{
+                readXY.put("y",row.getDouble("R_KB"));
+                writeXY.put("y",row.getDouble("W_KB"));
             }
         }
     }

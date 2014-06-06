@@ -1,0 +1,93 @@
+@(device:com.fasterxml.jackson.databind.node.ObjectNode)
+
+@main("Storage") {
+    <script type="text/javascript">
+        $(function () {
+            var id = '@device.get("ID").asText()';
+            initChart('@routes.Charts.options()','chart1','host','io','sum','',id);
+            initChart('@routes.Charts.options()','chart2','host','kb','sum','',id);
+            initTable('@routes.Datatables.options()','table2','cfg_port',10,id);
+        });
+    </script>
+    <ul class="breadcrumb breadcrumb-page">
+        <div class="breadcrumb-label text-light-gray">You are here: </div>
+        <li><a href="#">Host</a></li>
+        <li class="active"><a href="#">@device.get("NAME").asText()</a></li>
+    </ul>
+    <div class="page-header">
+
+        <div class="row">
+            <h1 class="col-xs-12 col-sm-4 text-center text-left-sm">
+            <img src="assets/images/vendor/@device.get("ICON").asText()">&nbsp;&nbsp;@device.get("NAME").asText() ( @device.get("IP_ADDRESS").asText() )</h1>
+            <div class="col-xs-12 col-sm-8">
+            </div>
+        </div>
+    </div>
+    <div id="page-content">
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+                <div class="stat-panel text-center">
+                    <div class="stat-row">
+                        <div class="stat-cell col-sm-4 padding-sm-hr bordered valign-top">
+                            <ul class="list-group no-margin">
+                                <li class="list-group-item no-border-hr no-border-t padding-xs-hr no-bg no-border-radius">
+                                    <span class="col-sm-4 label label-pa-purple pull-left">IP地址</span> @device.get("IP_ADDRESS").asText()
+                                </li>
+                                <li class="list-group-item no-border-hr no-border-b padding-xs-hr no-bg">
+                                    <span class="col-sm-4 label label-pa-purple pull-left">描述</span> @device.get("ELEMENT_NAME").asText()
+                                </li>
+                                <li class="list-group-item no-border-hr padding-xs-hr no-bg">
+                                    <span class="col-sm-4 label label-pa-purple pull-left">CPU</span> @device.get("CPU_ARCHITECTURE").asText()
+                                </li>
+                                <li class="list-group-item no-border-hr no-border-b padding-xs-hr no-bg">
+                                    <span class="col-sm-4 label label-pa-purple pull-left">端口数量</span> @device.get("N_PORT").asText()
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="stat-panel text-center">
+                    <div class="stat-row">
+                        <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                            <i class="fa fa-cloud"></i>&nbsp;&nbsp;IOPS (Last 24 hours)
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-cell bordered no-border-t no-padding" id="chart1" style="height: 200px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="stat-panel text-center">
+                    <div class="stat-row">
+                        <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                            <i class="fa fa-cloud"></i>&nbsp;&nbsp;KBPS (Last 24 hours)
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-cell bordered no-border-t no-padding" id="chart2" style="height: 200px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+             <div class="col-sm-12 col-md-12">
+                <div class="stat-panel text-center">
+                    <div class="stat-row">
+                        <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
+                            <i class="fa fa-cube"></i>&nbsp;&nbsp;端口列表
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-cell bordered no-border-t no-padding" id="table2" style="height: 300px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+}
