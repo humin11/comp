@@ -239,10 +239,11 @@ public class Charts extends Controller {
         HashMap<String,ObjectNode> serieMap = new HashMap<String,ObjectNode>();
         List<TResStorageSubsystem> subsystems = TResStorageSubsystem.findAll();
         for (TResStorageSubsystem subsystem : subsystems) {
-            if ("".equals(id) || subsystem.ID.equals(id)) {
+            if ("".equals(id) || ids.contains(subsystem.ID)) {
                 ObjectNode serie = series.addObject();
                 serie.put("id", subsystem.ID);
                 serie.put("name", subsystem.NAME.length()>15?subsystem.NAME.substring(0,15)+"...":subsystem.NAME);
+                serie.put("max",0);
                 serie.putArray("data");
                 serieMap.put(subsystem.ID, serie);
             }
@@ -326,6 +327,9 @@ public class Charts extends Controller {
             if(serieMap.containsKey(row.getString("ID"))) {
                 ObjectNode serie = serieMap.get(row.getString("ID"));
                 ArrayNode data = (ArrayNode) serie.findValue("data");
+                double max = serie.findValue("max").asDouble();
+                if(row.getDouble("VAL")>max)
+                    serie.put("max",row.getDouble("VAL"));
                 ObjectNode xy = data.addObject();
                 xy.put("x", row.getLong("DEV_TIME"));
                 xy.put("y", row.getDouble("VAL"));

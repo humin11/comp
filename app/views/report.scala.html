@@ -1,9 +1,29 @@
 @main("Report") {
     <script type="text/javascript">
-        
+        $(function () {
+            $('#runDaily').click(function(){
+                $.get('@routes.Reports.daily()',function(){
+                    alert('已生成');
+                });
+            });
+        });
     </script>
     <ul class="breadcrumb breadcrumb-page">
         <div class="breadcrumb-label text-light-gray">You are here: </div>
         <li><a href="#">Reports</a></li>
     </ul>
+    <div class="page-header">
+
+        <div class="row">
+            <h1 class="col-xs-12 col-sm-4 text-center text-left-sm">
+                <i class="fa fa-file-text-o page-header-icon"></i>
+            &nbsp;&nbsp;报表管理</h1>
+            <div class="col-xs-12 col-sm-8">
+                <a id="runDaily" class="btn btn-primary btn-labeled"><span class="btn-label icon fa fa-file-pdf-o"></span>生成日报</a>
+            </div>
+        </div>
+    </div>
+    <div id="page-content">
+
+    </div>
 }
