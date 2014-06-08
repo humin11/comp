@@ -9,7 +9,10 @@
  */
 package models;
 
+import play.db.ebean.Model;
+
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -111,4 +114,10 @@ public class TAlarm{
 	public String ATTR3;
 	public String ATTR4;
 	public String ATTR5;
+
+    public static Model.Finder<String, TAlarm> find = new Model.Finder<String, TAlarm>(
+            String.class, TAlarm.class
+    );
+
+    public static List<TAlarm> findAll() { return find.all(); }
 }

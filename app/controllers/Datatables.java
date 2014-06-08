@@ -219,11 +219,9 @@ public class Datatables extends Controller {
     }
 
     private static ObjectNode getAlarm(String id, String title, String start_time, String end_time) {
-        String[] testSubsystems = {"USPV.29846", "USPV.29416", "VSP.90873"};
-        String[] severity = {"Fatal","Critical","Major","Minor","Warning"};
-        String[] colors = {"btn-dark-gray","btn-danger","btn-warning","btn-info","btn-light-green"};
-        int count = 100;
-        Random random = new Random();
+        String[] severity = {"Clear","Information","Warning","Minor","Major","Critical","Fatal"};
+        String[] colors = {"btn-light-green","btn-light-green","btn-light-green","btn-info","btn-warning","btn-danger","btn-dark-gray"};
+        List<TAlarm> alarms = TAlarm.findAll();
         ObjectNode options = Json.newObject();
         ArrayNode cols = options.putArray("cols");
         ArrayNode rows = options.putArray("rows");
@@ -232,14 +230,14 @@ public class Datatables extends Controller {
         cols.add("描述");
         cols.add("分类");
         cols.add("开始时间");
-        for(int i = 0; i < count; i++){
+        for(int i = 0; i < alarms.size(); i++){
+            TAlarm alarm = alarms.get(i);
             ArrayNode obj = rows.addArray();
-            obj.add(testSubsystems[random.nextInt(3)]);
-            int r = random.nextInt(5);
-            obj.add("<a class='btn btn-sm "+colors[r]+" btn-labeled'>"+severity[r]+"</a>");
-            obj.add("V1TRAP[reqestID=0,timestamp=0:00:43.14,enterprise=1.3.6.1.4.1.232,genericTrap=6,specificTrap=3034, VBS[1.3.6.1.2.1.1.5.0 = STOR_HY_SERVER1;");
-            obj.add("STORAGE");
-            obj.add(Format.parseString(new Date(),"yyyy-MM-dd HH:mm:ss"));
+            obj.add(alarm.DEVICE_NAME);
+            obj.add("<a class='btn btn-sm "+colors[alarm.ALARM_SEVERITY]+" btn-labeled'>"+severity[alarm.ALARM_SEVERITY]+"</a>");
+            obj.add(alarm.ORIGINAL_MESSAGE);
+            obj.add(alarm.DEVICE_TYPE);
+            obj.add(Format.parseString(alarm.LAST_OCCURENCE,"yyyy-MM-dd HH:mm:ss"));
         }
         return options;
     }
