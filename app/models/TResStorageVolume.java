@@ -87,4 +87,8 @@ public class TResStorageVolume extends ResModel {
         return find.where().eq("SUBSYSTEM_ID",subsystemId).findList();
     }
 
+    public static TResStorageVolume findById(String id){
+        return find.byId(id);
+    }
+
 }

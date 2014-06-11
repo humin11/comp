@@ -218,7 +218,7 @@ public class Charts extends Controller {
 
     private static void getSubsystemPrf(String id, String sub_kpi,String math, String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -4);
+        c.add(Calendar.DAY_OF_MONTH, -2);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
@@ -338,17 +338,8 @@ public class Charts extends Controller {
     }
 
     private static void getRaidGroupPrf(String id, String sub_kpi, String start_time, String end_time, ArrayNode series) {
-        HashMap<String,ObjectNode> serieMap = new HashMap<String,ObjectNode>();
-        List<TResRaidGroup> rdList = TResRaidGroup.findBySubsystemId(id);
-        for (TResRaidGroup rd : rdList) {
-            ObjectNode serie = series.addObject();
-            serie.put("id", rd.ID);
-            serie.put("name", rd.NAME);
-            serie.putArray("data");
-            serieMap.put(rd.ID, serie);
-        }
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -4);
+        c.add(Calendar.DAY_OF_MONTH, -1);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
@@ -383,6 +374,15 @@ public class Charts extends Controller {
                 " order by c.DEV_TIME,c.ELEMENT_ID asc";
         SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
         List<SqlRow> results = sqlQuery.findList();
+        HashMap<String,ObjectNode> serieMap = new HashMap<String,ObjectNode>();
+        List<TResRaidGroup> rdList = TResRaidGroup.findBySubsystemId(id);
+        for (TResRaidGroup rd : rdList) {
+            ObjectNode serie = series.addObject();
+            serie.put("id", rd.ID);
+            serie.put("name", rd.NAME);
+            serie.putArray("data");
+            serieMap.put(rd.ID, serie);
+        }
         for(SqlRow row : results){
             if(serieMap.containsKey(row.getString("ELEMENT_ID"))) {
                 ObjectNode serie = serieMap.get(row.getString("ELEMENT_ID"));
@@ -397,7 +397,7 @@ public class Charts extends Controller {
     private static void getSubsystemPrfTopn(String id,String sub_kpi,String math, String start_time, String end_time,ArrayNode categories, ArrayNode series) {
         int limit = 10;
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -5);
+        c.add(Calendar.DAY_OF_MONTH, -1);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
@@ -476,7 +476,7 @@ public class Charts extends Controller {
 
     private static void getSwitchPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -21);
+        c.add(Calendar.DAY_OF_MONTH, -1);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){
@@ -529,7 +529,7 @@ public class Charts extends Controller {
 
     private static void getHostPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -5);
+        c.add(Calendar.DAY_OF_MONTH, -1);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){

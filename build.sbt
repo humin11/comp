@@ -1,3 +1,5 @@
+import com.github.play2war.plugin._
+
 name := "comp"
 
 version := "1.0-SNAPSHOT"
@@ -11,3 +13,7 @@ libraryDependencies ++= Seq(
 )     
 
 play.Project.playJavaSettings
+
+Play2WarPlugin.play2WarSettings
+
+Play2WarKeys.servletVersion := "2.5"

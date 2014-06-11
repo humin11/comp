@@ -53,6 +53,10 @@ public class TResRaidGroup2Vol {
     }
 
     public static TResRaidGroup2Vol findByVolumeId(String volumeId){
-        return find.where().eq("VOLUME_ID",volumeId).findUnique();
+        List<TResRaidGroup2Vol> list = find.where().eq("VOLUME_ID",volumeId).findList();
+        if(list.isEmpty())
+            return null;
+        else
+            return list.get(0);
     }
 }

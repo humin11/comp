@@ -66,4 +66,8 @@ public class TResPort extends ResModel {
     public static List<TResPort> findBySubsystemId(String subsystemId){
         return find.where().eq("SUBSYSTEM_ID",subsystemId).findList();
     }
+
+    public static TResPort findById(String id){
+        return find.byId(id);
+    }
 }

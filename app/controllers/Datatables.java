@@ -39,6 +39,10 @@ public class Datatables extends Controller {
             options = getVolumeCfg(id);
         else if("cfg_disk".equals(model))
             options = getDiskCfg(id);
+        else if("cfg_hostgroup".equals(model))
+            options = getHostGroupCfg(id);
+        else if("cfg_app".equals(model))
+            options = getAppCfg(id);
         else if("cfg_port".equals(model))
             options = getPortCfg(id);
         else if("alarm".equals(model))
@@ -189,6 +193,64 @@ public class Datatables extends Controller {
             obj.add(TResVendor.findById(disk.VENDOR_ID).NAME);
             obj.add(disk.SERIAL_NUMBER);
             obj.add(disk.SLOT);
+        }
+        return options;
+    }
+
+    private static ObjectNode getAppCfg(String id) {
+        String[] kpiColumns = {"名称","描述","Host Group","容量","卷数量"};
+        List<TResApplication> apps = TResApplication.findBySubsystemId(id);
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for(TResApplication app : apps){
+            ArrayNode obj = rows.addArray();
+            obj.add(app.NAME);
+            obj.add(app.DESCRIPTION);
+            obj.add(app.HOSTGROUP);
+            obj.add(app.CAPACITY);
+            obj.add(app.N_VOL);
+        }
+        return options;
+    }
+
+    private static ObjectNode getHostGroupCfg(String id) {
+        String[] kpiColumns = {"Raid Level","RaidGroup","卷","容量","前端口","HBA WWN","Host Group","应用名称"};
+        List<TResLunMapping> lunmappingList = TResLunMapping.findBySubsystemId(id);
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for(TResLunMapping lunmapping : lunmappingList){
+            TResStorageVolume volume = TResStorageVolume.findById(lunmapping.VOLUME_ID);
+            TResRaidGroup2Vol rd2vol = TResRaidGroup2Vol.findByVolumeId(volume.ID);
+            String rd = "no data";
+            String rd_level = (volume.RAID_LEVEL == null ? "no data" : volume.RAID_LEVEL);
+            String fcport = "*";
+            if(rd2vol != null){
+                TResRaidGroup raidgroup = TResRaidGroup.findById(rd2vol.RAIDGROUP_ID);
+                if(raidgroup != null) {
+                    rd = raidgroup.NAME;
+                    rd_level = raidgroup.RAID_LEVEL;
+                }
+            }
+            if(lunmapping.FCPORT_ID != null){
+                TResPort port = TResPort.findById(lunmapping.FCPORT_ID);
+                if(port != null)
+                    fcport = port.ELEMENT_NAME;
+            }
+            ArrayNode obj = rows.addArray();
+            obj.add(rd_level);
+            obj.add(rd);
+            obj.add(volume.ELEMENT_NAME);
+            obj.add(Format.parserCapacity(volume.CAPACITY));
+            obj.add(fcport);
+            obj.add(Format.splitWWN(lunmapping.HBA_WWN));
+            obj.add(lunmapping.HOST_NAME);
+            obj.add("");
         }
         return options;
     }

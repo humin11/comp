@@ -24,6 +24,10 @@
                         container.load('@{routes.Storages.volume()}?id='+id);
                     else if($(this).attr('id') == 'diskBtn')
                         container.load('@{routes.Storages.disk()}?id='+id);
+                    else if($(this).attr('id') == 'hostgroupBtn')
+                        container.load('@{routes.Storages.hostgroup()}?id='+id);
+                    else if($(this).attr('id') == 'appBtn')
+                        container.load('@{routes.Storages.app()}?id='+id);
                 });
             });
             if(tab == 'summary')
@@ -60,6 +64,8 @@
                     <a id="raidgroupBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa pool16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Raid组</a>
                     <a id="volumeBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa thinVolume16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;卷</a>
                     <a id="diskBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa disk16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;磁盘</a>
+                    <a id="hostgroupBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa hostConnections16" style="margin-bottom: -3px"></div>&nbsp;&nbsp;Host组</a>
+                    <a id="appBtn" href="#" class="btn btn-pa-purple btn-labeled"><div class="icon fa fa-cubes" style="margin-bottom: -3px"></div>&nbsp;&nbsp;应用</a>
                 </div>
             </div>
         </div>

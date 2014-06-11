@@ -9,7 +9,10 @@
  */
 package models;
 
+import play.db.ebean.Model;
+
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -52,4 +55,19 @@ public class TResLunMapping {
 	 * The time of something changed(E.g. Status changed) 
 	 */
 	public Timestamp CHANGED_TIME;
+
+    public static Model.Finder<String, TResLunMapping> find = new Model.Finder<String, TResLunMapping>(
+            String.class, TResLunMapping.class
+    );
+
+    public static List<TResLunMapping> findAll() { return find.all(); }
+
+    public static List<TResLunMapping> findBySubsystemId(String id) {
+        return find.where().eq("SUBSYSTEM_ID",id).orderBy("HOST_NAME").findList();
+    }
+
+    public static List<TResLunMapping> findHostGroupBySubsystemId(String id,String hostname) {
+        return find.where().eq("SUBSYSTEM_ID",id).eq("HOST_NAME",hostname).findList();
+    }
+
 }

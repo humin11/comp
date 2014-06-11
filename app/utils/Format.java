@@ -30,6 +30,8 @@ public class Format {
 	}
 
     public static String splitWWN(String wwn){
+        if(wwn == null)
+            return "";
         char[] tmp = wwn.toCharArray();
         String result = "";
         for(int i=0;i<tmp.length;i++){

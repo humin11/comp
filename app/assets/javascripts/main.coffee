@@ -50,7 +50,7 @@ Highcharts.setOptions(
       $('#'+container).highcharts(json)
   )
 
-@initTable = (url,container,model,rowlen = 5,id = '',start_time = '',end_time = '') ->
+@initTable = (url,container,model,rowlen = 5,id = '',title = '',start_time = '',end_time = '') ->
   $.ajax(
     cache:false
     dataType: "json"
@@ -64,7 +64,7 @@ Highcharts.setOptions(
     success: (json) ->
       $('#'+container).empty()
       try
-          table = $('<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered"></table>')
+          table = $('<table id="'+container+'_table" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered"></table>')
           thead = $('<thead></thead>')
           ttr = $('<tr></tr>')
           tbody = $('<tbody></tbody>')
@@ -85,6 +85,8 @@ Highcharts.setOptions(
             iDisplayLength: rowlen
             aLengthMenu: [5,10,20,50,100]
           )
+          $('#'+container+'_table_wrapper .table-caption').html(title);
+          $('#'+container+'_table_wrapper .dataTables_filter input').attr('placeholder', 'Search...');
         catch error
           #{error}
   )

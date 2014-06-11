@@ -30,12 +30,19 @@
                 if(cbId == 'storageCb'){
                     $('#switchCb').removeAttr('checked');
                     $('#hostCb').removeAttr('checked');
+                    $('#appCb').removeAttr('checked');
                     loadStorages();
                 }else if(cbId == 'switchCb'){
                     $('#storageCb').removeAttr('checked');
                     $('#hostCb').removeAttr('checked');
+                    $('#appCb').removeAttr('checked');
                     loadSwitchs();
                 }else if(cbId == 'hostCb'){
+                    $('#switchCb').removeAttr('checked');
+                    $('#storageCb').removeAttr('checked');
+                    $('#appCb').removeAttr('checked');
+                }else if(cbId == 'appCb'){
+                    $('#hostCb').removeAttr('checked');
                     $('#switchCb').removeAttr('checked');
                     $('#storageCb').removeAttr('checked');
                 }
@@ -126,6 +133,10 @@
                     <label class="checkbox-inline">
                         <input id="hostCb" type="checkbox" class="px">
                         <span class="lbl">主机</span>
+                    </label>
+                    <label class="checkbox-inline">
+                        <input id="appCb" type="checkbox" class="px">
+                        <span class="lbl">应用系统</span>
                     </label>
                 </div>
             </div>
