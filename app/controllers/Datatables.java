@@ -209,8 +209,17 @@ public class Datatables extends Controller {
             ArrayNode obj = rows.addArray();
             obj.add(app.NAME);
             obj.add(app.DESCRIPTION);
-            obj.add(app.HOSTGROUP);
-            obj.add(app.CAPACITY);
+            String hostgroups = "";
+            if(app.HOSTGROUP != null){
+                String[] hostnames = app.HOSTGROUP.split(",");
+                hostgroups += "<div class='select2-success'><div class='select2-container-multi select2-danger'><ul class='select2-choices'>";
+                for(String hostname : hostnames){
+                    hostgroups += ("<li class='select2-search-choice'>"+hostname+"</li>");
+                }
+                hostgroups += "</ul></div></div>";
+            }
+            obj.add(hostgroups);
+            obj.add(Format.parserCapacity(app.CAPACITY));
             obj.add(app.N_VOL);
         }
         return options;
@@ -250,7 +259,11 @@ public class Datatables extends Controller {
             obj.add(fcport);
             obj.add(Format.splitWWN(lunmapping.HBA_WWN));
             obj.add(lunmapping.HOST_NAME);
-            obj.add("");
+            TResApplication app = TResApplication.findBySubsystemId(id,lunmapping.HOST_NAME);
+            if(app == null)
+                obj.add("");
+            else
+                obj.add(app.NAME);
         }
         return options;
     }

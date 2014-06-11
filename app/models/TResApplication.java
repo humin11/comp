@@ -32,4 +32,12 @@ public class TResApplication extends Model{
         return find.where().eq("SUBSYSTEM_ID",id).findList();
     }
 
+    public static TResApplication findBySubsystemId(String id,String hostgroup) {
+        List<TResApplication> apps = find.where().eq("SUBSYSTEM_ID",id).eq("HOSTGROUP",hostgroup).findList();
+        if(apps.isEmpty())
+            return null;
+        else
+            return apps.get(0);
+    }
+
 }

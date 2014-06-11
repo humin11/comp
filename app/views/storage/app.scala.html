@@ -20,22 +20,27 @@
             };
             $.ajax({
                 cache:false,
-                dataType: "json",
+                dataType: "text",
                 type: "POST",
                 contentType:'application/json',
                 data: JSON.stringify(params),
                 url: '@routes.Storages.addapp()',
                 success:function(data){
                     $('#add_app').modal('hide');
+                    loadTable();
                 }
             });
         });
         var title = $('<a class="btn btn-sm btn-default btn-labeled" href="#">添加应用</a>');
         title.click(function(){
-            loadHostgroup();
             $('#add_app').modal('show');
         });
-        initTable('@routes.Datatables.options()','table1',model,count,id,title,'','');
+        loadTable();
+
+        loadHostgroup();
+        function loadTable(){
+            initTable('@routes.Datatables.options()','table1',model,count,id,title,'','');
+        }
 
         function loadHostgroup(){
             $.ajax({
@@ -79,7 +84,7 @@
                 <label for="app_desc">应用描述</label>
                 <input id="app_desc" class="form-control" type="text">
                 <label for="app_hostgroup">HostGroup</label>
-                <div class="select2-danger">
+                <div class="select2-success">
                     <select id="select_hostgroup" multiple="multiple" class="form-control">
                     </select>
                 </div>
