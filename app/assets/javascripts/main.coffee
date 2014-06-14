@@ -79,13 +79,17 @@ Highcharts.setOptions(
           tableOuterDiv = $('<div class="table-primary" style="margin-bottom: 0"></div>')
           tableOuterDiv.append(table)
           $('#'+container).append(tableOuterDiv)
-          table.dataTable(
-            bSort: true
-            bAutoWidth: false
-            iDisplayLength: rowlen
-            aLengthMenu: [5,10,20,50,100]
-          )
-          $('#'+container+'_table_wrapper .table-caption').html(title);
+          table.dataTable({
+            bSort: true,
+            bAutoWidth: false,
+            iDisplayLength: rowlen,
+            aLengthMenu: [5, 10, 20, 50, 100],
+            "sDom":"<'table-header clearfix'<'table-caption'T><'DT-lf-right'<'DT-per-page'l><'DT-search'f>>r>t<'table-footer clearfix'<'DT-label'i><'DT-pagination'p>>",
+            "tableTools": {
+              "sSwfPath": "/assets/images/copy_csv_xls_pdf.swf"
+            }
+          })
+          $('#'+container+'_table_wrapper .table-caption').append(title) if title!=null && title!=''
           $('#'+container+'_table_wrapper .dataTables_filter input').attr('placeholder', 'Search...');
         catch error
           #{error}
