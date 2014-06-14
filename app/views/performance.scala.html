@@ -17,6 +17,23 @@
                     $('#select-device').select2('disable');
                 }
             });
+            $('#select_type').select2({
+                allowClear: false,
+                placeholder: "选择类型"
+            });
+            $('#select_math').select2({
+                allowClear: false,
+                placeholder: "选择汇总方式"
+            });
+            $('#select_type').change(function(){
+                var kpi = $('#select_type').select2('val');
+                if(kpi == 'subsystem')
+                    loadStorages();
+                else if(kpi == 'switch')
+                    loadSwitchs();
+                else if(kpi == 'business')
+                    loadBusiness();
+            });
             $('#select-device').select2({
                 allowClear: true,
                 placeholder: "选择对象"
@@ -25,38 +42,10 @@
                 allowClear: true,
                 placeholder: "选择KPI"
             });
-            $('#cb-section input[type="checkbox"]').click(function(){
-                var cbId = $(this).attr('id');
-                if(cbId == 'storageCb'){
-                    $('#switchCb').removeAttr('checked');
-                    $('#hostCb').removeAttr('checked');
-                    $('#businessCb').removeAttr('checked');
-                    loadStorages();
-                }else if(cbId == 'switchCb'){
-                    $('#storageCb').removeAttr('checked');
-                    $('#hostCb').removeAttr('checked');
-                    $('#businessCb').removeAttr('checked');
-                    loadSwitchs();
-                }else if(cbId == 'hostCb'){
-                    $('#switchCb').removeAttr('checked');
-                    $('#storageCb').removeAttr('checked');
-                    $('#businessCb').removeAttr('checked');
-                }else if(cbId == 'businessCb'){
-                    $('#hostCb').removeAttr('checked');
-                    $('#switchCb').removeAttr('checked');
-                    $('#storageCb').removeAttr('checked');
-                    loadBusiness();
-                }
-                $(this).attr('checked','checked');
-            });
 
             $('#exec').click(function(){
-                var deviceType = $('#cb-section input[checked]').attr('id');
-                var kpi = 'subsystem';
-                if(deviceType == 'switchCb')
-                    kpi = 'switchs';
-                if(deviceType == 'businessCb')
-                    kpi = 'business';
+                var kpi = $('#select_type').select2('val');
+                var math = $('#select_math').select2('val');
                 var sub_kpi = $('#select-kpi').select2('val');
                 var kpiName = $('option[value='+sub_kpi+']').text();
                 var id = $('#select-device').select2('val');
@@ -71,7 +60,7 @@
                 var title = deviceName+kpiName;
                 var start_time = $('#starttime').val();
                 var end_time = $('#endtime').val();
-                initChart('@routes.Charts.options()','chart1',kpi,sub_kpi,'max',title,id,start_time,end_time);
+                initChart('@routes.Charts.options()','chart1',kpi,sub_kpi,math,title,id,start_time,end_time);
             });
             loadStorages();
             function loadStorages(){
@@ -128,35 +117,34 @@
         <h1 class="col-xs-12 col-sm-2 text-center text-left-sm"><i class="fa fa-bar-chart-o page-header-icon"></i>&nbsp;&nbsp;性能查询</h1>
         <div class="col-xs-12 col-sm-8">
             <div class="row">
-                <div class="col-sm-5 col-md-5">
+                <div class="col-sm-6 col-md-6">
                     <div class="input-daterange input-group" id="kpi-timerange" style="width: 300px">
                         <input type="text" class="input-sm form-control" id="starttime" name="start" placeholder="Start date">
                         <span class="input-group-addon">to</span>
                         <input type="text" class="input-sm form-control" id="endtime" name="end" placeholder="End date">
                     </div>
                 </div>
-                <div class="col-sm-2 col-md-2">
+                <div class="col-sm-6 col-md-6">
                     <div class="input-group" style="width: 100px">
                         <input type="checkbox" data-class="switcher-lg" id="globa-btn">
                     </div>
                 </div>
-                <div class="col-sm-5 col-md-5" id="cb-section">
-                    <label class="checkbox-inline">
-                        <input id="storageCb" type="checkbox" class="px" checked="checked">
-                        <span class="lbl">存储</span>
-                    </label>
-                    <label class="checkbox-inline">
-                        <input id="switchCb" type="checkbox" class="px">
-                        <span class="lbl">交换机</span>
-                    </label>
-                    <label class="checkbox-inline">
-                        <input id="hostCb" type="checkbox" class="px">
-                        <span class="lbl">主机</span>
-                    </label>
-                    <label class="checkbox-inline">
-                        <input id="businessCb" type="checkbox" class="px">
-                        <span class="lbl">应用</span>
-                    </label>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <select id="select_type" class="form-control" style="width: 300px">
+                        <option value="subsystem" selected="selected">存储</option>
+                        <option value="switch">交换机</option>
+                        <option value="host">主机</option>
+                        <option value="business">应用系统</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <select id="select-device" class="form-control" style="width: 200px" disabled="disabled">
+                        <option></option>
+                    </select>
                 </div>
             </div>
             <div class="row" style="margin-top: 5px">
@@ -201,11 +189,11 @@
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4">
-                    <div class="input-group" style="width: 200px">
-                        <select id="select-device" class="form-control" style="width: 200px" disabled="disabled">
-                            <option></option>
-                        </select>
-                    </div>
+                    <select id="select_math" class="form-control" style="width: 200px">
+                        <option value="max" selected="selected">最大值</option>
+                        <option value="sum">总和</option>
+                        <option value="avg">平均值</option>
+                    </select>
                 </div>
             </div>
         </div>

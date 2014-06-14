@@ -350,11 +350,11 @@ public class Charts extends Controller {
         if(!end_time.equals("")) {
             endTime = Format.parseDate(end_time, "yyyy-MM-dd HH:mm");
         }
-        String sql = "select a.APPLICATION_NAME,t.stoptime as time,SUM(p.TOTAL_IO/p.INTERVAL_LEN) as total_io,SUM(p.TOTAL_KB/p.INTERVAL_LEN) as total_kb from " +
-                "T_Res_Application2Lun a,T_Prf_Dsvol p, V_Prf_TimeStamp t where " +
-                "a.VOLUME_ID=p.ELEMENT_ID and " +
-                "a.APPLICATION_NAME=:ELEMENT_ID and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
-                "t.stoptime<=:END_TIME group by a.APPLICATION_NAME,t.stoptime order by t.stoptime asc";
+        String sql = "select t.stoptime as time,SUM(p.TOTAL_IO/p.INTERVAL_LEN) as total_io,SUM(p.TOTAL_KB/p.INTERVAL_LEN) as total_kb from " +
+                "T_Prf_Dsvol p, V_Prf_TimeStamp t where " +
+                "p.ELEMENT_ID in (select a.VOLUME_ID from T_Res_Application2Lun a where a.APPLICATION_NAME=:ELEMENT_ID) " +
+                "and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
+                "t.stoptime<=:END_TIME group by t.stoptime order by t.stoptime asc";
         System.out.println(sql);
         SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
         sqlQuery.setParameter("ELEMENT_ID",id);
