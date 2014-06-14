@@ -30,18 +30,18 @@
                 if(cbId == 'storageCb'){
                     $('#switchCb').removeAttr('checked');
                     $('#hostCb').removeAttr('checked');
-                    $('#appCb').removeAttr('checked');
+                    $('#businessCb').removeAttr('checked');
                     loadStorages();
                 }else if(cbId == 'switchCb'){
                     $('#storageCb').removeAttr('checked');
                     $('#hostCb').removeAttr('checked');
-                    $('#appCb').removeAttr('checked');
+                    $('#businessCb').removeAttr('checked');
                     loadSwitchs();
                 }else if(cbId == 'hostCb'){
                     $('#switchCb').removeAttr('checked');
                     $('#storageCb').removeAttr('checked');
-                    $('#appCb').removeAttr('checked');
-                }else if(cbId == 'appCb'){
+                    $('#businessCb').removeAttr('checked');
+                }else if(cbId == 'businessCb'){
                     $('#hostCb').removeAttr('checked');
                     $('#switchCb').removeAttr('checked');
                     $('#storageCb').removeAttr('checked');
@@ -55,8 +55,8 @@
                 var kpi = 'subsystem';
                 if(deviceType == 'switchCb')
                     kpi = 'switchs';
-                if(deviceType == 'appCb')
-                    kpi = 'app';
+                if(deviceType == 'businessCb')
+                    kpi = 'business';
                 var sub_kpi = $('#select-kpi').select2('val');
                 var kpiName = $('option[value='+sub_kpi+']').text();
                 var id = $('#select-device').select2('val');
@@ -154,7 +154,7 @@
                         <span class="lbl">主机</span>
                     </label>
                     <label class="checkbox-inline">
-                        <input id="appCb" type="checkbox" class="px">
+                        <input id="businessCb" type="checkbox" class="px">
                         <span class="lbl">应用</span>
                     </label>
                 </div>

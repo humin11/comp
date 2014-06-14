@@ -70,8 +70,8 @@ public class Charts extends Controller {
             getSwitchPrf(id, sub_kpi, start_time, end_time, series);
         else if("host".equalsIgnoreCase(kpi))
             getHostPrf(id, sub_kpi, start_time, end_time, series);
-        else if("app".equalsIgnoreCase(kpi))
-            getAppPrf(id, sub_kpi,math, start_time, end_time, series);
+        else if("business".equalsIgnoreCase(kpi))
+            getBusinessPrf(id, sub_kpi,math, start_time, end_time, series);
         return options;
     }
 
@@ -220,7 +220,7 @@ public class Charts extends Controller {
 
     private static void getSubsystemPrf(String id, String sub_kpi,String math, String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -2);
+        c.add(Calendar.HOUR, -30);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
@@ -275,8 +275,8 @@ public class Charts extends Controller {
                 subWhere = " and c.WRITE_HITS>=0 ";
             }
             sql = "select c.DEV_TIME,a.ID,"+column+" as VAL " +
-                "from T_Res_Storage_Subsystem a,T_Res_RaidGroup b,T_Prf_Dsraidgroup c "+
-                "where a.ID=b.SUBSYSTEM_ID and b.ID=c.ELEMENT_ID " + subWhere +
+                "from T_Res_Storage_Subsystem a,T_Prf_Dsraidgroup c "+
+                "where a.ID=c.SUBSYSTEM_ID " + subWhere +
                 timescope +
                 idscope +
                 " group by c.DEV_TIME,a.ID " +
@@ -339,9 +339,9 @@ public class Charts extends Controller {
         }
     }
 
-    private static void getAppPrf(String id, String sub_kpi,String math, String start_time, String end_time, ArrayNode series) {
+    private static void getBusinessPrf(String id, String sub_kpi,String math, String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -1);
+        c.add(Calendar.HOUR, -30);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){
@@ -350,25 +350,31 @@ public class Charts extends Controller {
         if(!end_time.equals("")) {
             endTime = Format.parseDate(end_time, "yyyy-MM-dd HH:mm");
         }
-        String sql = "select a.NAME,t.stoptime as time,p.TOTAL_IO/p.INTERVAL_LEN as total_io,p.TOTAL_KB/p.INTERVAL_LEN as total_kb from " +
-                "T_Res_Application a,T_Res_Lun_Mapping b,T_Prf_Dsvol p, V_Prf_TimeStamp t where " +
-                "a.HOSTGROUP like CONCAT('%',b.HOST_NAME,'%') and b.VOLUME_ID=p.ELEMENT_ID and " +
-                "a.NAME=:ELEMENT_ID and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
-                "t.stoptime<=:END_TIME order by t.stoptime asc";
+        String sql = "select a.APPLICATION_NAME,t.stoptime as time,SUM(p.TOTAL_IO/p.INTERVAL_LEN) as total_io,SUM(p.TOTAL_KB/p.INTERVAL_LEN) as total_kb from " +
+                "T_Res_Application2Lun a,T_Prf_Dsvol p, V_Prf_TimeStamp t where " +
+                "a.VOLUME_ID=p.ELEMENT_ID and " +
+                "a.APPLICATION_NAME=:ELEMENT_ID and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
+                "t.stoptime<=:END_TIME group by a.APPLICATION_NAME,t.stoptime order by t.stoptime asc";
         System.out.println(sql);
         SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
         sqlQuery.setParameter("ELEMENT_ID",id);
         sqlQuery.setParameter("START_TIME",startTime);
         sqlQuery.setParameter("END_TIME",endTime);
         List<SqlRow> results = sqlQuery.findList();
-        ObjectNode send = series.addObject();
-        ArrayNode sendData = send.putArray("data");
-        ObjectNode recv = series.addObject();
+        ObjectNode serie = series.addObject();
+        ArrayNode serieData = serie.putArray("data");
+        serie.put("id",id);
+        serie.put("name",id);
+        for(SqlRow row : results){
+            ObjectNode xy = serieData.addObject();
+            xy.put("x",row.getDate("time").getTime());
+            xy.put("y",row.getDate("total_io").getTime());
+        }
     }
 
     private static void getRaidGroupPrf(String id, String sub_kpi, String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -1);
+        c.add(Calendar.HOUR, -30);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
@@ -426,7 +432,7 @@ public class Charts extends Controller {
     private static void getSubsystemPrfTopn(String id,String sub_kpi,String math, String start_time, String end_time,ArrayNode categories, ArrayNode series) {
         int limit = 10;
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -1);
+        c.add(Calendar.HOUR, -30);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
@@ -468,12 +474,12 @@ public class Charts extends Controller {
                 column = "ROUND("+math+"(c.WRITE_HITS),1)";
                 subWhere = " and c.WRITE_HITS>=0 ";
             }
-            sql = "select a.ID as SUBSYSTEM_ID,a.NAME as SUBSYSTEM_NAME,b.ID,b.NAME,"+column+" as VAL " +
-                "from T_Res_Storage_Subsystem a,T_Res_RaidGroup b,T_Prf_Dsraidgroup c "+
-                "where a.ID=b.SUBSYSTEM_ID and b.ID=c.ELEMENT_ID " +subWhere+
+            sql = "select a.ID as SUBSYSTEM_ID,a.NAME as SUBSYSTEM_NAME,c.ELEMENT_NAME as NAME,"+column+" as VAL " +
+                "from T_Res_Storage_Subsystem a,T_Prf_Dsraidgroup c "+
+                "where a.ID=c.SUBSYSTEM_ID " +subWhere+
                 timescope +
                 idscope +
-                " group by b.ID,b.NAME " +
+                " group by c.ELEMENT_NAME " +
                 "order by VAL desc";
         }else if("chp_usage".equalsIgnoreCase(sub_kpi)||"dkp_usage".equalsIgnoreCase(sub_kpi)){
             if("chp_usage".equalsIgnoreCase(sub_kpi)) {
