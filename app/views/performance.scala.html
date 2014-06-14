@@ -45,7 +45,7 @@
                     $('#hostCb').removeAttr('checked');
                     $('#switchCb').removeAttr('checked');
                     $('#storageCb').removeAttr('checked');
-                    loadApps();
+                    loadBusiness();
                 }
                 $(this).attr('checked','checked');
             });
@@ -106,12 +106,12 @@
                     }
                 });
             }
-            function loadApps(){
+            function loadBusiness(){
                 $.ajax({
                     cache:false,
                     dataType: "json",
                     type: "GET",
-                    url: '@routes.Storages.appJson()',
+                    url: '@routes.Business.json()',
                     success:function(data){
                         $('#select-device').empty();
                         $('#select-device').append('<option></option>');

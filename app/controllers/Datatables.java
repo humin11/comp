@@ -41,8 +41,8 @@ public class Datatables extends Controller {
             options = getDiskCfg(id);
         else if("cfg_hostgroup".equals(model))
             options = getHostGroupCfg(id);
-        else if("cfg_app".equals(model))
-            options = getAppCfg(id);
+        else if("cfg_business".equals(model))
+            options = getBusinessCfg(id);
         else if("cfg_port".equals(model))
             options = getPortCfg(id);
         else if("alarm".equals(model))
@@ -197,9 +197,9 @@ public class Datatables extends Controller {
         return options;
     }
 
-    private static ObjectNode getAppCfg(String id) {
+    private static ObjectNode getBusinessCfg(String id) {
         String[] kpiColumns = {"名称","描述","Host Group","容量","卷数量"};
-        List<TResApplication> apps = TResApplication.findBySubsystemId(id);
+        List<TResApplication> apps = TResApplication.findAll();
         ObjectNode options = Json.newObject();
         ArrayNode cols = options.putArray("cols");
         ArrayNode rows = options.putArray("rows");
@@ -210,13 +210,14 @@ public class Datatables extends Controller {
             obj.add(app.NAME);
             obj.add(app.DESCRIPTION);
             String hostgroups = "";
-            if(app.HOSTGROUP != null){
-                String[] hostnames = app.HOSTGROUP.split(",");
-//                hostgroups += "<div class='select2-success'><div class='select2-container-multi select2-danger'><ul class='select2-choices'>";
-                for(String hostname : hostnames){
-                    hostgroups += (hostname+"<br>");
-                }
-//                hostgroups += "</ul></div></div>";
+            HashMap<String,String> hostgroupMap = new HashMap<String,String>();
+            List<TResApplication2Lun> app2lunList = TResApplication2Lun.findByApplicationId(app.ID);
+            for(TResApplication2Lun app2lun : app2lunList){
+                if(hostgroupMap.containsKey(app2lun.HOSTGROUP))
+                    continue;
+                else
+                    hostgroupMap.put(app2lun.HOSTGROUP,app2lun.HOSTGROUP);
+                hostgroups += (app2lun.HOSTGROUP+"<br>");
             }
             obj.add(hostgroups);
             obj.add(Format.parserCapacity(app.CAPACITY));
@@ -259,11 +260,11 @@ public class Datatables extends Controller {
             obj.add(fcport);
             obj.add(Format.splitWWN(lunmapping.HBA_WWN));
             obj.add(lunmapping.HOST_NAME);
-            TResApplication app = TResApplication.findBySubsystemId(id,lunmapping.HOST_NAME);
-            if(app == null)
+            List<TResApplication2Lun> app = TResApplication2Lun.findBySubsystemId(id,lunmapping.HOST_NAME);
+            if(app.isEmpty())
                 obj.add("");
             else
-                obj.add(app.NAME);
+                obj.add(app.get(0).APPLICATION_NAME);
         }
         return options;
     }

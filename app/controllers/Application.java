@@ -66,6 +66,11 @@ public class Application extends Controller {
         for(TResHost host : hostList){
             initHostSubMenu(c13c,host.ID,host.NAME);
         }
+        ObjectNode c14 = c1c.addObject();
+        c14.put("id",14);
+        c14.put("name","应用系统");
+        c14.put("url","/business");
+        c14.put("icon","fa-cloud");
         ObjectNode c5 = root.addObject();
         c5.put("id",5);
         c5.put("name","性能");

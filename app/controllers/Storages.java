@@ -70,11 +70,6 @@ public class Storages extends Controller {
         return ok(views.html.widgets.table.render(id,"cfg_hostgroup",10));
     }
 
-    public static Result app() {
-        String id = request().getQueryString("id");
-        return ok(views.html.storage.app.render(id));
-    }
-
     public static Result json() {
         List<TResStorageSubsystem> subsystemList= TResStorageSubsystem.findAll();
         ArrayNode json = (ArrayNode)Json.toJson(subsystemList);
@@ -92,34 +87,6 @@ public class Storages extends Controller {
         }
         ArrayNode json = (ArrayNode)Json.toJson(hostgroup);
         return ok(json);
-    }
-
-    public static Result appJson(){
-        List<TResApplication> apps = TResApplication.findAll();
-        ArrayNode json = (ArrayNode)Json.toJson(apps);
-        return ok(json);
-    }
-
-    public static Result addapp(){
-        ObjectNode params = (ObjectNode)request().body().asJson();
-        long capacity = 0L;
-        int volcounts = 0;
-        String subsystemId = params.get("SUBSYSTEM_ID").asText();
-        String[] hostgroups = params.get("HOSTGROUP").asText().split(",");
-        for(int i = 0;i < hostgroups.length;i++){
-            String hostgroup = hostgroups[i];
-            List<TResLunMapping> lunmappingList = TResLunMapping.findHostGroupBySubsystemId(subsystemId,hostgroup);
-            for(TResLunMapping lunmapping : lunmappingList){
-                volcounts++;
-                TResStorageVolume volume = TResStorageVolume.findById(lunmapping.VOLUME_ID);
-                capacity+=volume.CAPACITY;
-            }
-        }
-        params.put("CAPACITY",capacity);
-        params.put("N_VOL",volcounts);
-        TResApplication app = Json.fromJson(params,TResApplication.class);
-        app.save();
-        return ok("");
     }
 
 }

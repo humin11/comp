@@ -12,13 +12,10 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TResApplication extends Model{
 
-    @GeneratedValue
     @Id
-	public Long ID;
+	public String ID;
 	public String NAME;
 	public String DESCRIPTION;
-    public String HOSTGROUP;
-    public String SUBSYSTEM_ID;
     public Long CAPACITY;
     public Integer N_VOL;
 
@@ -28,16 +25,11 @@ public class TResApplication extends Model{
 
     public static List<TResApplication> findAll() { return find.all(); }
 
-    public static List<TResApplication> findBySubsystemId(String id) {
-        return find.where().eq("SUBSYSTEM_ID",id).findList();
-    }
-
-    public static TResApplication findBySubsystemId(String id,String hostgroup) {
-        List<TResApplication> apps = find.where().eq("SUBSYSTEM_ID",id).like("HOSTGROUP","%"+hostgroup+"%").findList();
-        if(apps.isEmpty())
+    public static TResApplication findByName(String name){
+        List<TResApplication> list = find.where().eq("NAME",name).findList();
+        if(list.isEmpty())
             return null;
         else
-            return apps.get(0);
+            return list.get(0);
     }
-
 }
