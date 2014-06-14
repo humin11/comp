@@ -70,6 +70,8 @@ public class Charts extends Controller {
             getSwitchPrf(id, sub_kpi, start_time, end_time, series);
         else if("host".equalsIgnoreCase(kpi))
             getHostPrf(id, sub_kpi, start_time, end_time, series);
+        else if("app".equalsIgnoreCase(kpi))
+            getAppPrf(id, sub_kpi,math, start_time, end_time, series);
         return options;
     }
 
@@ -335,6 +337,33 @@ public class Charts extends Controller {
                 xy.put("y", row.getDouble("VAL"));
             }
         }
+    }
+
+    private static void getAppPrf(String id, String sub_kpi,String math, String start_time, String end_time, ArrayNode series) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, -1);
+        Date startTime = c.getTime();
+        Date endTime = new Date();
+        if(!start_time.equals("")){
+            startTime = Format.parseDate(start_time,"yyyy-MM-dd HH:mm");
+        }
+        if(!end_time.equals("")) {
+            endTime = Format.parseDate(end_time, "yyyy-MM-dd HH:mm");
+        }
+        String sql = "select a.NAME,t.stoptime as time,p.TOTAL_IO/p.INTERVAL_LEN as total_io,p.TOTAL_KB/p.INTERVAL_LEN as total_kb from " +
+                "T_Res_Application a,T_Res_Lun_Mapping b,T_Prf_Dsvol p, V_Prf_TimeStamp t where " +
+                "a.HOSTGROUP like CONCAT('%',b.HOST_NAME,'%') and b.VOLUME_ID=p.ELEMENT_ID and " +
+                "a.NAME=:ELEMENT_ID and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
+                "t.stoptime<=:END_TIME order by t.stoptime asc";
+        System.out.println(sql);
+        SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+        sqlQuery.setParameter("ELEMENT_ID",id);
+        sqlQuery.setParameter("START_TIME",startTime);
+        sqlQuery.setParameter("END_TIME",endTime);
+        List<SqlRow> results = sqlQuery.findList();
+        ObjectNode send = series.addObject();
+        ArrayNode sendData = send.putArray("data");
+        ObjectNode recv = series.addObject();
     }
 
     private static void getRaidGroupPrf(String id, String sub_kpi, String start_time, String end_time, ArrayNode series) {

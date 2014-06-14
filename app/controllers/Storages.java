@@ -94,6 +94,12 @@ public class Storages extends Controller {
         return ok(json);
     }
 
+    public static Result appJson(){
+        List<TResApplication> apps = TResApplication.findAll();
+        ArrayNode json = (ArrayNode)Json.toJson(apps);
+        return ok(json);
+    }
+
     public static Result addapp(){
         ObjectNode params = (ObjectNode)request().body().asJson();
         long capacity = 0L;

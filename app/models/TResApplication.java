@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "T_RES_APPLICATION")
+@Table(name = "T_RES_APPLICATION", uniqueConstraints = {@UniqueConstraint(columnNames = {"NAME"})})
 @Access(AccessType.FIELD)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TResApplication extends Model{
@@ -33,7 +33,7 @@ public class TResApplication extends Model{
     }
 
     public static TResApplication findBySubsystemId(String id,String hostgroup) {
-        List<TResApplication> apps = find.where().eq("SUBSYSTEM_ID",id).eq("HOSTGROUP",hostgroup).findList();
+        List<TResApplication> apps = find.where().eq("SUBSYSTEM_ID",id).like("HOSTGROUP","%"+hostgroup+"%").findList();
         if(apps.isEmpty())
             return null;
         else

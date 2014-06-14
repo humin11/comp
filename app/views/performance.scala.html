@@ -19,7 +19,7 @@
             });
             $('#select-device').select2({
                 allowClear: true,
-                placeholder: "选择设备"
+                placeholder: "选择对象"
             });
             $("#select-kpi").select2({
                 allowClear: true,
@@ -45,6 +45,7 @@
                     $('#hostCb').removeAttr('checked');
                     $('#switchCb').removeAttr('checked');
                     $('#storageCb').removeAttr('checked');
+                    loadApps();
                 }
                 $(this).attr('checked','checked');
             });
@@ -54,6 +55,8 @@
                 var kpi = 'subsystem';
                 if(deviceType == 'switchCb')
                     kpi = 'switchs';
+                if(deviceType == 'appCb')
+                    kpi = 'app';
                 var sub_kpi = $('#select-kpi').select2('val');
                 var kpiName = $('option[value='+sub_kpi+']').text();
                 var id = $('#select-device').select2('val');
@@ -103,13 +106,29 @@
                     }
                 });
             }
+            function loadApps(){
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    url: '@routes.Storages.appJson()',
+                    success:function(data){
+                        $('#select-device').empty();
+                        $('#select-device').append('<option></option>');
+                        $.each(data,function(idx,obj){
+                            var option = $('<option value='+obj.NAME+'>'+obj.DESCRIPTION+'</option>');
+                            $('#select-device').append(option);
+                        });
+                    }
+                });
+            }
         });
     </script>
     <div class="page-header">
         <h1 class="col-xs-12 col-sm-2 text-center text-left-sm"><i class="fa fa-bar-chart-o page-header-icon"></i>&nbsp;&nbsp;性能查询</h1>
         <div class="col-xs-12 col-sm-8">
             <div class="row">
-                <div class="col-sm-6 col-md-6">
+                <div class="col-sm-5 col-md-5">
                     <div class="input-daterange input-group" id="kpi-timerange" style="width: 300px">
                         <input type="text" class="input-sm form-control" id="starttime" name="start" placeholder="Start date">
                         <span class="input-group-addon">to</span>
@@ -121,7 +140,7 @@
                         <input type="checkbox" data-class="switcher-lg" id="globa-btn">
                     </div>
                 </div>
-                <div class="col-sm-4 col-md-4" id="cb-section">
+                <div class="col-sm-5 col-md-5" id="cb-section">
                     <label class="checkbox-inline">
                         <input id="storageCb" type="checkbox" class="px" checked="checked">
                         <span class="lbl">存储</span>
@@ -136,7 +155,7 @@
                     </label>
                     <label class="checkbox-inline">
                         <input id="appCb" type="checkbox" class="px">
-                        <span class="lbl">应用系统</span>
+                        <span class="lbl">应用</span>
                     </label>
                 </div>
             </div>

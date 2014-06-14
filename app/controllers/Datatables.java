@@ -212,11 +212,11 @@ public class Datatables extends Controller {
             String hostgroups = "";
             if(app.HOSTGROUP != null){
                 String[] hostnames = app.HOSTGROUP.split(",");
-                hostgroups += "<div class='select2-success'><div class='select2-container-multi select2-danger'><ul class='select2-choices'>";
+//                hostgroups += "<div class='select2-success'><div class='select2-container-multi select2-danger'><ul class='select2-choices'>";
                 for(String hostname : hostnames){
-                    hostgroups += ("<li class='select2-search-choice'>"+hostname+"</li>");
+                    hostgroups += (hostname+"<br>");
                 }
-                hostgroups += "</ul></div></div>";
+//                hostgroups += "</ul></div></div>";
             }
             obj.add(hostgroups);
             obj.add(Format.parserCapacity(app.CAPACITY));
