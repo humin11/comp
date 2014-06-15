@@ -632,8 +632,12 @@ public class Charts extends Controller {
                 ArrayNode procKPI = proc.putArray("处理器");
                 procKPI.addObject().put("chp_usage", "前端处理器繁忙度");
                 procKPI.addObject().put("dkp_usage", "后端处理器繁忙度");
-
             }
+            ObjectNode fcport = data.addObject();
+            ArrayNode fcportKPI = fcport.putArray("端口");
+            fcportKPI.addObject().put("port_io","端口IOPS");
+            fcportKPI.addObject().put("port_transfer","端口传输率");
+            fcportKPI.addObject().put("port_response","端口响应时间");
             ObjectNode volume = data.addObject();
             ArrayNode volumeKPI = volume.putArray("存储卷");
             volumeKPI.addObject().put("vol_iops","卷IOPS");
@@ -641,19 +645,11 @@ public class Charts extends Controller {
             volumeKPI.addObject().put("vol_response","卷响应时间");
             volumeKPI.addObject().put("vol_read_hits","卷读命中率");
             volumeKPI.addObject().put("vol_write_hits","卷写命中率");
-
-            ObjectNode fcport = data.addObject();
-            ArrayNode fcportKPI = fcport.putArray("端口");
-            fcportKPI.addObject().put("port_io","端口IOPS");
-            fcportKPI.addObject().put("port_transfer","端口传输率");
-            fcportKPI.addObject().put("port_response","端口响应时间");
-
             ObjectNode tc = data.addObject();
             ArrayNode tcKPI = tc.putArray("True Copy");
             tcKPI.addObject().put("tc_response", "TC响应时间");
             tcKPI.addObject().put("tc_all_rio", "All Rio");
             tcKPI.addObject().put("tc_all_write", "All Write");
-
             ObjectNode ur = data.addObject();
             ArrayNode urKPI = ur.putArray("Universal Replicator");
             urKPI.addObject().put("ur_response", "UR响应时间");
