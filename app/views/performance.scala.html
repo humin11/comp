@@ -60,6 +60,8 @@
                 var title = deviceName+kpiName;
                 var start_time = $('#starttime').val();
                 var end_time = $('#endtime').val();
+                $("#chart1" ).empty();
+                $("#chart1" ).html("<div class=\"progress progress-striped active\"><div class=\"progress-bar progress-bar-info\" style=\"width: 100%;\"></div></div>")
                 initChart('@routes.Charts.options()','chart1',kpi,sub_kpi,math,title,id,start_time,end_time);
             });
             loadStorages();
@@ -207,7 +209,7 @@
         <div class="col-sm-12 col-md-12">
             <div class="stat-panel text-center">
                 <div class="stat-row">
-                    <div class="stat-cell bordered no-border-t no-padding" id="chart1" style="height: 500px">
+                    <div class="stat-cell bordered no-border-t no-padding" id="chart1" style="height: 500px; margin-bottom: auto; margin-top: auto;">
 
                     </div>
                 </div>

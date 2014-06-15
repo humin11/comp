@@ -39,100 +39,84 @@
         </div>
     </div>
     <div class="col-sm-3 col-md-3">
-        <div class="stat-panel text-center">
-            <div class="stat-row">
-                <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                    <i class="fa fa-cloud"></i>&nbsp;&nbsp;Capacity ( TB )
-                </div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-cell bordered no-border-t no-padding" id="chart1" style="height: 200px">
-                </div>
-            </div>
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="panel-title"><i class="panel-title-icon fa fa-clock-o"></i>容量概述 ( TB )</span>
+            </div> <!-- / .panel-heading -->
+            <div class="panel-body">
+
+                <div id="chart1" style="height: 200px"></div>
+
+            </div> <!-- / .panel-body -->
         </div>
     </div>
     <div class="col-sm-3 col-md-3">
-        <div class="stat-panel text-center">
-            <div class="stat-row">
-                <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                    <i class="fa fa-cloud"></i>&nbsp;&nbsp;IO/sec (Last 24 hours)
-                </div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-cell bordered no-border-t no-padding" id="chart2" style="height: 200px">
-                </div>
-            </div>
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="panel-title"><i class="panel-title-icon fa fa-clock-o"></i>吞吐频率 ( IO/sec )</span>
+            </div> <!-- / .panel-heading -->
+            <div class="panel-body">
+
+                <div id="chart2" style="height: 200px"></div>
+
+            </div> <!-- / .panel-body -->
         </div>
     </div>
     <div class="col-sm-3 col-md-3">
-        <div class="stat-panel text-center">
-            <div class="stat-row">
-                <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                    <i class="fa fa-cloud"></i>&nbsp;&nbsp;MB/sec (Last 24 hours)
-                </div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-cell bordered no-border-t no-padding" id="chart3" style="height: 200px">
-                </div>
-            </div>
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="panel-title"><i class="panel-title-icon fa fa-clock-o"></i>吞吐量 ( MS/sec )</span>
+            </div> <!-- / .panel-heading -->
+            <div class="panel-body">
+
+                <div id="chart3" style="height: 200px"></div>
+
+            </div> <!-- / .panel-body -->
         </div>
     </div>
 </div>
 
 <div class="row">
      <div class="col-sm-3 col-md-3">
-        <div class="stat-panel text-center">
-            <div class="stat-row">
-                <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                    <i class="fa fa-cube"></i>&nbsp;&nbsp;Top 10 RaidGroup by IOPS (Last 24 hours)
-                </div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-cell bordered no-border-t no-padding" id="chart4" style="height: 300px">
-                </div>
-            </div>
-        </div>
+         <div class="panel">
+             <div class="panel-heading">
+                 <span class="panel-title"><i class="panel-title-icon fa fa-clock-o"></i>吞吐频率最高的RAID组</span>
+             </div> <!-- / .panel-heading -->
+             <div class="panel-body">
+
+                 <div id="chart4" style="height: 300px"></div>
+
+             </div> <!-- / .panel-body -->
+         </div>
     </div>
     <div class="col-sm-3 col-md-3">
-        <div class="stat-panel text-center">
-            <div class="stat-row">
-                <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                    <i class="fa fa-cube"></i>&nbsp;&nbsp;Top 10 RaidGroup by Response (Last 24 hours)
-                </div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-cell bordered no-border-t no-padding" id="chart5" style="height: 300px">
-                </div>
-            </div>
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="panel-title"><i class="panel-title-icon fa fa-clock-o"></i>响应时间最高的RAID组</span>
+            </div> <!-- / .panel-heading -->
+            <div class="panel-body">
+
+                <div id="chart5" style="height: 300px"></div>
+
+            </div> <!-- / .panel-body -->
         </div>
     </div>
     <div class="col-sm-6 col-md-6">
-        <div class="stat-panel text-center">
-            <div class="stat-row">
-                <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                    <i class="fa fa-cube"></i>&nbsp;&nbsp;Port Performance Average (Last 24 hours)
-                </div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-cell bordered no-border-t no-padding" id="table2" >
-                </div>
-            </div>
-        </div>
+        <div id="table2" style="height: 300px"></div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <div class="stat-panel text-center">
-            <div class="stat-row">
-                <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                    <i class="fa fa-cube"></i>&nbsp;&nbsp;RaidGroup Performance Average (Average Last 24 hours)
-                </div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-cell bordered no-border-t no-padding" id="table1" style="height: 200px">
-                </div>
-            </div>
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="panel-title"><i class="panel-title-icon fa fa-clock-o"></i>RaidGroup平均性能</span>
+            </div> <!-- / .panel-heading -->
+            <div class="panel-body">
+
+                <div id="table1" style="height: 500px"></div>
+
+            </div> <!-- / .panel-body -->
         </div>
     </div>
 </div>

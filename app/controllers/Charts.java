@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.TResRaidGroup;
 import models.TResStorageSubsystem;
 import models.TResSwitch;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.*;
 import utils.Format;
@@ -511,7 +512,7 @@ public class Charts extends Controller {
 
     private static void getSwitchPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -1);
+        c.add(Calendar.WEEK_OF_MONTH, -1);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){
@@ -532,6 +533,7 @@ public class Charts extends Controller {
         sqlQuery.setParameter("START_TIME",startTime);
         sqlQuery.setParameter("END_TIME",endTime);
         List<SqlRow> results = sqlQuery.findList();
+        Logger.info(sql);
         ObjectNode send = series.addObject();
         ArrayNode sendData = send.putArray("data");
         ObjectNode recv = series.addObject();
@@ -583,6 +585,7 @@ public class Charts extends Controller {
         sqlQuery.setParameter("ELEMENT_ID",id);
         sqlQuery.setParameter("START_TIME",startTime);
         sqlQuery.setParameter("END_TIME",endTime);
+        Logger.info(sql);
         List<SqlRow> results = sqlQuery.findList();
         ObjectNode read = series.addObject();
         ArrayNode readData = read.putArray("data");

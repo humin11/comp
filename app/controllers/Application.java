@@ -62,9 +62,9 @@ public class Application extends Controller {
         c13.put("url","");
         c13.put("icon","cluster16");
         ArrayNode c13c = c13.putArray("children");
-        List<TResHost> hostList = TResHost.findAll();
+        List<TResHost> hostList = TResHost.find("PARENT_ID is null");
         for(TResHost host : hostList){
-            initHostSubMenu(c13c,host.ID,host.NAME);
+            initHostSubMenu(c13c,host.ID,host.NAME, host.OS_DESCRIPTION);
         }
         ObjectNode c14 = c1c.addObject();
         c14.put("id",14);
@@ -152,10 +152,10 @@ public class Application extends Controller {
 //        port.put("icon","zoneSet16");
     }
 
-    private static void initHostSubMenu(ArrayNode hosts,String id,String name){
+    private static void initHostSubMenu(ArrayNode hosts,String id,String name, String type){
         ObjectNode host = hosts.addObject();
         host.put("id",id);
-        host.put("name",name);
+        host.put("name",name+"("+type+")");
         host.put("url","/host?id="+id);
         host.put("icon","unmanagedServer16");
 //        ArrayNode hostSub = host.putArray("children");

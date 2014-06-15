@@ -42,6 +42,18 @@ public class Format {
         return result;
     }
 
+    public static String parserSpeed(long kb){
+        if(kb*1.0<=0)
+            kb = 1;
+        String[]  unitArr = {"KB","MB","GB","TB","PB","EB","ZB","YB"};
+        Double index= 0d;
+        index=Math.floor(Math.log(kb)/Math.log(1024));
+
+        DecimalFormat df = new DecimalFormat("####");
+        double size =kb/Math.pow(1024,index.doubleValue());
+        return df.format(size)+" "+unitArr[index.intValue()];
+    }
+
 	public static String parserCapacity(long kb){
 	  if(kb*1.0<=0)
 		  kb = 1;

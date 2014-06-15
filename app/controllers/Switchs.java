@@ -18,7 +18,7 @@ public class Switchs extends Controller {
         ObjectNode device = (ObjectNode)Json.toJson(tResSwitch);
         String vendorName = TResVendor.findById(tResSwitch.VENDOR_ID).NAME;
         if(vendorName.contains("Brocade"))
-            device.put("ICON","brocade_small.png");
+            device.put("ICON","brocade.png");
         else if(vendorName.contains("Cisco"))
             device.put("ICON","cisco_small.png");
         return ok(views.html.switchs.index.render(device));

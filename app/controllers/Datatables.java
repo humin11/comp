@@ -47,6 +47,8 @@ public class Datatables extends Controller {
             options = getPortCfg(id);
         else if("alarm".equals(model))
             options = getAlarm(id, title, start_time, end_time);
+        else if("guest_os".equals(model))
+            options = getVMGuest(id);
         return ok(options);
     }
 
@@ -112,7 +114,29 @@ public class Datatables extends Controller {
             obj.add(Format.splitWWN(port.NAME));
             obj.add(port.USAGE_RESTRICTION == null ? "FICON": "Fibre");
             obj.add(port.PORT_NUMBER == null ? "no data" : port.PORT_NUMBER);
-            obj.add(port.PORT_SPEED == null ? "no data" : Format.parserCapacity(port.PORT_SPEED));
+            obj.add(port.PORT_SPEED == null ? "no data" : Format.parserSpeed(port.PORT_SPEED));
+        }
+        return options;
+    }
+
+    private static ObjectNode getVMGuest(String id) {
+        String[] kpiColumns = {"主机名","IP地址","操作系统","状态","内存大小", "内存使用率", "CPU数量", "CPU使用率"};
+        List<TResHost> hosts = TResHost.find("PARENT_ID='"+id+"'");
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for(TResHost host : hosts){
+            ArrayNode obj = rows.addArray();
+            obj.add(host.ELEMENT_NAME);
+            obj.add(host.IP_ADDRESS==null?"":host.IP_ADDRESS);
+            obj.add(host.OS_DESCRIPTION);
+            obj.add(host.STATUS.equals("poweredOn")?"<a href=\"#\" class=\"badge badge-success\">运行中</a>":"<a href=\"#\" class=\"badge badge-warning\">已关机</a>");
+            obj.add(host.MEMEORY_SIZE);
+            obj.add(host.MEMEORY_USAGE);
+            obj.add(host.CPU_CORES);
+            obj.add(host.CPU_USAGE);
         }
         return options;
     }
@@ -131,7 +155,7 @@ public class Datatables extends Controller {
             obj.add(Format.splitWWN(port.NAME));
             obj.add(port.PORT_NUMBER == null ? "no data" : port.PORT_NUMBER);
             obj.add("Fibre");
-            obj.add(port.PORT_SPEED == null ? "no data" : Format.parserCapacity(port.PORT_SPEED));
+            obj.add(port.PORT_SPEED == null ? "no data" : Format.parserSpeed(port.PORT_SPEED));
         }
         return options;
     }
