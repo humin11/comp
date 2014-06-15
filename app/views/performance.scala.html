@@ -11,10 +11,10 @@
             $('#globa-btn').change(function(){
                 var checked = $(this).is(':checked');
                 if(checked) {
-                    $('#select_device').select2('enable');
+                    $('#select_device').select2('enable',true);
                 }else{
-                    $('#select_device').select2('clear');
-                    $('#select_device').select2('disable');
+                    $('#select_device').select2('val','');
+                    $('#select_device').select2('enable',false);
                 }
             });
             $('#select_type').select2({
@@ -26,6 +26,7 @@
                 placeholder: "选择汇总方式"
             });
             $('#select_type').change(function(){
+                $('#select_device').select2('val','');
                 var kpi = $('#select_type').select2('val');
                 if(kpi == 'subsystem')
                     loadStorages();
