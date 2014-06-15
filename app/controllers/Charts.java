@@ -6,6 +6,7 @@ import com.avaje.ebean.SqlRow;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.TResApplication;
 import models.TResRaidGroup;
 import models.TResStorageSubsystem;
 import models.TResSwitch;
@@ -281,18 +282,17 @@ public class Charts extends Controller {
                 idscope +
                 " group by c.DEV_TIME,a.ID " +
                 "order by c.DEV_TIME asc";
-        }else if("port_io".equalsIgnoreCase(sub_kpi)){
-            sql = "select c.DEV_TIME,a.ID,MAX(c.TOTAL_IO) as VAL " +
+        }else if("port_io".equalsIgnoreCase(sub_kpi)||"port_transfer".equalsIgnoreCase(sub_kpi)||"port_response".equalsIgnoreCase(sub_kpi)){
+            if("port_io".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.TOTAL_IO),1)";
+            }else if("port_transfer".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.TOTAL_KB),1)";
+            }else if("port_response".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.TOTAL_TIME),1)";
+            }
+            sql = "select c.DEV_TIME,a.ID,"+column+" as VAL " +
                 "from T_Res_Storage_Subsystem a,T_Res_Port b,T_Prf_Dsport c "+
                 "where a.ID=b.SUBSYSTEM_ID and b.ID=c.ELEMENT_ID " +
-                timescope +
-                idscope +
-                " group by c.DEV_TIME,a.ID " +
-                "order by c.DEV_TIME asc";
-        }else if("port_response".equalsIgnoreCase(sub_kpi)){
-            sql = "select c.DEV_TIME,a.ID,MAX(c.TOTAL_TIME) as VAL " +
-                "from TResStorageSubsystem a,T_Res_Port b,T_Prf_Dsport c "+
-                "where a.ID=b.SUBSYSTEM_ID and b.ID=c.ELEMENT_ID and c.TOTAL_TIME>=0 " +
                 timescope +
                 idscope +
                 " group by c.DEV_TIME,a.ID " +
@@ -313,15 +313,43 @@ public class Charts extends Controller {
                 " group by c.DEV_TIME,a.ID " +
                 "order by c.DEV_TIME asc";
         }else if("cache_write_pending".equalsIgnoreCase(sub_kpi)){
-            sql = "select c.DEV_TIME,a.ID,ROUND(AVG(c.WRITE_PENDING),1) as VAL " +
+            sql = "select c.DEV_TIME,a.ID,ROUND("+math+"(c.WRITE_PENDING),1) as VAL " +
                 "from T_Res_Storage_Subsystem a,T_Prf_Cache c "+
                 "where a.ID=c.SUBSYSTEM_ID and c.WRITE_PENDING >= 0 " +
                 timescope +
                 idscope +
                 " group by c.DEV_TIME,a.ID " +
                 "order by c.DEV_TIME asc";
-        }else if("tc_response".equalsIgnoreCase(sub_kpi)||"ur_response".equalsIgnoreCase(sub_kpi)){
-            return;
+        }else if("tc_response".equalsIgnoreCase(sub_kpi)||"tc_all_rio".equalsIgnoreCase(sub_kpi)||"tc_all_write".equalsIgnoreCase(sub_kpi)){
+            if("tc_response".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.UPDATE_COPY_TIME),1)";
+            }else if("tc_all_rio".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.ALL_RIO),1)";
+            }else if("tc_all_write".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.ALL_WRITE),1)";
+            }
+            sql = "select c.DEV_TIME,a.ID,"+column+" as VAL " +
+                "from T_Res_Storage_Subsystem a,T_PRF_DSSYSTEM_RC c "+
+                "where a.ID=c.SUBSYSTEM_ID " +
+                timescope +
+                idscope +
+                " group by c.DEV_TIME,a.ID " +
+                "order by c.DEV_TIME asc";
+        }else if("ur_response".equalsIgnoreCase(sub_kpi)||"ur_write_record".equalsIgnoreCase(sub_kpi)||"ur_write_transfer".equalsIgnoreCase(sub_kpi)){
+            if("ur_response".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.RJNL_TIME),1)";
+            }else if("ur_write_record".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.WRITE_RECORD),1)";
+            }else if("ur_write_transfer".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.WRITE_TRANSFER),1)";
+            }
+            sql = "select c.DEV_TIME,a.ID,"+column+" as VAL " +
+                "from T_Res_Storage_Subsystem a,T_PRF_DSSYSTEM_UR c "+
+                "where a.ID=c.SUBSYSTEM_ID " +
+                timescope +
+                idscope +
+                " group by c.DEV_TIME,a.ID " +
+                "order by c.DEV_TIME asc";
         }
         SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
         List<SqlRow> results = sqlQuery.findList();
@@ -350,24 +378,49 @@ public class Charts extends Controller {
         if(!end_time.equals("")) {
             endTime = Format.parseDate(end_time, "yyyy-MM-dd HH:mm");
         }
-        String sql = "select t.stoptime as time,SUM(p.TOTAL_IO/p.INTERVAL_LEN) as total_io,SUM(p.TOTAL_KB/p.INTERVAL_LEN) as total_kb from " +
+        if("".equals(id)){
+            List<TResApplication> businessList = TResApplication.findAll();
+            int i = 0;
+            for(TResApplication business : businessList){
+                if(i > 0)
+                    id+=",";
+                id+=business.NAME;
+                i++;
+            }
+        }
+        String column = "";
+        if("vol_iops".equalsIgnoreCase(sub_kpi)){
+            column = "ROUND("+math+"(p.TOTAL_IO/p.INTERVAL_LEN),1)";
+        }else if("vol_transfer".equalsIgnoreCase(sub_kpi)){
+            column = "ROUND("+math+"(p.TOTAL_KB/p.INTERVAL_LEN),1)";
+        }else if("vol_response".equalsIgnoreCase(sub_kpi)){
+            column = "ROUND("+math+"(p.TOTAL_TIME/p.INTERVAL_LEN),1)";
+        }else if("vol_read_hits".equalsIgnoreCase(sub_kpi)){
+            column = "ROUND("+math+"(p.READ_HITS/p.INTERVAL_LEN),1)";
+        }else if("vol_write_hits".equalsIgnoreCase(sub_kpi)){
+            column = "ROUND("+math+"(p.WRITE_HITS/p.INTERVAL_LEN),1)";
+        }
+        String sql = "select t.stoptime as time,"+column+" as val from " +
                 "T_Prf_Dsvol p, V_Prf_TimeStamp t where " +
                 "p.ELEMENT_ID in (select a.VOLUME_ID from T_Res_Application2Lun a where a.APPLICATION_NAME=:ELEMENT_ID) " +
                 "and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
                 "t.stoptime<=:END_TIME group by t.stoptime order by t.stoptime asc";
-        SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
-        sqlQuery.setParameter("ELEMENT_ID",id);
-        sqlQuery.setParameter("START_TIME",startTime);
-        sqlQuery.setParameter("END_TIME",endTime);
-        List<SqlRow> results = sqlQuery.findList();
-        ObjectNode serie = series.addObject();
-        ArrayNode serieData = serie.putArray("data");
-        serie.put("id",id);
-        serie.put("name",id);
-        for(SqlRow row : results){
-            ObjectNode xy = serieData.addObject();
-            xy.put("x",row.getDate("time").getTime());
-            xy.put("y",row.getDate("total_io").getTime());
+        String[] appnames = id.split(",");
+        for(String appname : appnames){
+            ObjectNode serie = series.addObject();
+            serie.put("id",appname);
+            serie.put("name",TResApplication.findByName(appname).DESCRIPTION);
+            SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+            sqlQuery.setParameter("ELEMENT_ID",appname);
+            sqlQuery.setParameter("START_TIME",startTime);
+            sqlQuery.setParameter("END_TIME",endTime);
+            List<SqlRow> results = sqlQuery.findList();
+            ArrayNode serieData = serie.putArray("data");
+            for(SqlRow row : results){
+                ObjectNode xy = serieData.addObject();
+                xy.put("x",row.getDate("time").getTime());
+                xy.put("y",row.getDate("val").getTime());
+            }
         }
     }
 
@@ -632,12 +685,12 @@ public class Charts extends Controller {
                 ArrayNode procKPI = proc.putArray("处理器");
                 procKPI.addObject().put("chp_usage", "前端处理器繁忙度");
                 procKPI.addObject().put("dkp_usage", "后端处理器繁忙度");
+                ObjectNode fcport = data.addObject();
+                ArrayNode fcportKPI = fcport.putArray("端口");
+                fcportKPI.addObject().put("port_io","端口IOPS");
+                fcportKPI.addObject().put("port_transfer","端口传输率");
+                fcportKPI.addObject().put("port_response","端口响应时间");
             }
-            ObjectNode fcport = data.addObject();
-            ArrayNode fcportKPI = fcport.putArray("端口");
-            fcportKPI.addObject().put("port_io","端口IOPS");
-            fcportKPI.addObject().put("port_transfer","端口传输率");
-            fcportKPI.addObject().put("port_response","端口响应时间");
             ObjectNode volume = data.addObject();
             ArrayNode volumeKPI = volume.putArray("存储卷");
             volumeKPI.addObject().put("vol_iops","卷IOPS");

@@ -59,7 +59,7 @@
                         sub_kpi = sub_kpi.split('pg_')[1];
                     }
                 }
-                var title = deviceName+kpiName;
+                var title = deviceName+kpiName+' - '+$('#select_math').select2('data').text+'';
                 var start_time = $('#starttime').val();
                 var end_time = $('#endtime').val();
                 initChart('@routes.Charts.options()','chart1',kpi,sub_kpi,math,title,id,start_time,end_time);
