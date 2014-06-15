@@ -67,7 +67,7 @@ public class Charts extends Controller {
             getSubsystemPrf(id, sub_kpi,math, start_time, end_time, series);
         else if("raidgroup".equalsIgnoreCase(kpi))
             getRaidGroupPrf(id, sub_kpi, start_time, end_time, series);
-        else if("switchs".equalsIgnoreCase(kpi))
+        else if("switch".equalsIgnoreCase(kpi))
             getSwitchPrf(id, sub_kpi, start_time, end_time, series);
         else if("host".equalsIgnoreCase(kpi))
             getHostPrf(id, sub_kpi, start_time, end_time, series);
@@ -290,36 +290,43 @@ public class Charts extends Controller {
                || "vol_transfer".equalsIgnoreCase(sub_kpi) || "vol_read_hits".equalsIgnoreCase(sub_kpi) || "vol_write_hits".equalsIgnoreCase(sub_kpi)){
             if("vol_io".equalsIgnoreCase(sub_kpi)){
                 column = "ROUND("+math+"(p.TOTAL_IO/p.INTERVAL_LEN),1)";
+                subWhere = " and p.TOTAL_IO>=0 ";
             }else if("vol_transfer".equalsIgnoreCase(sub_kpi)){
                 column = "ROUND("+math+"(p.TOTAL_KB/p.INTERVAL_LEN),1)";
+                subWhere = " and p.TOTAL_KB>=0 ";
             }else if("vol_response".equalsIgnoreCase(sub_kpi)){
                 column = "ROUND("+math+"(p.TOTAL_TIME/p.INTERVAL_LEN),1)";
+                subWhere = " and p.TOTAL_TIME>=0 ";
             }else if("vol_read_hits".equalsIgnoreCase(sub_kpi)){
                 column = "ROUND("+math+"(p.READ_HITS/p.INTERVAL_LEN),1)";
+                subWhere = " and p.READ_HITS>=0 ";
             }else if("vol_write_hits".equalsIgnoreCase(sub_kpi)){
                 column = "ROUND("+math+"(p.WRITE_HITS/p.INTERVAL_LEN),1)";
+                subWhere = " and p.WRITE_HITS>=0 ";
             }
             sql = "select t.stoptime as DEV_TIME,a.ID,"+column+" as VAL from " +
                 "T_Res_Storage_Subsystem a,T_Prf_Dsvol p, V_Prf_TimeStamp t " +
-                "where a.ID=p.SUBSYSTEM_ID " +
+                "where a.ID=p.SUBSYSTEM_ID " + subWhere +
                 idscope +
                 "and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
                 "t.stoptime<=:END_TIME group by t.stoptime,a.ID order by t.stoptime asc";
         }else if("port_io".equalsIgnoreCase(sub_kpi)||"port_transfer".equalsIgnoreCase(sub_kpi)||"port_response".equalsIgnoreCase(sub_kpi)){
             if("port_io".equalsIgnoreCase(sub_kpi)) {
-                column = "ROUND("+math+"(c.TOTAL_IO),1)";
+                column = "ROUND("+math+"(p.TOTAL_IO/p.INTERVAL_LEN),1)";
+                subWhere = " and p.TOTAL_IO>=0 ";
             }else if("port_transfer".equalsIgnoreCase(sub_kpi)) {
-                column = "ROUND("+math+"(c.TOTAL_KB),1)";
+                column = "ROUND("+math+"(p.TOTAL_KB/p.INTERVAL_LEN),1)";
+                subWhere = " and p.TOTAL_KB>=0 ";
             }else if("port_response".equalsIgnoreCase(sub_kpi)) {
-                column = "ROUND("+math+"(c.TOTAL_TIME),1)";
+                column = "ROUND("+math+"(p.TOTAL_TIME/p.INTERVAL_LEN),1)";
+                subWhere = " and p.TOTAL_TIME>=0 ";
             }
-            sql = "select c.DEV_TIME,a.ID,"+column+" as VAL " +
-                "from T_Res_Storage_Subsystem a,T_Res_Port b,T_Prf_Dsport c "+
-                "where a.ID=b.SUBSYSTEM_ID and b.ID=c.ELEMENT_ID " +
-                timescope +
+            sql = "select t.stoptime as DEV_TIME,a.ID,"+column+" as VAL from " +
+                "T_Res_Storage_Subsystem a,T_Res_Port b,T_Prf_Dsport p, V_Prf_TimeStamp t " +
+                "where a.ID=b.SUBSYSTEM_ID and b.ID=p.ELEMENT_ID " + subWhere +
                 idscope +
-                " group by c.DEV_TIME,a.ID " +
-                "order by c.DEV_TIME asc";
+                "and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
+                "t.stoptime<=:END_TIME group by t.stoptime,a.ID order by t.stoptime asc";
         }else if("chp_usage".equalsIgnoreCase(sub_kpi)||"dkp_usage".equalsIgnoreCase(sub_kpi)){
             if("chp_usage".equalsIgnoreCase(sub_kpi)) {
                 column = "ROUND("+math+"(c.UTILIZATION),1)";
@@ -611,7 +618,7 @@ public class Charts extends Controller {
 
     private static void getSwitchPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR, -24);
+        c.add(Calendar.DAY_OF_MONTH, -4);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){
@@ -664,7 +671,7 @@ public class Charts extends Controller {
 
     private static void getHostPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR, -24);
+        c.add(Calendar.DAY_OF_MONTH, -5);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){
@@ -676,8 +683,8 @@ public class Charts extends Controller {
         String sql = "select t.stoptime as time," +
                 "SUM(p.READ_IO/p.INTERVAL_LEN) as R_IO,SUM(p.WRITE_IO/p.INTERVAL_LEN) as W_IO," +
                 "SUM(p.READ_KB/p.INTERVAL_LEN) as R_KB,SUM(p.WRITE_KB/p.INTERVAL_LEN) as W_KB from " +
-                "T_Prf_Hba_port p,V_Prf_TimeStamp t where " +
-                "p.SUBSYSTEM_ID=:ELEMENT_ID and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
+                "T_Prf_Host p,V_Prf_TimeStamp t where " +
+                "p.ELEMENT_ID=:ELEMENT_ID and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
                 "t.stoptime<=:END_TIME group by p.SUBSYSTEM_ID,t.stoptime order by t.stoptime asc";
         SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
         sqlQuery.setParameter("ELEMENT_ID",id);

@@ -23,6 +23,8 @@ public class Hosts extends Controller{
             device.put("ICON","linux_small.png");
         else if(vendorName.indexOf("zos") >= 0)
             device.put("ICON","ibm_small.png");
+        else
+            device.put("ICON","windows_small.png");
         device.put("N_PORT", TResPort.findBySubsystemId(id).size());
         return ok(views.html.host.index.render(device));
     }
