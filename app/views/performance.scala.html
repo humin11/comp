@@ -32,6 +32,8 @@
                     loadStorages();
                 else if(kpi == 'switch')
                     loadSwitchs();
+                else if(kpi == 'host')
+                    loadHosts();
                 else if(kpi == 'business')
                     loadBusiness();
                 loadKPI();
@@ -92,6 +94,22 @@
                         $('#select_device').append('<option></option>');
                         $.each(data,function(idx,obj){
                             var option = $('<option value='+obj.ID+'>'+obj.ELEMENT_NAME+'</option>');
+                            $('#select_device').append(option);
+                        });
+                    }
+                });
+            }
+            function loadHosts(){
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    url: '@routes.Hosts.json()',
+                    success:function(data){
+                        $('#select_device').empty();
+                        $('#select_device').append('<option></option>');
+                        $.each(data,function(idx,obj){
+                            var option = $('<option value='+obj.ID+'>'+obj.NAME+'</option>');
                             $('#select_device').append(option);
                         });
                     }

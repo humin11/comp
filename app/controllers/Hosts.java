@@ -29,4 +29,11 @@ public class Hosts extends Controller{
         return ok(views.html.host.index.render(device));
     }
 
+    public static Result json() {
+        List<TResHost> hostList= TResHost.findAll();
+        ArrayNode json = (ArrayNode)Json.toJson(hostList);
+        return ok(json);
+    }
+
+
 }

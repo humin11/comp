@@ -643,7 +643,7 @@ public class Charts extends Controller {
         ArrayNode sendData = send.putArray("data");
         ObjectNode recv = series.addObject();
         ArrayNode recvData = recv.putArray("data");
-        if("pkgs".equalsIgnoreCase(sub_kpi)){
+        if("io".equalsIgnoreCase(sub_kpi)){
             send.put("id", "send_pkgs");
             send.put("name", "发送包");
             recv.put("id", "recv_pkgs");
@@ -766,12 +766,12 @@ public class Charts extends Controller {
         }else if("switch".equalsIgnoreCase(type)){
             ObjectNode switchs = data.addObject();
             ArrayNode switchsKPI = switchs.putArray("交换机");
-            switchsKPI.addObject().put("pkgs", "包数量");
+            switchsKPI.addObject().put("io", "包数量");
             switchsKPI.addObject().put("kb", "流量");
         }else if("host".equalsIgnoreCase(type)){
             ObjectNode host = data.addObject();
             ArrayNode hostKPI = host.putArray("主机");
-            hostKPI.addObject().put("pkgs", "端口包数量");
+            hostKPI.addObject().put("io", "端口包数量");
             hostKPI.addObject().put("kb", "端口流量");
         }
         return ok(data);
