@@ -4,12 +4,12 @@
     $(function () {
         var id = '@subsystem.get("ID").asText()';
         initChart('@routes.Charts.options()','chart1','subsystem','capacity','sum','',id);
-        initChart('@routes.Charts.options()','chart2','subsystem','pg_io','sum','',id);
-        initChart('@routes.Charts.options()','chart3','subsystem','pg_transfer','sum','',id);
-        initChart('@routes.Charts.options()','chart4','subsystem_topn','pg_io','max','',id);
-        initChart('@routes.Charts.options()','chart5','subsystem_topn','pg_response','max','',id);
-        initTable('@routes.Datatables.options()','table2','prf_fcport');
-        initTable('@routes.Datatables.options()','table1','prf_raidgroup',10);
+        initChart('@routes.Charts.options()','chart2','subsystem','vol_io','sum','',id);
+        initChart('@routes.Charts.options()','chart3','subsystem','vol_transfer','sum','',id);
+        initChart('@routes.Charts.options()','chart4','subsystem_topn','vol_io','max','',id);
+        initChart('@routes.Charts.options()','chart5','subsystem_topn','vol_response','max','',id);
+        initTable('@routes.Datatables.options()','table2','prf_fcport',5,id);
+        initTable('@routes.Datatables.options()','table1','prf_raidgroup',10,id);
     });
 </script>
 <div class="row">
@@ -84,7 +84,7 @@
         <div class="stat-panel text-center">
             <div class="stat-row">
                 <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                    <i class="fa fa-cube"></i>&nbsp;&nbsp;Top 10 RaidGroup by IOPS (Last 24 hours)
+                    <i class="fa fa-cube"></i>&nbsp;&nbsp;Top 10 LDEV by IOPS (Last 24 hours)
                 </div>
             </div>
             <div class="stat-row">
@@ -97,7 +97,7 @@
         <div class="stat-panel text-center">
             <div class="stat-row">
                 <div class="stat-cell bg-dark-gray padding-sm text-xs text-semibold">
-                    <i class="fa fa-cube"></i>&nbsp;&nbsp;Top 10 RaidGroup by Response (Last 24 hours)
+                    <i class="fa fa-cube"></i>&nbsp;&nbsp;Top 10 LDEV by Response (Last 24 hours)
                 </div>
             </div>
             <div class="stat-row">

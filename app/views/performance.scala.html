@@ -56,7 +56,6 @@
                     deviceName = $('option[value='+id+']').text()+' ';
                     if(sub_kpi.indexOf('pg_') == 0){
                         kpi = 'raidgroup';
-                        sub_kpi = sub_kpi.split('pg_')[1];
                     }
                 }
                 var title = deviceName+kpiName+' - '+$('#select_math').select2('data').text+'';

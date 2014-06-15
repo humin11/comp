@@ -78,7 +78,7 @@ public class Datatables extends Controller {
 
     private static ObjectNode getFCPortPrf(String id, String title, String start_time, String end_time) {
         String[] kpiColumns = {"IOPS","Transfer(mb)"};
-        String chpNum = "ABCDEFGHIJKLMNOPQ";
+        List<TResPort> ports = TResPort.findBySubsystemId(id);
         Random random = new Random();
         ObjectNode options = Json.newObject();
         ArrayNode cols = options.putArray("cols");
@@ -86,14 +86,11 @@ public class Datatables extends Controller {
         cols.add("名称");
         for (String colname : kpiColumns)
             cols.add(colname);
-        for (int i=1;i < 12;i++) {
-            for (int j = 0; j < chpNum.length(); j++) {
-                String name = "CL" + i + "-" + chpNum.charAt(j);
-                ArrayNode obj = rows.addArray();
-                obj.add(name);
-                for (String colname : kpiColumns)
-                    obj.add(random.nextInt(130));
-            }
+        for (int i=0;i < ports.size();i++) {
+            ArrayNode obj = rows.addArray();
+            obj.add(ports.get(i).ELEMENT_NAME);
+            for (String colname : kpiColumns)
+                obj.add(random.nextInt(130));
         }
         return options;
     }
@@ -271,25 +268,24 @@ public class Datatables extends Controller {
 
     private static ObjectNode getRaidGroupPrf(String id, String title, String start_time, String end_time) {
         String[] kpiColumns = {"IOPS","Transfer(mb)","Response Time(ms)","Cache Hits(%)"};
+        List<TResRaidGroup> raidgroupList = TResRaidGroup.findBySubsystemId(id);
         Random random = new Random();
         ObjectNode options = Json.newObject();
         ArrayNode cols = options.putArray("cols");
         ArrayNode rows = options.putArray("rows");
         cols.add("名称");
-        cols.add("类型");
+        cols.add("容量");
         cols.add("Raid Level");
         for (String colname : kpiColumns)
             cols.add(colname);
-        for (int i=1;i < 12;i++) {
-            for (int j = 1; j < 12; j++) {
-                String name = "1-" + i + "-" + j;
-                ArrayNode obj = rows.addArray();
-                obj.add(name);
-                obj.add("FC");
-                obj.add("RAID5(3D+1P)");
-                for (String colname : kpiColumns)
-                    obj.add(random.nextInt(130));
-            }
+        for (int i=0;i < raidgroupList.size();i++) {
+            TResRaidGroup raidgroup = raidgroupList.get(i);
+            ArrayNode obj = rows.addArray();
+            obj.add(raidgroup.NAME);
+            obj.add(Format.parserCapacity(raidgroup.DDM_CAP));
+            obj.add(raidgroup.RAID_LEVEL);
+            for (String colname : kpiColumns)
+                obj.add(random.nextInt(130));
         }
         return options;
     }

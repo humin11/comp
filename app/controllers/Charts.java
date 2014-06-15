@@ -112,11 +112,11 @@ public class Charts extends Controller {
 
     public static ObjectNode bar(String id, String title, String kpi, String sub_kpi,String math,String start_time, String end_time) {
         String unit = "%";
-        if("pg_response".equalsIgnoreCase(sub_kpi))
+        if("pg_response".equalsIgnoreCase(sub_kpi)||"vol_response".equalsIgnoreCase(sub_kpi))
             unit = "s";
-        if("pg_transfer".equalsIgnoreCase(sub_kpi))
+        if("pg_transfer".equalsIgnoreCase(sub_kpi)||"vol_transfer".equalsIgnoreCase(sub_kpi))
             unit = "mb";
-        if("pg_io".equalsIgnoreCase(sub_kpi))
+        if("pg_io".equalsIgnoreCase(sub_kpi)||"vol_io".equalsIgnoreCase(sub_kpi))
             unit = "";
         ObjectNode options = Json.newObject();
         ObjectNode chart = options.putObject("chart");
@@ -221,14 +221,18 @@ public class Charts extends Controller {
 
     private static void getSubsystemPrf(String id, String sub_kpi,String math, String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR, -24);
+        c.add(Calendar.DAY_OF_MONTH, -5);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
+        Date startTime1 = c.getTime();
+        Date endTime1 = new Date();
         if(!start_time.equals("")){
             startTime = Format.parseDate(start_time,"yyyy-MM-dd HH:mm").getTime()+"";
+            startTime1 = Format.parseDate(start_time,"yyyy-MM-dd HH:mm");
         }
         if(!end_time.equals("")) {
             endTime = Format.parseDate(end_time, "yyyy-MM-dd HH:mm").getTime()+"";
+            endTime1 = Format.parseDate(end_time,"yyyy-MM-dd HH:mm");
         }
         String timescope = " and c.DEV_TIME>"+startTime;
         if(!"".equals(endTime))
@@ -282,6 +286,25 @@ public class Charts extends Controller {
                 idscope +
                 " group by c.DEV_TIME,a.ID " +
                 "order by c.DEV_TIME asc";
+        }else if("vol_io".equalsIgnoreCase(sub_kpi) || "vol_response".equalsIgnoreCase(sub_kpi)
+               || "vol_transfer".equalsIgnoreCase(sub_kpi) || "vol_read_hits".equalsIgnoreCase(sub_kpi) || "vol_write_hits".equalsIgnoreCase(sub_kpi)){
+            if("vol_io".equalsIgnoreCase(sub_kpi)){
+                column = "ROUND("+math+"(p.TOTAL_IO/p.INTERVAL_LEN),1)";
+            }else if("vol_transfer".equalsIgnoreCase(sub_kpi)){
+                column = "ROUND("+math+"(p.TOTAL_KB/p.INTERVAL_LEN),1)";
+            }else if("vol_response".equalsIgnoreCase(sub_kpi)){
+                column = "ROUND("+math+"(p.TOTAL_TIME/p.INTERVAL_LEN),1)";
+            }else if("vol_read_hits".equalsIgnoreCase(sub_kpi)){
+                column = "ROUND("+math+"(p.READ_HITS/p.INTERVAL_LEN),1)";
+            }else if("vol_write_hits".equalsIgnoreCase(sub_kpi)){
+                column = "ROUND("+math+"(p.WRITE_HITS/p.INTERVAL_LEN),1)";
+            }
+            sql = "select t.stoptime as DEV_TIME,a.ID,"+column+" as VAL from " +
+                "T_Res_Storage_Subsystem a,T_Prf_Dsvol p, V_Prf_TimeStamp t " +
+                "where a.ID=p.SUBSYSTEM_ID " +
+                idscope +
+                "and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
+                "t.stoptime<=:END_TIME group by t.stoptime,a.ID order by t.stoptime asc";
         }else if("port_io".equalsIgnoreCase(sub_kpi)||"port_transfer".equalsIgnoreCase(sub_kpi)||"port_response".equalsIgnoreCase(sub_kpi)){
             if("port_io".equalsIgnoreCase(sub_kpi)) {
                 column = "ROUND("+math+"(c.TOTAL_IO),1)";
@@ -352,6 +375,8 @@ public class Charts extends Controller {
                 "order by c.DEV_TIME asc";
         }
         SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+        sqlQuery.setParameter("START_TIME",startTime1);
+        sqlQuery.setParameter("END_TIME",endTime1);
         List<SqlRow> results = sqlQuery.findList();
         for(SqlRow row : results){
             if(serieMap.containsKey(row.getString("ID"))) {
@@ -389,7 +414,7 @@ public class Charts extends Controller {
             }
         }
         String column = "";
-        if("vol_iops".equalsIgnoreCase(sub_kpi)){
+        if("vol_io".equalsIgnoreCase(sub_kpi)){
             column = "ROUND("+math+"(p.TOTAL_IO/p.INTERVAL_LEN),1)";
         }else if("vol_transfer".equalsIgnoreCase(sub_kpi)){
             column = "ROUND("+math+"(p.TOTAL_KB/p.INTERVAL_LEN),1)";
@@ -439,19 +464,17 @@ public class Charts extends Controller {
         if(!"".equals(endTime))
             timescope += (" and c.DEV_TIME<"+endTime);
         String column = "c.UTILIZATION";
-        if("usage".equalsIgnoreCase(sub_kpi)){
+        if("pg_usage".equalsIgnoreCase(sub_kpi)){
             column = "c.UTILIZATION";
-        }else if("io".equalsIgnoreCase(sub_kpi)){
+        }else if("pg_io".equalsIgnoreCase(sub_kpi)){
             column = "c.TOTAL_IO";
-        }else if("io".equalsIgnoreCase(sub_kpi)){
-            column = "c.TOTAL_IO";
-        }else if("transfer".equalsIgnoreCase(sub_kpi)){
+        }else if("pg_transfer".equalsIgnoreCase(sub_kpi)){
             column = "c.TOTAL_KB";
-        }else if("response".equalsIgnoreCase(sub_kpi)){
+        }else if("pg_response".equalsIgnoreCase(sub_kpi)){
             column = "c.TOTAL_TIME";
-        }else if("read_hits".equalsIgnoreCase(sub_kpi)){
+        }else if("pg_read_hits".equalsIgnoreCase(sub_kpi)){
             column = "c.READ_HITS";
-        }else if("write_hits".equalsIgnoreCase(sub_kpi)){
+        }else if("pg_write_hits".equalsIgnoreCase(sub_kpi)){
             column = "c.WRITE_HITS";
         }
         String sql = "select c.DEV_TIME,c.ELEMENT_ID,"+column+" as VAL " +
@@ -530,6 +553,31 @@ public class Charts extends Controller {
                 "from T_Res_Storage_Subsystem a,T_Prf_Dsraidgroup c "+
                 "where a.ID=c.SUBSYSTEM_ID " +subWhere+
                 timescope +
+                idscope +
+                " group by c.ELEMENT_NAME " +
+                "order by VAL desc";
+        }else if("vol_io".equalsIgnoreCase(sub_kpi) || "vol_response".equalsIgnoreCase(sub_kpi)
+           || "vol_transfer".equalsIgnoreCase(sub_kpi) || "vol_read_hits".equalsIgnoreCase(sub_kpi) || "vol_write_hits".equalsIgnoreCase(sub_kpi)){
+            if("vol_io".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.TOTAL_IO),1)";
+                subWhere = " and c.TOTAL_IO>=0 ";
+            } else if("vol_response".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.TOTAL_TIME),1)";
+                subWhere = " and c.TOTAL_TIME>=0 ";
+            } else if("vol_transfer".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.TOTAL_KB),1)";
+                subWhere = " and c.TOTAL_KB>=0 ";
+            } else if("vol_read_hits".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.READ_HITS),1)";
+                subWhere = " and c.READ_HITS>=0 ";
+            } else if("vol_write_hits".equalsIgnoreCase(sub_kpi)) {
+                column = "ROUND("+math+"(c.WRITE_HITS),1)";
+                subWhere = " and c.WRITE_HITS>=0 ";
+            }
+            sql = "select a.ID as SUBSYSTEM_ID,a.NAME as SUBSYSTEM_NAME,c.ELEMENT_NAME as NAME,"+column+" as VAL " +
+                "from T_Res_Storage_Subsystem a,T_Prf_Dsvol c "+
+                "where a.ID=c.SUBSYSTEM_ID " +subWhere+
+//                timescope +
                 idscope +
                 " group by c.ELEMENT_NAME " +
                 "order by VAL desc";
@@ -693,7 +741,7 @@ public class Charts extends Controller {
             }
             ObjectNode volume = data.addObject();
             ArrayNode volumeKPI = volume.putArray("存储卷");
-            volumeKPI.addObject().put("vol_iops","卷IOPS");
+            volumeKPI.addObject().put("vol_io","卷IOPS");
             volumeKPI.addObject().put("vol_transfer","卷传输率");
             volumeKPI.addObject().put("vol_response","卷响应时间");
             volumeKPI.addObject().put("vol_read_hits","卷读命中率");
