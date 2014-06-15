@@ -36,9 +36,16 @@ public class Hosts extends Controller{
         else if(vendorName.indexOf("sles") >= 0)
             device.put("ICON","suse.png");
         else
-            device.put("ICON","default.png");
+            device.put("ICON","windows_small.png");
         device.put("N_PORT", TResPort.findBySubsystemId(id).size());
         return ok(views.html.host.index.render(device));
     }
+
+    public static Result json() {
+        List<TResHost> hostList= TResHost.findAll();
+        ArrayNode json = (ArrayNode)Json.toJson(hostList);
+        return ok(json);
+    }
+
 
 }

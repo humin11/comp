@@ -19,14 +19,16 @@ public class Storages extends Controller {
         TResStorageSubsystem subsystem = TResStorageSubsystem.findById(id);
         ObjectNode device = (ObjectNode)Json.toJson(subsystem);
         String vendorName = TResVendor.findById(subsystem.VENDOR_ID).NAME.toLowerCase();
-        if(vendorName.contains("hitachi"))
-            device.put("ICON","hitachi_small.png");
-        else if(vendorName.contains("emc"))
-            device.put("ICON","emc_small.png");
-        else if(vendorName.contains("netapp"))
-            device.put("ICON","netapp_small.png");
-        else if(vendorName.contains("cisco"))
-            device.put("ICON","cisco_small.png");
+        if(vendorName.contains("hitachi")) {
+            device.put("VENDOR_NAME","hitachi");
+            device.put("ICON", "hitachi_small.png");
+        }else if(vendorName.contains("emc")) {
+            device.put("VENDOR_NAME","emc");
+            device.put("ICON", "emc_small.png");
+        }else if(vendorName.contains("netapp")) {
+            device.put("VENDOR_NAME","netapp");
+            device.put("ICON", "netapp_small.png");
+        }
         return ok(views.html.storage.index.render(device,tab));
     }
 

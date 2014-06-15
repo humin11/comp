@@ -63,7 +63,7 @@ public class TResLunMapping {
     public static List<TResLunMapping> findAll() { return find.all(); }
 
     public static List<TResLunMapping> findBySubsystemId(String id) {
-        return find.where().eq("SUBSYSTEM_ID",id).orderBy("HOST_NAME").findList();
+        return find.where().eq("SUBSYSTEM_ID",id).setMaxRows(2000).orderBy("HOST_NAME").findList();
     }
 
     public static List<TResLunMapping> findHostGroupBySubsystemId(String id,String hostname) {

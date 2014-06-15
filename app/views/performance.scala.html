@@ -11,10 +11,10 @@
             $('#globa-btn').change(function(){
                 var checked = $(this).is(':checked');
                 if(checked) {
-                    $('#select-device').select2('enable');
+                    $('#select_device').select2('enable',true);
                 }else{
-                    $('#select-device').select2('clear');
-                    $('#select-device').select2('disable');
+                    $('#select_device').select2('val','');
+                    $('#select_device').select2('enable',false);
                 }
             });
             $('#select_type').select2({
@@ -26,19 +26,23 @@
                 placeholder: "选择汇总方式"
             });
             $('#select_type').change(function(){
+                $('#select_device').select2('val','');
                 var kpi = $('#select_type').select2('val');
                 if(kpi == 'subsystem')
                     loadStorages();
                 else if(kpi == 'switch')
                     loadSwitchs();
+                else if(kpi == 'host')
+                    loadHosts();
                 else if(kpi == 'business')
                     loadBusiness();
+                loadKPI();
             });
-            $('#select-device').select2({
+            $('#select_device').select2({
                 allowClear: true,
                 placeholder: "选择对象"
             });
-            $("#select-kpi").select2({
+            $("#select_kpi").select2({
                 allowClear: true,
                 placeholder: "选择KPI"
             });
@@ -46,18 +50,17 @@
             $('#exec').click(function(){
                 var kpi = $('#select_type').select2('val');
                 var math = $('#select_math').select2('val');
-                var sub_kpi = $('#select-kpi').select2('val');
+                var sub_kpi = $('#select_kpi').select2('val');
                 var kpiName = $('option[value='+sub_kpi+']').text();
-                var id = $('#select-device').select2('val');
+                var id = $('#select_device').select2('val');
                 var deviceName = '';
                 if(id.length>0) {
                     deviceName = $('option[value='+id+']').text()+' ';
                     if(sub_kpi.indexOf('pg_') == 0){
                         kpi = 'raidgroup';
-                        sub_kpi = sub_kpi.split('pg_')[1];
                     }
                 }
-                var title = deviceName+kpiName;
+                var title = deviceName+kpiName+' - '+$('#select_math').select2('data').text+'';
                 var start_time = $('#starttime').val();
                 var end_time = $('#endtime').val();
                 $("#chart1" ).empty();
@@ -65,6 +68,7 @@
                 initChart('@routes.Charts.options()','chart1',kpi,sub_kpi,math,title,id,start_time,end_time);
             });
             loadStorages();
+            loadKPI();
             function loadStorages(){
                 $.ajax({
                     cache:false,
@@ -72,11 +76,11 @@
                     type: "GET",
                     url: '@routes.Storages.json()',
                     success:function(data){
-                        $('#select-device').empty();
-                        $('#select-device').append('<option></option>');
+                        $('#select_device').empty();
+                        $('#select_device').append('<option></option>');
                         $.each(data,function(idx,obj){
                             var option = $('<option value='+obj.ID+'>'+obj.NAME+'</option>');
-                            $('#select-device').append(option);
+                            $('#select_device').append(option);
                         });
                     }
                 });
@@ -88,11 +92,27 @@
                     type: "GET",
                     url: '@routes.Switchs.json()',
                     success:function(data){
-                        $('#select-device').empty();
-                        $('#select-device').append('<option></option>');
+                        $('#select_device').empty();
+                        $('#select_device').append('<option></option>');
                         $.each(data,function(idx,obj){
                             var option = $('<option value='+obj.ID+'>'+obj.ELEMENT_NAME+'</option>');
-                            $('#select-device').append(option);
+                            $('#select_device').append(option);
+                        });
+                    }
+                });
+            }
+            function loadHosts(){
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    url: '@routes.Hosts.json()',
+                    success:function(data){
+                        $('#select_device').empty();
+                        $('#select_device').append('<option></option>');
+                        $.each(data,function(idx,obj){
+                            var option = $('<option value='+obj.ID+'>'+obj.NAME+'</option>');
+                            $('#select_device').append(option);
                         });
                     }
                 });
@@ -104,11 +124,37 @@
                     type: "GET",
                     url: '@routes.Business.json()',
                     success:function(data){
-                        $('#select-device').empty();
-                        $('#select-device').append('<option></option>');
+                        $('#select_device').empty();
+                        $('#select_device').append('<option></option>');
                         $.each(data,function(idx,obj){
                             var option = $('<option value='+obj.NAME+'>'+obj.DESCRIPTION+'</option>');
-                            $('#select-device').append(option);
+                            $('#select_device').append(option);
+                        });
+                    }
+                });
+            }
+            function loadKPI(){
+                var kpitype = $('#select_type').select2('val');
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    data: {type:kpitype},
+                    url: '@routes.Charts.kpi()',
+                    success:function(data){
+                        $('#select_kpi').empty();
+                        $('#select_kpi').append('<option></option>');
+                        $.each(data,function(idx,kpigroupObj){
+                            for(var groupname in kpigroupObj){
+                                var optgroup = $('<optgroup label="'+groupname+'"></optgroup>');
+                                $.each(kpigroupObj[groupname],function(idx1,kpiObj){
+                                    for(var kpiname in kpiObj){
+                                        var option = $('<option value='+kpiname+'>'+kpiObj[kpiname]+'</option>');
+                                        optgroup.append(option);
+                                    }
+                                });
+                                $('#select_kpi').append(optgroup);
+                            }
                         });
                     }
                 });
@@ -144,50 +190,15 @@
                     </select>
                 </div>
                 <div class="col-sm-6 col-md-6">
-                    <select id="select-device" class="form-control" style="width: 200px" disabled="disabled">
+                    <select id="select_device" class="form-control" style="width: 200px" disabled="disabled">
                         <option></option>
                     </select>
                 </div>
             </div>
             <div class="row" style="margin-top: 5px">
                 <div class="col-sm-6 col-md-6">
-                    <select id="select-kpi" class="form-control" style="width: 300px">
+                    <select id="select_kpi" class="form-control" style="width: 300px">
                         <option></option>
-                        <optgroup label="Raid组">
-                            <option value="pg_io">Raid组IOPS</option>
-                            <option value="pg_transfer">Raid组传输率</option>
-                            <option value="pg_response">Raid组响应时间</option>
-                            <option value="pg_read_hits">Raid组读命中率</option>
-                            <option value="pg_write_hits">Raid组写命中率</option>
-                        </optgroup>
-                        <optgroup label="卷">
-                            <option value="ldev_iops">卷IOPS</option>
-                            <option value="ldev_transfer">卷数据量</option>
-                            <option value="ldev_response">卷响应时间</option>
-                            <option value="ldev_read_hits">卷读命中率</option>
-                            <option value="ldev_write_hits">卷写命中率</option>
-                        </optgroup>
-                        <optgroup label="缓存">
-                            <option value="cache_write_pending">缓存写等待率</option>
-                        </optgroup>
-                        <optgroup label="端口">
-                            <option value="port_io">端口IOPS</option>
-                            <option value="port_response">端口响应时间</option>
-                        </optgroup>
-                        <optgroup label="处理器">
-                            <option value="chp_usage">前端处理器繁忙度</option>
-                            <option value="dkp_usage">后端处理器繁忙度</option>
-                        </optgroup>
-                        <optgroup label="Remote Copy">
-                            <option value="tc_response">TC响应时间</option>
-                        </optgroup>
-                        <optgroup label="Universal Replicator">
-                            <option value="ur_response">UR响应时间</option>
-                        </optgroup>
-                        <optgroup label="交换机">
-                            <option value="pkgs">包数量</option>
-                            <option value="kb">流量</option>
-                        </optgroup>
                     </select>
                 </div>
                 <div class="col-sm-4 col-md-4">
