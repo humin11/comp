@@ -24,7 +24,7 @@ public class Datatables extends Controller {
         String model = request().getQueryString("model");
         String start_time = request().getQueryString("start_time");
         String end_time = request().getQueryString("end_time");
-        ObjectNode options = null;
+        ObjectNode options = Json.newObject();
         if("prf_subsystem".equals(model))
             options = getSubsystemPrf(id,title,start_time,end_time);
         else if("prf_raidgroup".equals(model))

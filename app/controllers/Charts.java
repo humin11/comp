@@ -444,7 +444,7 @@ public class Charts extends Controller {
             for(SqlRow row : results){
                 ObjectNode xy = serieData.addObject();
                 xy.put("x",row.getDate("time").getTime());
-                xy.put("y",row.getDate("val").getTime());
+                xy.put("y",row.getLong("val"));
             }
         }
     }
