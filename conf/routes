@@ -29,6 +29,7 @@ GET        /switch/port               controllers.Switchs.port()
 GET        /switch/json               controllers.Switchs.json()
 GET        /host                      controllers.Hosts.index()
 GET        /charts/options            controllers.Charts.options()
+GET        /charts/kpi                controllers.Charts.kpi()
 GET        /datatables/options        controllers.Datatables.options()
 GET        /reports/daily             controllers.Reports.daily()
 

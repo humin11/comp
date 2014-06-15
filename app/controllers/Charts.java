@@ -220,7 +220,7 @@ public class Charts extends Controller {
 
     private static void getSubsystemPrf(String id, String sub_kpi,String math, String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR, -30);
+        c.add(Calendar.HOUR, -24);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
@@ -355,7 +355,6 @@ public class Charts extends Controller {
                 "p.ELEMENT_ID in (select a.VOLUME_ID from T_Res_Application2Lun a where a.APPLICATION_NAME=:ELEMENT_ID) " +
                 "and p.TIME_ID=t.ID and t.stoptime>=:START_TIME and " +
                 "t.stoptime<=:END_TIME group by t.stoptime order by t.stoptime asc";
-        System.out.println(sql);
         SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
         sqlQuery.setParameter("ELEMENT_ID",id);
         sqlQuery.setParameter("START_TIME",startTime);
@@ -374,7 +373,7 @@ public class Charts extends Controller {
 
     private static void getRaidGroupPrf(String id, String sub_kpi, String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR, -30);
+        c.add(Calendar.HOUR, -24);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
@@ -432,7 +431,7 @@ public class Charts extends Controller {
     private static void getSubsystemPrfTopn(String id,String sub_kpi,String math, String start_time, String end_time,ArrayNode categories, ArrayNode series) {
         int limit = 10;
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR, -30);
+        c.add(Calendar.HOUR, -24);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         if(!start_time.equals("")){
@@ -511,7 +510,7 @@ public class Charts extends Controller {
 
     private static void getSwitchPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -1);
+        c.add(Calendar.HOUR, -24);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){
@@ -564,7 +563,7 @@ public class Charts extends Controller {
 
     private static void getHostPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -1);
+        c.add(Calendar.HOUR, -24);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){
@@ -612,6 +611,66 @@ public class Charts extends Controller {
                 writeXY.put("y",row.getDouble("W_KB"));
             }
         }
+    }
+
+    public static Result kpi() {
+        String type = request().getQueryString("type");
+        ArrayNode data = Json.newObject().putArray("data");
+        if("subsystem".equalsIgnoreCase(type) || "business".equalsIgnoreCase(type)){
+            if("subsystem".equalsIgnoreCase(type)) {
+                ObjectNode raidgroup = data.addObject();
+                ArrayNode raidgroupKPI = raidgroup.putArray("Raid组");
+                raidgroupKPI.addObject().put("pg_io", "Raid组IOPS");
+                raidgroupKPI.addObject().put("pg_transfer", "Raid组传输率");
+                raidgroupKPI.addObject().put("pg_response", "Raid组响应时间");
+                raidgroupKPI.addObject().put("pg_read_hits", "Raid组读命中率");
+                raidgroupKPI.addObject().put("pg_write_hits", "Raid组写命中率");
+                ObjectNode cache = data.addObject();
+                ArrayNode cacheKPI = cache.putArray("缓存");
+                cacheKPI.addObject().put("cache_write_pending", "缓存写等待率");
+                ObjectNode proc = data.addObject();
+                ArrayNode procKPI = proc.putArray("处理器");
+                procKPI.addObject().put("chp_usage", "前端处理器繁忙度");
+                procKPI.addObject().put("dkp_usage", "后端处理器繁忙度");
+
+            }
+            ObjectNode volume = data.addObject();
+            ArrayNode volumeKPI = volume.putArray("存储卷");
+            volumeKPI.addObject().put("vol_iops","卷IOPS");
+            volumeKPI.addObject().put("vol_transfer","卷传输率");
+            volumeKPI.addObject().put("vol_response","卷响应时间");
+            volumeKPI.addObject().put("vol_read_hits","卷读命中率");
+            volumeKPI.addObject().put("vol_write_hits","卷写命中率");
+
+            ObjectNode fcport = data.addObject();
+            ArrayNode fcportKPI = fcport.putArray("端口");
+            fcportKPI.addObject().put("port_io","端口IOPS");
+            fcportKPI.addObject().put("port_transfer","端口传输率");
+            fcportKPI.addObject().put("port_response","端口响应时间");
+
+            ObjectNode tc = data.addObject();
+            ArrayNode tcKPI = tc.putArray("True Copy");
+            tcKPI.addObject().put("tc_response", "TC响应时间");
+            tcKPI.addObject().put("tc_all_rio", "All Rio");
+            tcKPI.addObject().put("tc_all_write", "All Write");
+
+            ObjectNode ur = data.addObject();
+            ArrayNode urKPI = ur.putArray("Universal Replicator");
+            urKPI.addObject().put("ur_response", "UR响应时间");
+            urKPI.addObject().put("ur_write_record", "Write Record");
+            urKPI.addObject().put("ur_write_transfer", "Write Transfer");
+        }else if("switch".equalsIgnoreCase(type)){
+            ObjectNode switchs = data.addObject();
+            ArrayNode switchsKPI = switchs.putArray("交换机");
+            switchsKPI.addObject().put("pkgs", "包数量");
+            switchsKPI.addObject().put("kb", "流量");
+        }else if("host".equalsIgnoreCase(type)){
+            ObjectNode host = data.addObject();
+            ArrayNode hostKPI = host.putArray("主机");
+            hostKPI.addObject().put("pkgs", "端口包数量");
+            hostKPI.addObject().put("kb", "端口流量");
+        }
+        return ok(data);
     }
 
 }

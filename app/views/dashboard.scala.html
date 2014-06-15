@@ -2,12 +2,20 @@
     <script type="text/javascript">
         $(function () {
             $('#kpi-timerange').datepicker({format:'yyyy-mm-dd 00:00',forceParse:false});
-            initChart('@routes.Charts.options()','chart1','subsystem','chp_usage','avg','平均值');
-            initChart('@routes.Charts.options()','chart2','subsystem','pg_response','sum','总和');
             initChart('@routes.Charts.options()','chart3','subsystem','capacity');
-            initChart('@routes.Charts.options()','chart4','subsystem','pg_io','sum','总和');
-            initChart('@routes.Charts.options()','chart5','subsystem','pg_usage','max','最大值');
-            initChart('@routes.Charts.options()','chart6','subsystem','cache_write_pending','max','最大值');
+            changeTime();
+            $('#searchBtn').click(function(){
+                changeTime();
+            });
+            function changeTime(){
+                var starttime = $('#starttime').val();
+                var endtime = $('#endtime').val();
+                initChart('@routes.Charts.options()','chart1','subsystem','chp_usage','avg','平均值','',starttime,endtime);
+                initChart('@routes.Charts.options()','chart2','subsystem','pg_response','sum','总和','',starttime,endtime);
+                initChart('@routes.Charts.options()','chart4','subsystem','pg_io','sum','总和','',starttime,endtime);
+                initChart('@routes.Charts.options()','chart5','subsystem','pg_usage','max','最大值','',starttime,endtime);
+                initChart('@routes.Charts.options()','chart6','subsystem','cache_write_pending','max','最大值','',starttime,endtime);
+            }
         });
     </script>
     <ul class="breadcrumb breadcrumb-page">
@@ -26,7 +34,8 @@
                     <hr class="visible-xs no-grid-gutter-h">
                         <!-- "Create project" button, width=auto on desktops -->
                     <div class="pull-right col-xs-12 col-sm-auto">
-                        <a href="#" class="btn btn-primary btn-labeled" style="width: 100%;"><span class="btn-label icon fa fa-plus"></span>Add</a>
+                        <a href="#" class="btn btn-primary btn-labeled" id="searchBtn" ><span class="btn-label icon fa fa-paper-plane-o"></span>Search</a>
+                        <a href="#" class="btn btn-primary btn-labeled" ><span class="btn-label icon fa fa-plus"></span>Add</a>
                     </div>
                         <!-- Margin -->
                     <div class="visible-xs clearfix form-group-margin"></div>

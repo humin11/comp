@@ -28,19 +28,29 @@ import javax.persistence.UniqueConstraint;
  */
 
 @Entity
-@Table(name="T_PRF_DSSYSTEM",uniqueConstraints={@UniqueConstraint(columnNames={"TIME_ID","ELEMENT_ID"})})
+@Table(name="T_PRF_DSSYSTEM_RC",uniqueConstraints={@UniqueConstraint(columnNames={"TIME_ID","ELEMENT_ID"})})
 public class TPrfDssystemRC extends PrfModel{
 	
 	public Long ALL_RIO;
-	
-	public Long ALL_WRITE;
-	
-	public Long RIO_ERROR;
-	
-	public Long INITIAL_COPY_RIO;
-	
-	public Long INITIAL_COPY_KB;
-	
-	public Long INITIAL_COPY_TRANSFER;
+
+    public Long ALL_WRITE;
+
+    public Long RIO_ERROR;
+
+    public Long INIT_RIO;
+
+    public Long INIT_TRANSFER;
+
+    public Long INIT_TIME;
+
+    public Long UPDATE_COPY_RIO;
+
+    public Long UPDATE_COPY_TRANSFER;
+
+    public Long UPDATE_COPY_TIME;
+
+    public Long PAIR_SYNC;
+
+    public Long OUT_OF_TRACKS;
 	
 }
