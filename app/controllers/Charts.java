@@ -10,6 +10,7 @@ import models.TResApplication;
 import models.TResRaidGroup;
 import models.TResStorageSubsystem;
 import models.TResSwitch;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.*;
 import utils.Format;
@@ -639,6 +640,7 @@ public class Charts extends Controller {
         sqlQuery.setParameter("START_TIME",startTime);
         sqlQuery.setParameter("END_TIME",endTime);
         List<SqlRow> results = sqlQuery.findList();
+        Logger.info(sql);
         ObjectNode send = series.addObject();
         ArrayNode sendData = send.putArray("data");
         ObjectNode recv = series.addObject();
@@ -690,6 +692,7 @@ public class Charts extends Controller {
         sqlQuery.setParameter("ELEMENT_ID",id);
         sqlQuery.setParameter("START_TIME",startTime);
         sqlQuery.setParameter("END_TIME",endTime);
+        Logger.info(sql);
         List<SqlRow> results = sqlQuery.findList();
         ObjectNode read = series.addObject();
         ArrayNode readData = read.putArray("data");
