@@ -222,7 +222,7 @@ public class Charts extends Controller {
 
     private static void getSubsystemPrf(String id, String sub_kpi,String math, String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -5);
+        c.add(Calendar.DAY_OF_MONTH, -1);
         String startTime = c.getTimeInMillis()+"";
         String endTime = "";
         Date startTime1 = c.getTime();
@@ -402,7 +402,7 @@ public class Charts extends Controller {
 
     private static void getBusinessPrf(String id, String sub_kpi,String math, String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.HOUR, -30);
+        c.add(Calendar.DAY_OF_MONTH, -1);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){
@@ -619,7 +619,7 @@ public class Charts extends Controller {
 
     private static void getSwitchPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -4);
+        c.add(Calendar.DAY_OF_MONTH, -1);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){
@@ -673,7 +673,7 @@ public class Charts extends Controller {
 
     private static void getHostPrf(String id, String sub_kpi,String start_time, String end_time, ArrayNode series) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -5);
+        c.add(Calendar.DAY_OF_MONTH, -1);
         Date startTime = c.getTime();
         Date endTime = new Date();
         if(!start_time.equals("")){
