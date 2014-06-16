@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.TResHost;
 import models.TResStorageSubsystem;
 import models.TResSwitch;
+import play.Configuration;
 import play.api.Play;
 import play.libs.Json;
 import play.mvc.*;
+import utils.Play1Session;
 import views.html.*;
 
 import java.util.List;
@@ -69,27 +71,27 @@ public class Application extends Controller {
         ObjectNode c14 = c1c.addObject();
         c14.put("id",14);
         c14.put("name","应用系统");
-        c14.put("url","/business");
+        c14.put("url",Configuration.root().getString("application.context")+"business");
         c14.put("icon","fa-cloud");
         ObjectNode c5 = root.addObject();
         c5.put("id",5);
         c5.put("name","性能");
-        c5.put("url", "/performance");
+        c5.put("url", Configuration.root().getString("application.context")+"performance");
         c5.put("icon","fa-bar-chart-o");
         ObjectNode c2 = root.addObject();
         c2.put("id",2);
         c2.put("name","拓扑");
-        c2.put("url","/topology");
+        c2.put("url",Configuration.root().getString("application.context")+"topology");
         c2.put("icon","fa-sitemap");
         ObjectNode c3 = root.addObject();
         c3.put("id",3);
         c3.put("name","告警");
-        c3.put("url","/alarm");
+        c3.put("url",Configuration.root().getString("application.context")+"alarm");
         c3.put("icon","fa-warning");
         ObjectNode c4 = root.addObject();
         c4.put("id",4);
         c4.put("name","报表");
-        c4.put("url","/reports");
+        c4.put("url",Configuration.root().getString("application.context")+"reports");
         c4.put("icon","fa-file-pdf-o");
         return ok(root);
     }
@@ -98,7 +100,7 @@ public class Application extends Controller {
         ObjectNode storage = storages.addObject();
         storage.put("id",id);
         storage.put("name",name.length()>15?name.substring(0,15)+"...":name);
-        storage.put("url","/storage?id="+id+"&tab=summary");
+        storage.put("url", Configuration.root().getString("application.context")+"storage?id="+id+"&tab=summary");
         storage.put("icon","ds800016");
 //        ArrayNode storageSub = storage.putArray("children");
 //        ObjectNode dashboard = storageSub.addObject();
@@ -137,7 +139,7 @@ public class Application extends Controller {
         ObjectNode switch1 = switchs.addObject();
         switch1.put("id",id);
         switch1.put("name",name);
-        switch1.put("url","/switch?id="+id);
+        switch1.put("url",Configuration.root().getString("application.context")+"switch?id="+id);
         switch1.put("icon","storwize16");
 //        ArrayNode switchSub = switch1.putArray("children");
 //        ObjectNode dashboard = switchSub.addObject();
@@ -156,7 +158,7 @@ public class Application extends Controller {
         ObjectNode host = hosts.addObject();
         host.put("id",id);
         host.put("name",name);
-        host.put("url","/host?id="+id);
+        host.put("url",Configuration.root().getString("application.context")+"host?id="+id);
         host.put("icon","unmanagedServer16");
 //        ArrayNode hostSub = host.putArray("children");
 //        ObjectNode dashboard = hostSub.addObject();
@@ -179,7 +181,10 @@ public class Application extends Controller {
 
     public static Result reports() { return ok(report.render()); }
 
-    public static Result topology() { return ok(topology.render()); }
+    public static Result topology() {
+        response().setCookie(Play1Session.getSessionName(),Play1Session.getSessionParams());
+        return ok(topology.render());
+    }
 
     public static Result performance() { return ok(performance.render()); }
 
