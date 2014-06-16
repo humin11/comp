@@ -640,7 +640,6 @@ public class Charts extends Controller {
         sqlQuery.setParameter("START_TIME",startTime);
         sqlQuery.setParameter("END_TIME",endTime);
         List<SqlRow> results = sqlQuery.findList();
-        Logger.info(sql);
         ObjectNode send = series.addObject();
         ArrayNode sendData = send.putArray("data");
         ObjectNode recv = series.addObject();
