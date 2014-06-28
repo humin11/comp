@@ -2,7 +2,19 @@
     <script type="text/javascript">
         $(function () {
             initTable('@routes.Datatables.options()','table1','alarm',20);
-
+            $('#select_object').select2({
+                allowClear: false,
+                placeholder: "选择性能库"
+            });
+            $('#select_device').select2({
+                allowClear: true,
+                placeholder: "选择设备"
+            });
+            $('#select_severity').select2({
+                allowClear: true,
+                placeholder: "选择级别"
+            });
+            $('#add_filter').modal('show');
         });
     </script>
     <ul class="breadcrumb breadcrumb-page">
@@ -15,6 +27,74 @@
                 <div class="stat-row">
                     <div class="stat-cell bordered no-border-t no-padding" id="table1" style="height: 500px">
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="add_filter" class="modal fade" tabindex="-1" role="dialog" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">新建性能告警规则</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="row">
+                                <label class="checkbox-inline">
+                                    <input id="storageCb" type="checkbox" class="px" checked="checked">
+                                    <span class="lbl">告警</span>
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input id="switchCb" type="checkbox" class="px">
+                                    <span class="lbl">邮件</span>
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input id="hostCb" type="checkbox" class="px">
+                                    <span class="lbl">生成Trap</span>
+                                </label>
+                            </div>
+                            <div class="row" style="margin-top: 10px">
+                                <label for="select_object">选择性能库</label>
+                                <select id="select_object" class="form-control" >
+                                    <option>存储卷性能</option>
+                                </select>
+                            </div>
+                            <div class="row" style="margin-top: 5px">
+                                <label>过滤条件</label>
+                                <textarea class="form-control" rows="5" style="resize: none"></textarea>
+                            </div>
+                            <div class="row" style="margin-top: 5px">
+                                <label>选择设备</label>
+                                <select id="select_device" class="form-control">
+                                    <option>USP_V.29846</option>
+                                </select>
+                            </div>
+                            <div class="row" style="margin-top: 5px">
+                                <label>生成告警级别</label>
+                                <div class="select2-warning">
+                                    <select id="select_severity" multiple="multiple" class="form-control">
+                                        <option>Major</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5 col-md-5" style="margin-left: 20px;">
+                            <div class="row" style="margin-top: 28px">
+                                <label>标题</label>
+                                <input class="form-control" type="text">
+                            </div>
+                            <div class="row" style="margin-top: 5px">
+                                <label>内容</label>
+                                <textarea class="form-control" rows="5" style="resize: none"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary btn-labeled" href="#" id="saveBtn"><span class="btn-label icon fa fa-save"></span>保存</a>
+                    <a class="btn btn-primary btn-labeled" href="#" id="saveBtn">取消</a>
                 </div>
             </div>
         </div>

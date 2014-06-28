@@ -25,12 +25,16 @@ public class Datatables extends Controller {
         String start_time = request().getQueryString("start_time");
         String end_time = request().getQueryString("end_time");
         ObjectNode options = Json.newObject();
-        if("prf_subsystem".equals(model))
-            options = getSubsystemPrf(id,title,start_time,end_time);
+        if("cfg_subsystem".equals(model))
+            options = getSubsystemCfg(id, title, start_time, end_time);
+        else if("cfg_report".equals(model))
+            options = getReportCfg(id, title, start_time, end_time);
+        else if("prf_subsystem".equals(model))
+            options = getSubsystemPrf(id, title, start_time, end_time);
         else if("prf_raidgroup".equals(model))
-            options = getRaidGroupPrf(id,title,start_time,end_time);
+            options = getRaidGroupPrf(id, title, start_time, end_time);
         else if("prf_fcport".equals(model))
-            options = getFCPortPrf(id,title,start_time,end_time);
+            options = getFCPortPrf(id, title, start_time, end_time);
         else if("cfg_fcport".equals(model))
             options = getFCPortCfg(id);
         else if("cfg_raidgroup".equals(model))
@@ -50,6 +54,49 @@ public class Datatables extends Controller {
         else if("guest_os".equals(model))
             options = getVMGuest(id);
         return ok(options);
+    }
+
+    private static ObjectNode getSubsystemCfg(String id, String title, String start_time, String end_time) {
+        String[] kpiColumns = {"名称","已使用容量","空闲容量","总容量","IP地址","序列号","厂商","端口数量","卷数量"};
+        List<TResStorageSubsystem> subsystems = TResStorageSubsystem.findAll();
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for (TResStorageSubsystem subsystem : subsystems){
+            ArrayNode obj = rows.addArray();
+            obj.add(subsystem.NAME);
+            obj.add(Format.parserCapacity(subsystem.ALLOCATED_CAPACITY));
+            obj.add(Format.parserCapacity(subsystem.ASSIGNED_CAPACITY-subsystem.ALLOCATED_CAPACITY));
+            obj.add(Format.parserCapacity(subsystem.ASSIGNED_CAPACITY));
+            obj.add(subsystem.IP_ADDRESS==null?"no data":subsystem.IP_ADDRESS);
+            obj.add(subsystem.SERIAL_NUMBER);
+            obj.add(TResVendor.findById(subsystem.VENDOR_ID).NAME);
+            obj.add(TResPort.findBySubsystemId(subsystem.ID).size());
+            obj.add(TResStorageVolume.findBySubsystemId(subsystem.ID).size());
+        }
+        return options;
+    }
+
+    private static ObjectNode getReportCfg(String id, String title, String start_time, String end_time) {
+        String[] kpiColumns = {"名称","设备类型","类型","上一次运行时间","生成次数"};
+        List<TResReport> reports = TResReport.findAll();
+        ObjectNode options = Json.newObject();
+        ArrayNode cols = options.putArray("cols");
+        ArrayNode rows = options.putArray("rows");
+        Random random = new Random();
+        for (String colname : kpiColumns)
+            cols.add(colname);
+        for (TResReport report : reports){
+            ArrayNode obj = rows.addArray();
+            obj.add("<a href='#'>"+report.REPORT_NAME+"</a>");
+            obj.add(report.DEVICE_TYPE);
+            obj.add("临时报表");
+            obj.add(Format.parseString(report.CREATE_TIME,"yyyy-MM-dd HH:mm:ss"));
+            obj.add(random.nextInt(10));
+        }
+        return options;
     }
 
     private static ObjectNode getSubsystemPrf(String id, String title, String start_time, String end_time) {
