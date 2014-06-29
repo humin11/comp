@@ -16,51 +16,51 @@ import java.util.Iterator;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TResDiskDrive extends AssetModel {
 
-    public String instance_id;
+    public String INSTANCE_ID;
 
-    public String device_id;
+    public String DEVICE_ID;
 
-    public Boolean primordial;
+    public Boolean PRIMORDIAL;
 
-    public Boolean segential_access;
+    public Boolean SEGENTIAL_ACCESS;
 
-    public Long total_managed_space;
+    public Long TOTAL_MANAGED_SPACE;
 
-    public Long capacity;
+    public Long CAPACITY;
 
-    public Long remaining_managed_space;
+    public Long REMAINING_MANAGED_SPACE;
 
-    public Long used_capacity;
+    public Long USED_CAPACITY;
 
-    public Long free_capacity;
+    public Long FREE_CAPACITY;
 
-    public Long block_size;
+    public Long BLOCK_SIZE;
 
-    public Long number_blocks;
+    public Long NUMBER_BLOCKS;
 
-    public Long consumable_blocks;
+    public Long CONSUMABLE_BLOCKS;
 
-    public int data_redundancy;
+    public int DATA_REDUNDANCY;
 
-    public int delta_reservation;
+    public int DELTA_RESERVATION;
 
-    public int package_redundancy;
+    public int PACKAGE_REDUNDANCY;
 
-    public String extent_status;
+    public String EXTENT_STATUS;
 
-    public String raid_level;
+    public String RAID_LEVEL;
 
-    public int speed;
+    public int SPEED;
 
-    public String slot;
+    public String SLOT;
 
-    public String disk_type;
+    public String DISK_TYPE;
 
-    public Boolean is_spare;
+    public Boolean IS_SPARE;
 
-    public String emc_volume_attributes_description;
+    public String EMC_VOLUME_ATTRIBUTES_DESCRIPTION;
 
-    public String emc_volume_attributes_description2;
+    public String EMC_VOLUME_ATTRIBUTES_DESCRIPTION2;
 
 
     public static Finder<Long, TResDiskDrive> find = new Finder<Long, TResDiskDrive>(
@@ -68,13 +68,13 @@ public class TResDiskDrive extends AssetModel {
     );
 
     public static void create(JsonNode node){
-        TResDiskDrive obj = find.where().eq("name",node.get("name").asText()).eq("system_name", node.get("system_name").asText()).findUnique();
+        TResDiskDrive obj = find.where().eq("NAME",node.get("NAME").asText()).eq("SUBSYSTEM_NAME", node.get("SUBSYSTEM_NAME").asText()).findUnique();
         if(obj==null){
             obj = new TResDiskDrive();
             obj = Json.fromJson(node, TResDiskDrive.class);
             obj.save();
         } else {
-            Long id = obj.id;
+            Long id = obj.ID;
             obj = Json.fromJson(node, TResDiskDrive.class);
             obj.update(id);
         }

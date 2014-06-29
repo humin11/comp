@@ -10,6 +10,7 @@ import play.mvc.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import views.html.*;
 
 public class Storages extends Controller {
 
@@ -29,7 +30,7 @@ public class Storages extends Controller {
             device.put("VENDOR_NAME","netapp");
             device.put("ICON", "netapp_small.png");
         }
-        return ok(views.html.storage.index.render(device,tab));
+        return ok(storage.index.render(device,tab));
     }
 
     public static Result summary() {

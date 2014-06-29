@@ -32,6 +32,8 @@ public class ResModel extends Model{
 	public String SUBSYSTEM_ID;
 	public String ELEMENT_NAME;
 	public String DISPLAY_NAME;
+    public String NAME;
+    public String CREATION_CLASS_NAME;
 	public String DESCRIPTION;
 	public String VENDOR_ID;
 	public String MODEL_ID;

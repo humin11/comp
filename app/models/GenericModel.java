@@ -14,38 +14,40 @@ import java.util.Date;
 public class GenericModel extends Model {
 
     @Id
-    public Long id;
+    public Long ID;
 
     @Constraints.Required
-    public String name;
+    public String NAME;
 
     @Constraints.Required
-    public String element_name;
+    public String ELEMENT_NAME;
 
     @Constraints.Required
-    public String display_name;
+    public String DISPLAY_NAME;
 
-    public String creation_class_name;
+    public String CREATION_CLASS_NAME;
 
-    public String name_format;
+    public String NAME_FORMAT;
 
-    public int requested_state;
+    public int REQUESTED_STATE;
 
-    public int health_state;
+    public int HEALTH_STATE;
 
-    public int enabled_state;
+    public int ENABLED_STATE;
 
-    public int enabled_default;
+    public int ENABLED_DEFAULT;
 
-    public String operational_status;
+    public String OPERATIONAL_STATUS;
 
-    public String status;
+    public String STATUS;
 
-    public String status_description;
+    public String STATUS_DESCRIPTION;
 
-    public String system_name;
+    public String SUBSYSTEM_NAME;
 
-    public Date discovery_at = new Date();
+    public String SUBSYSTEM_ID;
 
-    public Date update_at = new Date();
+    public Date DISCOVERY_AT = new Date();
+
+    public Date UPDATE_AT = new Date();
 }

@@ -13,40 +13,40 @@ import java.util.Date;
 @MappedSuperclass
 public class AssetModel extends GenericModel {
 
-    public String caption;
+    public String CAPTION;
 
-    public String dedicated;
+    public String DEDICATED;
 
-    public String description;
+    public String DESCRIPTION;
 
-    public String firmware_version;
+    public String FIRMWARE_VERSION;
 
-    public String os_name;
+    public String OS_NAME;
 
-    public String version;
+    public String VERSION;
 
-    public String code_level;
+    public String CODE_LEVEL;
 
-    public String model;
+    public String MODEL;
 
-    public String manufacture;
+    public String MANUFACTURE;
 
-    public String vendor;
+    public String VENDOR;
 
-    public String roles;
+    public String ROLES;
 
-    public String primary_owner_name;
+    public String PRIMARY_OWNER_NAME;
 
-    public String primary_owner_contact;
+    public String PRIMARY_OWNER_CONTACT;
 
-    public String access_point;
+    public String ACCESS_POINT;
 
-    public String serial_number;
+    public String SERIAL_NUMBER;
 
-    public String part_number;
+    public String PART_NUMBER;
 
-    public String ip_address;
+    public String IP_ADDRESS;
 
-    public String uptime;
+    public String UPTIME;
 
 }

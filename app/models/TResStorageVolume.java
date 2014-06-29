@@ -9,12 +9,15 @@
  */
  package models;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.core.ResModel;
 import play.db.ebean.Model;
+import play.libs.Json;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -33,16 +36,37 @@ import java.util.List;
  */
 @Entity
 @Table(name="T_RES_STORAGE_VOLUME",uniqueConstraints={@UniqueConstraint(columnNames={"NAME","SUBSYSTEM_ID"})})
-public class TResStorageVolume extends ResModel {
+public class TResStorageVolume extends GenericModel {
 	public Long CAPACITY;
-	public Short PACKAGE_REUNDANCY;
-	public Short DATA_REDUNDANCY;
-	public Long SIZE_ALLOCATED;
+    public Long TOTAL_MANAGED_SPACE;
+    public Long REMAINING_MANAGED_SPACE;
+    public Long USED_CAPACITY;
+    public Long FREE_CAPACITY;
+
+    public String CONTROLLER_NAME;
+
+	public int PACKAGE_REDUNDANCY;
+	public int DATA_REDUNDANCY;
+    public String EXTENT_STATUS;
+
 	public Long BLOCK_SIZE;
 	public Long CONSUMABLE_BLOCKS;
-	public Short NATIVE_STATUS;
-	public Long NUMBER_OF_BLOCKS;
-	public Long THROTTLE;
+	public Long NUMBER_BLOCKS;
+
+    public Boolean SEGENTIAL_ACCESS;
+    public Boolean PRIMORDIAL;
+    public Boolean IS_UNDERLYING_REDUNDANCY;
+    public Boolean IS_THIN_PROVISIONED;
+    public Boolean IS_MAPPED;
+
+    public int ACCESS;
+
+    public String DEVICE_ID;
+    public String INSTANCE_ID;
+    public String POOL_NAME;
+    public String POOL_INSTANCE;
+
+    public Long THROTTLE;
 	public Short VDISK_TYPE;
 	public String POOL_ID;
 	public String LOGICAL_DISK_TYPE;
@@ -60,7 +84,6 @@ public class TResStorageVolume extends ResModel {
 	public Long LOGICAL_CAPACITY;
 	public Long LOGICAL_FREE;
 	public Short FORMAT;
-	public Short IS_MAPPING;
 	public String FLASH_COPY_ID;
 	public String FLASH_COPY_NAME;
 	public String METRO_MIRROR_ID;
@@ -89,6 +112,32 @@ public class TResStorageVolume extends ResModel {
 
     public static TResStorageVolume findById(String id){
         return find.byId(id);
+    }
+
+    public static void create(JsonNode node){
+        TResStorageVolume obj = find.where().eq("NAME",node.get("NAME").asText()).eq("SUBSYSTEM_NAME", node.get("SUBSYSTEM_NAME").asText()).findUnique();
+        if(obj==null){
+            obj = new TResStorageVolume();
+            obj = Json.fromJson(node, TResStorageVolume.class);
+            obj.save();
+        } else {
+            Long id = obj.ID;
+            obj = Json.fromJson(node, TResStorageVolume.class);
+            obj.update(id);
+        }
+    }
+
+    public static void createAll(JsonNode nodes){
+        if(nodes.isArray()) {
+            Iterator<JsonNode> it = nodes.elements();
+            JsonNode node = null;
+            while (it.hasNext()) {
+                node = it.next();
+                create(node);
+            }
+        } else {
+            create(nodes);
+        }
     }
 
 }
