@@ -6,6 +6,176 @@
                     alert('已生成');
                 });
             });
+            $('#report_btn' ).click(function(){
+                $('#add_report' ).modal('show');
+            });
+            initTable('@routes.Datatables.options()','table1','cfg_report',10);
+            $('#kpi-timerange').datepicker({format:'yyyy-mm-dd 00:00',forceParse:false});
+            $('#kpi-timerange2').datepicker({format:'yyyy-mm-dd 00:00',forceParse:false});
+            $('#globa-btn').switcher({
+                theme: 'square',
+                off_state_content :'全局',
+                on_state_content:'单设备'
+            });
+            $('#globa-btn').change(function(){
+                var checked = $(this).is(':checked');
+                if(checked) {
+                    $('#select_device').select2('enable',true);
+                }else{
+                    $('#select_device').select2('val','');
+                    $('#select_device').select2('enable',false);
+                }
+            });
+            $('#select_rate').select2({
+                allowClear: false,
+                placeholder: "采样间隔"
+            });
+            $('#select_type').select2({
+                allowClear: false,
+                placeholder: "选择类型"
+            });
+            $('#select_timescope').select2({
+                allowClear: false,
+                placeholder: "选择时间段"
+            });
+            $('#select_math').select2({
+                allowClear: false,
+                placeholder: "选择汇总方式"
+            });
+            $('#select_type').change(function(){
+                $('#select_device').select2('val','');
+                var kpi = $('#select_type').select2('val');
+                if(kpi == 'subsystem')
+                    loadStorages();
+                else if(kpi == 'switch')
+                    loadSwitchs();
+                else if(kpi == 'host')
+                    loadHosts();
+                else if(kpi == 'business')
+                    loadBusiness();
+                loadKPI();
+            });
+            $('#select_device').select2({
+                allowClear: true,
+                placeholder: "选择对象"
+            });
+            $("#select_kpi").select2({
+                allowClear: true,
+                placeholder: "选择KPI"
+            });
+
+            $('#exec').click(function(){
+                var kpi = $('#select_type').select2('val');
+                var math = $('#select_math').select2('val');
+                var sub_kpi = $('#select_kpi').select2('val');
+                var kpiName = $('option[value='+sub_kpi+']').text();
+                var id = $('#select_device').select2('val');
+                var deviceName = '';
+                if(id.length>0) {
+                    deviceName = $('option[value='+id+']').text()+' ';
+                    if(sub_kpi.indexOf('pg_') == 0){
+                        kpi = 'raidgroup';
+                    }
+                }
+                var title = deviceName+kpiName+' - '+$('#select_math').select2('data').text+'';
+                var start_time = $('#starttime').val();
+                var end_time = $('#endtime').val();
+                $("#chart1" ).empty();
+                $("#chart1" ).html("<div class=\"progress progress-striped active\"><div class=\"progress-bar progress-bar-info\" style=\"width: 100%;\"></div></div>")
+                initChart('@routes.Charts.options()','chart1',kpi,sub_kpi,math,title,id,start_time,end_time);
+            });
+            loadStorages();
+            loadKPI();
+            function loadStorages(){
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    url: '@routes.Storages.json()',
+                    success:function(data){
+                        $('#select_device').empty();
+                        $('#select_device').append('<option></option>');
+                        $.each(data,function(idx,obj){
+                            var option = $('<option value='+obj.ID+'>'+obj.NAME+'</option>');
+                            $('#select_device').append(option);
+                        });
+                    }
+                });
+            }
+            function loadSwitchs(){
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    url: '@routes.Switchs.json()',
+                    success:function(data){
+                        $('#select_device').empty();
+                        $('#select_device').append('<option></option>');
+                        $.each(data,function(idx,obj){
+                            var option = $('<option value='+obj.ID+'>'+obj.ELEMENT_NAME+'</option>');
+                            $('#select_device').append(option);
+                        });
+                    }
+                });
+            }
+            function loadHosts(){
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    url: '@routes.Hosts.json()',
+                    success:function(data){
+                        $('#select_device').empty();
+                        $('#select_device').append('<option></option>');
+                        $.each(data,function(idx,obj){
+                            var option = $('<option value='+obj.ID+'>'+obj.NAME+'</option>');
+                            $('#select_device').append(option);
+                        });
+                    }
+                });
+            }
+            function loadBusiness(){
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    url: '@routes.Business.json()',
+                    success:function(data){
+                        $('#select_device').empty();
+                        $('#select_device').append('<option></option>');
+                        $.each(data,function(idx,obj){
+                            var option = $('<option value='+obj.NAME+'>'+obj.DESCRIPTION+'</option>');
+                            $('#select_device').append(option);
+                        });
+                    }
+                });
+            }
+            function loadKPI(){
+                var kpitype = 'subsystem';
+                $.ajax({
+                    cache:false,
+                    dataType: "json",
+                    type: "GET",
+                    data: {type:kpitype},
+                    url: '@routes.Charts.kpi()',
+                    success:function(data){
+                        $('#select_kpi').empty();
+                        $('#select_kpi').append('<option></option>');
+                        $.each(data,function(idx,kpigroupObj){
+                            for(var groupname in kpigroupObj){
+                                var optgroup = $('<optgroup label="'+groupname+'"></optgroup>');
+                                $.each(kpigroupObj[groupname],function(idx1,kpiObj){
+                                    for(var kpiname in kpiObj){
+                                        var option = $('<option value='+kpiname+'>'+kpiObj[kpiname]+'</option>');
+                                        optgroup.append(option);
+                                    }
+                                });
+                                $('#select_kpi').append(optgroup);
+                            }
+                        });
+                    }
+                });
+            }
         });
     </script>
     <ul class="breadcrumb breadcrumb-page">
@@ -13,17 +183,112 @@
         <li><a href="#">Reports</a></li>
     </ul>
     <div class="page-header">
-
         <div class="row">
             <h1 class="col-xs-12 col-sm-4 text-center text-left-sm">
                 <i class="fa fa-file-text-o page-header-icon"></i>
             &nbsp;&nbsp;报表管理</h1>
             <div class="col-xs-12 col-sm-8">
-                <a id="runDaily" class="btn btn-primary btn-labeled"><span class="btn-label icon fa fa-file-pdf-o"></span>生成日报</a>
+                <a id="runDaily" class="btn btn-primary btn-labeled hide"><span class="btn-label icon fa fa-file-pdf-o"></span>生成日报</a>
             </div>
         </div>
     </div>
-    <div id="page-content">
-
+    <div class="page-content">
+        <ul id="reporttab" class="nav nav-tabs">
+            <li class="active">
+                <a href="#table1" data-toggle="tab">性能分析报表<span class="label label-success">9</span></a>
+            </li>
+            <li class="">
+                <a href="#tb_report" data-toggle="tab">同比报表</a>
+            </li>
+            <li class="">
+                <a href="#hb_report" data-toggle="tab">环比报表</a>
+            </li>
+            <li class="">
+                <a href="#history_report" data-toggle="tab">历史报表</a>
+            </li>
+        </ul>
+        <div class="tab-content tab-content-bordered">
+            <div class="tab-pane fade active in" id="table1">
+            </div>
+            <div class="tab-pane fade" id="tb_report">
+                <div class="row">
+                    <div class="col-sm-4 col-md-4">
+                        <label>业务时间段:</label><br>
+                        <select id="select_timescope" class="form-control" style="width: 300px">
+                            <option>两个业务时间段</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 col-md-4 select2-warning">
+                        <label>选择设备:</label><br>
+                        <select id="select_device" multiple="multiple" class="form-control" style="width: 300px">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 5px">
+                    <div class="col-sm-4 col-md-4">
+                        <label>采样间隔:</label><br>
+                        <select id="select_rate" class="form-control" style="width: 300px">
+                            <option>小时</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 col-md-4">
+                        <label>选择指标:</label><br>
+                        <select id="select_kpi" class="form-control" style="width: 300px">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 5px">
+                    <div class="col-sm-4 col-md-4">
+                        <label>第一业务时间段:</label><br>
+                        <div class="input-daterange input-group" id="kpi-timerange" style="width: 300px">
+                            <input type="text" class="input-sm form-control" id="starttime" name="start" placeholder="Start date">
+                            <span class="input-group-addon">to</span>
+                            <input type="text" class="input-sm form-control" id="endtime" name="end" placeholder="End date">
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-4">
+                        <label>计算方式:</label><br>
+                        <select id="select_math" class="form-control" style="width: 300px">
+                            <option value="max" selected="selected">最大值</option>
+                            <option value="sum">总和</option>
+                            <option value="avg">平均值</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 5px">
+                    <div class="col-sm-6 col-md-6">
+                        <label>第二业务时间段:</label><br>
+                        <div class="input-daterange input-group" id="kpi-timerange2" style="width: 300px">
+                            <input type="text" class="input-sm form-control" id="starttime2" name="start" placeholder="Start date">
+                            <span class="input-group-addon">to</span>
+                            <input type="text" class="input-sm form-control" id="endtime2" name="end" placeholder="End date">
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-md-2">
+                        <a id="report_btn" class="btn btn-info btn-labeled" style="margin-top: 20px"><span class="fa fa-file-pdf-o"></span>生成</a>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="hb_report">
+            </div>
+        </div>
+        <div id="add_report" class="modal fade" tabindex="-1" role="dialog" style="display: none;width:800px;overflow:hidden">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">生成报表</h4>
+                    </div>
+                    <div class="modal-body">
+                        <img src="assets/images/tmpreport.png"/>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-primary btn-labeled" href="#" id="saveBtn">关闭</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 }

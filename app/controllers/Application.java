@@ -186,6 +186,11 @@ public class Application extends Controller {
         return ok(topology.render());
     }
 
+    public static Result subsystem() {
+        String id = request().getQueryString("id");
+        return ok(subsystem.render());
+    }
+
     public static Result performance() { return ok(performance.render()); }
 
 }

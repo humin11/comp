@@ -195,8 +195,8 @@ public class Charts extends Controller {
         List<TResStorageSubsystem> subsystems = TResStorageSubsystem.findAll();
         for (TResStorageSubsystem subsystem : subsystems) {
             categories.add(subsystem.NAME.length()>15?subsystem.NAME.substring(0,15)+"...":subsystem.NAME);
-            unusedData.add(Format.parserCapacityTB(subsystem.ALLOCATED_CAPACITY));
-            usedData.add(Format.parserCapacityTB(subsystem.ASSIGNED_CAPACITY-subsystem.ALLOCATED_CAPACITY));
+            usedData.add(Format.parserCapacityTB(subsystem.ALLOCATED_CAPACITY));
+            unusedData.add(Format.parserCapacityTB(subsystem.ASSIGNED_CAPACITY-subsystem.ALLOCATED_CAPACITY));
         }
     }
 
