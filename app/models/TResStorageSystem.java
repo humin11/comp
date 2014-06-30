@@ -33,7 +33,7 @@ public class TResStorageSystem extends AssetModel {
             storage = Json.fromJson(node, TResStorageSystem.class);
             storage.save();
         } else {
-            Long id = storage.id;
+            String id = storage.ID;
             storage = Json.fromJson(node, TResStorageSystem.class);
             storage.update(id);
         }

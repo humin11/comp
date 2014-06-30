@@ -102,7 +102,7 @@ public class TResPort extends GenericModel {
             obj = Json.fromJson(node, TResPort.class);
             obj.save();
         } else {
-            Long id = obj.ID;
+            String id = obj.ID;
             obj = Json.fromJson(node, TResPort.class);
             obj.update(id);
         }

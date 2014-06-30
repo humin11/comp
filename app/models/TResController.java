@@ -67,7 +67,7 @@ public class TResController extends AssetModel {
             obj = Json.fromJson(node, TResController.class);
             obj.save();
         } else {
-            Long id = obj.ID;
+            String id = obj.ID;
             obj = Json.fromJson(node, TResController.class);
             obj.update(id);
         }

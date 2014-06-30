@@ -16,7 +16,7 @@ public class Switchs extends Controller {
         String id = request().getQueryString("id");
         TResSwitch tResSwitch = TResSwitch.findById(id);
         ObjectNode device = (ObjectNode)Json.toJson(tResSwitch);
-        String vendorName = TResVendor.findById(tResSwitch.VENDOR_ID).NAME;
+        String vendorName = tResSwitch.VENDOR;
         if(vendorName.contains("Brocade"))
             device.put("ICON","brocade.png");
         else if(vendorName.contains("Cisco"))

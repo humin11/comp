@@ -14,7 +14,7 @@ import java.util.Date;
 public class GenericModel extends Model {
 
     @Id
-    public Long ID;
+    public String ID;
 
     @Constraints.Required
     public String NAME;

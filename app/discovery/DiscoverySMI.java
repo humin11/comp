@@ -163,9 +163,9 @@ public class DiscoverySMI {
                         TResStorageSystem.create(Json.toJson(ss));
 
                         //For Get Controllers and Ports
-                        collector.getController(instance.getObjectPath(), this.cimDT, this.cim_Q, ss.name, creationClassName);
-                        collector.getStoragePool(instance.getObjectPath(), this.cimDT, this.cim_Q, ss.name, creationClassName);
-                        collector.getDiskDrive(instance.getObjectPath(), this.cimDT, this.cim_Q, ss.name, creationClassName);
+                        collector.getController(instance.getObjectPath(), this.cimDT, this.cim_Q, ss.NAME, creationClassName);
+                        collector.getStoragePool(instance.getObjectPath(), this.cimDT, this.cim_Q, ss.NAME, creationClassName);
+                        collector.getDiskDrive(instance.getObjectPath(), this.cimDT, this.cim_Q, ss.NAME, creationClassName);
                         count++;
 
                     } else if ((intDedicated1 == 15) && (intDedicated2 == 21)){

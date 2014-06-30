@@ -30,7 +30,7 @@ public class Storages extends Controller {
             device.put("VENDOR_NAME","netapp");
             device.put("ICON", "netapp_small.png");
         }
-        return ok(storage.index.render(device,tab));
+        return ok(views.html.storage.index.render(device,tab));
     }
 
     public static Result summary() {

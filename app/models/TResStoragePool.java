@@ -99,7 +99,7 @@ public class TResStoragePool extends GenericModel {
             obj = Json.fromJson(node, TResStoragePool.class);
             obj.save();
         } else {
-            Long id = obj.ID;
+            String id = obj.ID;
             obj = Json.fromJson(node, TResStoragePool.class);
             obj.update(id);
         }

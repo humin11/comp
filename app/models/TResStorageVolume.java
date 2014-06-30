@@ -121,7 +121,7 @@ public class TResStorageVolume extends GenericModel {
             obj = Json.fromJson(node, TResStorageVolume.class);
             obj.save();
         } else {
-            Long id = obj.ID;
+            String id = obj.ID;
             obj = Json.fromJson(node, TResStorageVolume.class);
             obj.update(id);
         }

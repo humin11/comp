@@ -9,12 +9,15 @@
  */
 package models;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.core.ResModel;
 import play.db.ebean.Model;
+import play.libs.Json;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -32,7 +35,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="T_RES_SWITCH",uniqueConstraints={@UniqueConstraint(columnNames={"NAME"})})
-public class TResSwitch extends ResModel {
+public class TResSwitch extends AssetModel {
 	public String PARENT_SWITCH_WWN;
 	public String SERIAL_NUMBER;
 	public String CONTACT;
@@ -65,5 +68,27 @@ public class TResSwitch extends ResModel {
 
     public static TResSwitch findById(String id) {
         return find.byId(id);
+    }
+
+    public static void create(JsonNode node){
+        TResSwitch obj = find.where().eq("NAME",node.get("NAME").asText()).findUnique();
+        if(obj==null){
+            obj = new TResSwitch();
+            obj = Json.fromJson(node, TResSwitch.class);
+            obj.save();
+        } else {
+            String id = obj.ID;
+            obj = Json.fromJson(node, TResSwitch.class);
+            obj.update(id);
+        }
+    }
+
+    public static void createAll(JsonNode nodes){
+        Iterator<JsonNode> it = nodes.elements();
+        JsonNode node = null;
+        while(it.hasNext()){
+            node = it.next();
+            create(node);
+        }
     }
 }

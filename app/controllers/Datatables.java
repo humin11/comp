@@ -239,7 +239,7 @@ public class Datatables extends Controller {
             obj.add("FC");
             TResRaidGroup2Vol rd2v = null;
             obj.add(rd2v == null ? "no data" : TResRaidGroup.findById(rd2v.RAIDGROUP_ID).NAME);
-            obj.add(volume.NUMBER_OF_BLOCKS == null?"no data":volume.NUMBER_OF_BLOCKS+"");
+            obj.add(volume.NUMBER_BLOCKS == null?"no data":volume.NUMBER_BLOCKS+"");
         }
         return options;
     }

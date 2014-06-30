@@ -63,8 +63,8 @@ public class TResDiskDrive extends AssetModel {
     public String EMC_VOLUME_ATTRIBUTES_DESCRIPTION2;
 
 
-    public static Finder<Long, TResDiskDrive> find = new Finder<Long, TResDiskDrive>(
-            Long.class, TResDiskDrive.class
+    public static Finder<String, TResDiskDrive> find = new Finder<String, TResDiskDrive>(
+            String.class, TResDiskDrive.class
     );
 
     public static void create(JsonNode node){
@@ -74,7 +74,7 @@ public class TResDiskDrive extends AssetModel {
             obj = Json.fromJson(node, TResDiskDrive.class);
             obj.save();
         } else {
-            Long id = obj.ID;
+            String id = obj.ID;
             obj = Json.fromJson(node, TResDiskDrive.class);
             obj.update(id);
         }

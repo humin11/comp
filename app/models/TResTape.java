@@ -20,8 +20,8 @@ import java.util.Iterator;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TResTape extends AssetModel {
 
-    public static Finder<Long, TResTape> find = new Finder<Long, TResTape>(
-            Long.class, TResTape.class
+    public static Finder<String, TResTape> find = new Finder<String, TResTape>(
+            String.class, TResTape.class
     );
 
     public static void create(JsonNode node){
@@ -31,7 +31,7 @@ public class TResTape extends AssetModel {
             obj = Json.fromJson(node, TResTape.class);
             obj.save();
         } else {
-            Long id = obj.id;
+            String id = obj.ID;
             obj = Json.fromJson(node, TResTape.class);
             obj.update(id);
         }

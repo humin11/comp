@@ -9,12 +9,14 @@
  */
 package models;
 
-import models.core.ResModel;
+import com.fasterxml.jackson.databind.JsonNode;
 import play.db.ebean.Model;
+import play.libs.Json;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -32,7 +34,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="T_RES_HOST",uniqueConstraints={@UniqueConstraint(columnNames={"NAME"})})
-public class TResHost extends ResModel {
+public class TResHost extends AssetModel {
 	public String GUID;
 	public String HOST_URL;
 	public String OS_PATCH;
@@ -84,5 +86,27 @@ public class TResHost extends ResModel {
 
     public static TResHost findById(String id) {
         return find.byId(id);
+    }
+
+    public static void create(JsonNode node){
+        TResHost obj = find.where().eq("NAME",node.get("NAME").asText()).findUnique();
+        if(obj==null){
+            obj = new TResHost();
+            obj = Json.fromJson(node, TResHost.class);
+            obj.save();
+        } else {
+            String id = obj.ID;
+            obj = Json.fromJson(node, TResHost.class);
+            obj.update(id);
+        }
+    }
+
+    public static void createAll(JsonNode nodes){
+        Iterator<JsonNode> it = nodes.elements();
+        JsonNode node = null;
+        while(it.hasNext()){
+            node = it.next();
+            create(node);
+        }
     }
 }
