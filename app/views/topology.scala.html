@@ -1,10 +1,79 @@
 @main("Topology") {
+    <script src="@routes.Assets.at("javascripts/topology/kinetic-v5.1.0.js")"></script>
+    <script src="@routes.Assets.at("javascripts/topology/Diagrammer.js")"></script>
+    <script src="@routes.Assets.at("javascripts/topology/GenericSprite.js")"></script>
+    <script src="@routes.Assets.at("javascripts/topology/GenericGroup.js")"></script>
+    <script src="@routes.Assets.at("javascripts/topology/GenericLink.js")"></script>
+    <script src="@routes.Assets.at("javascripts/topology/NodeTooltip.js")"></script>
+    <script src="@routes.Assets.at("javascripts/topology/NodeRenderer.js")"></script>
     <script type="text/javascript">
-
+        $(function(){
+            var groups = [
+                {id:'group1',x:200,y:20,groupWidth:300,groupHeight:150,data:{name:'Host',description:'Host'}},
+                {id:'group2',x:200,y:300,groupWidth:300,groupHeight:200,data:{name:'Storage',description:'Storage'}}
+            ];
+            var nodes = [
+                {id: 'node1',group:'group1',x:150,y:100,data:{name:'oa2',type:'host',vendor:'linux',description:'OA System'}},
+                {id: 'node11',group:'group1',x:500,y:100,data:{name:'EMS',type:'host',vendor:'solaris',description:'EMS Online'}},
+                {id: 'node2',x: 300,y: 200,data:{name:'11aas',type:'switch',vendor:'brocade',description:'Master Switch'},
+                    anchors:[{id:'p1',x:10,y:34,data:{}},{id:'p2',x:14,y:34,data:{}},
+                            {id:'p3',x:18,y:34,data:{}},{id:'p4',x:22,y:34,data:{}},
+                            {id:'p5',x:30,y:34,data:{}},{id:'p6',x:34,y:34,data:{}},
+                            {id:'p7',x:38,y:34,data:{}},{id:'p8',x:42,y:34,data:{}}]},
+                {id: 'node3',group:'group2',x: 150,y: 300,data:{name:'ems8000a1',type:'storage',vendor:'emc',description:'DS8000'}},
+                {id: 'node4',group:'group2',x: 550,y: 300,data:{name:'fas112',type:'storage',vendor:'hp',description:'FAS3140'}}
+            ];
+            var links = [
+                {id: 'link1',source: 'node1',target: 'node2'},
+                {id: 'link11',source: 'node11',target: 'node2',dashline: true},
+                {id: 'link2',source: 'node2',target: 'node3',sourceAnchor: 'p1'},
+                {id: 'link3',source: 'node2',target: 'node4',sourceAnchor: 'p7'}
+            ];
+            var diagrammer =  new Cloudwei.Diagrammer({
+                id: 'topology',
+                container: 'topology',
+                width: 1024,
+                height: 768,
+                nodeRenderFunc:function(nodeConfig){
+                    return new Cloudwei.NodeRenderer(nodeConfig);
+                }
+            });
+            for(var i=0;i<groups.length;i++){
+                diagrammer.addGroup(groups[i]);
+            }
+            for(var i=0;i<nodes.length;i++){
+                diagrammer.addNode(nodes[i]);
+            }
+            for(var i=0;i<links.length;i++){
+                diagrammer.addLink(links[i]);
+            }
+            diagrammer.refresh();
+            $.ajax({
+                cache:false,
+                dataType: "json",
+                type: "GET",
+                url: '@routes.Topology.layer1()',
+                success:function(data){
+                    diagrammer.removeAll();
+                    for(var i=0;i<data.groups.length;i++){
+                        diagrammer.addGroup(data.groups[i]);
+                    }
+                    for(var i=0;i<data.nodes.length;i++){
+                        diagrammer.addNode(data.nodes[i]);
+                    }
+                    for(var i=0;i<data.links.length;i++){
+                        diagrammer.addLink(data.links[i]);
+                    }
+                    diagrammer.refresh();
+                }
+            });
+        });
     </script>
     <ul class="breadcrumb breadcrumb-page">
         <div class="breadcrumb-label text-light-gray">You are here: </div>
         <li><a href="#">Topology</a></li>
     </ul>
-    <iframe src="http://localhost:9001/topology/index" style="border: 0;width:1180px;height:600px;overflow: hidden;"></iframe>
+    <div id="topology">
+
+    </div>
 }
