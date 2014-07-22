@@ -8,7 +8,20 @@
             });
             diagrammer.addNode({id:'server1',name:'server1',type:'server'});
             diagrammer.addNode({id:'server2',name:'server2',type:'server'});
-            diagrammer.addNode({id:'fabric1',name:'fabric1',type:'fabric'});
+            diagrammer.addGroup({id:'fabric1',name:'fabric1',type:'fabric',
+                nodes:[{id:'switch1',name:'switch1',type:'switch'},
+                       {id:'switch2',name:'switch2',type:'switch'},
+                       {id:'switch3',name:'switch3',type:'switch'},
+                       {id:'switch4',name:'switch4',type:'switch'}],
+                links:[{id:'link5a',source:'server1',target:'switch1'},
+                       {id:'link5',source:'server2',target:'switch1'},
+                       {id:'link6',source:'switch1',target:'switch2'},
+                       {id:'link7',source:'switch1',target:'switch3'},
+                       {id:'link8',source:'switch2',target:'switch4'},
+                       {id:'link9',source:'switch3',target:'switch4'},
+                       {id:'link10',source:'switch4',target:'storage1'},
+                       {id:'link11',source:'switch4',target:'storage2'}
+            ]});
             diagrammer.addNode({id:'storage1',name:'storage1',type:'storage'});
             diagrammer.addNode({id:'storage2',name:'storage2',type:'storage'});
             diagrammer.addLink({id:'link1',source:'server1',target:'fabric1'});
