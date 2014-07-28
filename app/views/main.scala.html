@@ -46,7 +46,10 @@
                 <div class="navbar-inner">
                         <!-- Main navbar header -->
                     <div class="navbar-header">
-                            <!-- Logo --><a href="@routes.Application.index()"><img alt="@Messages("application.name")" src="assets/images/logo.png" style="width:183px;"></a>
+                            <!-- Logo -->
+                            <a href="@routes.Application.index()" class="navbar-brand">
+                                <img alt="@Messages("application.name")"  src="assets/images/pixel-admin/main-navbar-logo.png">&nbsp;&nbsp;@Messages("application.name")
+                            </a>
                             <!-- Main navbar toggle -->
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse"><i class="navbar-icon fa fa-bars"></i></button>
 

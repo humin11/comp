@@ -14,15 +14,17 @@ Diagrammer.prototype = {
     addGroup: function(o){
         var scene = this.scene;
         var diagrammer = this;
-        var node = this.createNode(o.name, o.type);
+        var node = this.createNode(o.id,o.name, o.type);
         var group = this.createGroup(o.name, o.nodes, o.links);
         var inlinks,outlinks;
         group.dbclick(function(event){
             for(var i=0;i<group.childs.length;i++){
+                delete diagrammer.nodesMap[group.childs[i].id];
                 scene.remove(group.childs[i]);
             }
             scene.remove(this);
             scene.add(node);
+            diagrammer.nodesMap[o.id] = node;
             if(inlinks){
                 for(var i=0;i<inlinks.length;i++){
                     var link = diagrammer.createLink(inlinks[i].nodeA,node);
@@ -35,6 +37,7 @@ Diagrammer.prototype = {
                     scene.add(link);
                 }
             }
+            diagrammer.doLayout();
         });
 
         node.dbclick(function(event) {
@@ -43,18 +46,20 @@ Diagrammer.prototype = {
             group.x = this.x;
             group.y = this.y;
             scene.remove(this);
+            delete diagrammer.nodesMap[o.id];
             scene.add(group);
-            for(var i=0;i<group.expandNodes.length;i++){
-                var node = diagrammer.createNode(group.expandNodes[i].name,group.expandNodes[i].type);
+            for(var i = 0; i < group.expandNodes.length; i++){
+                var node = diagrammer.createNode(group.expandNodes[i].id,group.expandNodes[i].name,group.expandNodes[i].type);
                 node.setLocation(group.x,group.y);
                 diagrammer.nodesMap[group.expandNodes[i].id] = node;
                 group.add(node);
                 scene.add(node);
             }
-            for(var i=0;i<group.expandedLinks.length;i++){
+            for(var i = 0; i < group.expandedLinks.length; i++){
                 var link = group.expandedLinks[i];
                 diagrammer.addLink(link);
             }
+            diagrammer.doLayout();
         });
         this.scene.add(node);
         this.nodesMap[o.id] = node;
@@ -69,17 +74,18 @@ Diagrammer.prototype = {
         return group;
     },
     addNode: function(o){
-        var node = this.createNode(o.name, o.type);
+        var node = this.createNode(o.id,o.name, o.type);
         this.scene.add(node);
         this.nodesMap[o.id] = node;
         return node;
     },
-    createNode: function(name,type){
+    createNode: function(id,name,type){
         var node = new JTopo.Node(name);
         node.fontColor = 'black';
         node.showSelected = false;
         node.setImage(this.getIcon(type), true);
         node.type = type;
+        node.id = id;
         return node;
     },
     addLink: function(o){
@@ -97,18 +103,6 @@ Diagrammer.prototype = {
         link.lineWidth = 3;
         return link;
     },
-    getRank: function(type){
-        if(type == 'server')
-            return 1;
-        else if(type == 'switch')
-            return 2;
-        else if(type == 'fabric')
-            return 2;
-        else if(type == 'storage')
-            return 3;
-        else
-            return 1;
-    },
     getIcon: function(type){
         if(type == 'server')
             return this.ICONS_PATH+'server_128.png';
@@ -121,43 +115,90 @@ Diagrammer.prototype = {
         else
             return this.ICONS_PATH+'unknown_128.png';
     },
+    getOrder: function(){
+        return 'server,fabric,switch,storage'.split(',');
+    },
+    rootRank:function(nodeArr){
+        for(var i = 0; i < nodeArr.length; i++){
+            var isRoot = true;
+            for(var j = 0; j < nodeArr[i].inLinks.length; j++){
+                for(var k = 0; k < nodeArr.length; k++){
+                    if(nodeArr[i].inLinks[j].nodeA.id == nodeArr[k].id){
+                        isRoot = false;
+                    }
+                }
+            }
+            if(isRoot){
+                this.childRank(nodeArr[i],nodeArr);
+            }
+        }
+    },
+    childRank:function(sourceNode,nodeArr){
+        for(var i = 0; i < sourceNode.outLinks.length; i++){
+            var targetNode = sourceNode.outLinks[i].nodeZ;
+            targetNode.rank = sourceNode.rank+1;
+            for(var j = 0; j < nodeArr.length; j++){
+                if(targetNode.id == nodeArr[j].id){
+                    this.childRank(targetNode,nodeArr);
+                    break;
+                }
+            }
+        }
+    },
     doLayout: function(){
-        var rankArr = [];
         var canvasWidth = this.scene.getBound().width;
         var vGap = 100;
         var hGap = 100;
+        var nodeWidth = 32;
+        var typeMap = {};
+        var rankRow = 0;
         for(var i in this.nodesMap){
             var node = this.nodesMap[i];
-            if(node.inLinks.length == 0)
-                node.rank = 1;
-            else if(node.inLinks.length > 0 && node.outLinks.length > 0)
-                node.rank = 2;
-            else if(node.inLinks.length > 0 && node.outLinks.length == 0)
-                node.rank = 3;
+            node.rank = 0;
+            if(typeMap[node.type]){
+                typeMap[node.type].push(node);
+            }else{
+                typeMap[node.type] = [node];
+            }
         }
-        for(var i in this.nodesMap){
-            var node = this.nodesMap[i];
-            var nodeRank = node.rank+this.getRank(node.type);
-            var len = rankArr.length;
-            if(rankArr.length<nodeRank)
-                for(var j = 0;j<nodeRank-len;j++)
-                    rankArr.push([]);
-            var arr = rankArr[nodeRank-1];
-            arr.push(node);
-            rankArr.splice(-1,1,arr);
+        var types = this.getOrder();
+        for(var i = 0; i < types.length; i++) {
+            var rankNodes = typeMap[types[i]];
+            if (rankNodes) {
+                this.rootRank(rankNodes);
+            }
         }
-        for(var i=0;i<rankArr.length;i++){
-            var rankNodes = rankArr[i];
-            var currRank = 0;
-            if(rankNodes.length > 0){
-                var startW = (canvasWidth-rankNodes.length*vGap)/(rankNodes.length+1);
-                var startY = (i+currRank) * hGap;
-                for(var j=0;j<rankNodes.length;j++){
-                    var startX = (j+1)*startW;
-                    var node = rankNodes[j];
-                    node.x = startX;
-                    node.y = startY;
+        for(var i = 0; i < types.length; i++){
+            var rankNodes = typeMap[types[i]];
+            if(rankNodes){
+                rankNodes.sort(function(a,b){
+                    if(a.rank > b.rank)
+                        return 1;
+                    else if(a.rank < b.rank)
+                        return -1;
+                    else
+                        return 0;
+                });
+                var rankMap = {};
+                for(var j = 0; j < rankNodes.length; j++){
+                    if(rankMap["rank"+rankNodes[j].rank])
+                        rankMap["rank"+rankNodes[j].rank].push(rankNodes[j]);
+                    else
+                        rankMap["rank"+rankNodes[j].rank] = [rankNodes[j]];
                 }
+                for(var j in rankMap){
+                    var nodes = rankMap[j];
+                    var startX = (canvasWidth - (nodeWidth + vGap) * nodes.length) / 2 + vGap;
+                    var startY = rankRow * hGap;
+                    for(var k = 0; k < nodes.length; k++){
+                        var node = nodes[k];
+                        node.x = startX;
+                        node.y = startY;
+                        startX += (nodeWidth+vGap);
+                    }
+                    rankRow++;
+                }
+
             }
         }
     }
