@@ -26,19 +26,21 @@ Cloudwei.TreeLayout.prototype = {
         }
     },
 
-    run: function(diagrammer){
+    run: function(container,nodes,paddingTop,paddingLeft){
+        if(!paddingTop)
+            paddingTop = 0;
+        if(!paddingLeft)
+            paddingLeft = 0;
         var vGap = 50;
         var hGap = 70;
-        var nodeWidth = 32;
-        var rankRow = 1;
-        var containerX = diagrammer.getX();
-        var containerY = diagrammer.getY();
-        var canvasWidth = diagrammer.getWidth();
-        var allNodes = diagrammer.nodesLayer.getChildren();
+        var rankRow = 0;
+        var containerX = container.getX();
+        var containerY = container.getY();
+        var containerWidth = container.getWidth();
         var rankNodes = [];
-        for(var i = 0; i < allNodes.length; i++){
-            if(allNodes[i].isVisible())
-                rankNodes.push(allNodes[i]);
+        for(var i = 0; i < nodes.length; i++){
+            if(nodes[i].isVisible())
+                rankNodes.push(nodes[i]);
         }
         this.rootRank(rankNodes);
         rankNodes.sort(function(a,b){
@@ -51,26 +53,30 @@ Cloudwei.TreeLayout.prototype = {
         });
         var rankMap = {};
         for(var j = 0; j < rankNodes.length; j++){
-            if(rankMap["rank"+rankNodes[j].rank])
-                rankMap["rank"+rankNodes[j].rank].push(rankNodes[j]);
+            if(rankMap[rankNodes[j].rank])
+                rankMap[rankNodes[j].rank].push(rankNodes[j]);
             else
-                rankMap["rank"+rankNodes[j].rank] = [rankNodes[j]];
+                rankMap[rankNodes[j].rank] = [rankNodes[j]];
         }
         for(var j in rankMap){
             var nodes = rankMap[j];
-            var startX = containerX + (canvasWidth - (nodeWidth + vGap) * nodes.length) / 2 + vGap;
-            var startY = containerY + rankRow * hGap;
+            var nodesTotalWidth = 0;
+            for(var k = 0; k < nodes.length; k++){
+                nodesTotalWidth += nodes[k].getWidth();
+                nodesTotalWidth += vGap;
+            }
+            nodesTotalWidth -= vGap;
+            var startX = containerX + (containerWidth - nodesTotalWidth) / 2 + paddingLeft;
+            var startY = containerY + rankRow * hGap+paddingTop;
             for(var k = 0; k < nodes.length; k++){
                 var node = nodes[k];
                 node.setPosition({x:startX,y:startY});
+                node.innerX = startX - containerX;
+                node.innerY = startY - containerY;
                 node.updateLinks(false);
-                startX += (nodeWidth+vGap);
+                startX += (node.getWidth()+vGap);
             }
             rankRow++;
-        }
-        var allGroups = diagrammer.groupsLayer.getChildren();
-        for(var i = 0; i < allGroups.length; i++){
-            allGroups[i].updateBounds();
         }
     }
 

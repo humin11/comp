@@ -210,7 +210,15 @@ Cloudwei.Diagrammer.prototype = {
     },
 
     doLayout: function(){
-        this.layout.run(this);
+        this.layout.run(this,this.nodesLayer.getChildren(),70,50);
+        var allGroups = this.groupsLayer.getChildren();
+        for(var i = 0; i < allGroups.length; i++){
+            var group = allGroups[i];
+            if(group.isVisible()){
+                group.updateBounds();
+                this.layout.run(group,group.sprites);
+            }
+        }
     },
     
     refresh: function(){

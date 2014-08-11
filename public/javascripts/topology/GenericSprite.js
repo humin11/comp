@@ -37,6 +37,7 @@ Cloudwei.GenericSprite.prototype = {
             this.expander.nodes = config.nodes;
             this.expander.links = config.links;
             this.expander.initialized = false;
+            this.expander.collapser = this;
         }
         if(config.group){
         	var group1 = diagrammer.groupsLayer.get('#'+config.group)[0];

@@ -29,6 +29,18 @@ Cloudwei.GenericGroup.prototype = {
 	},
 	
 	_initListener: function(){
+        this.on("dblclick",function(evt) {
+            if (this.diagrammer.state == 'cursor' && this.collapser) {
+                this.hideNodes();
+                this.hide();
+                this.collapser.show();
+                this.collapser.showLinks();
+                this.diagrammer.doLayout();
+                this.diagrammer.nodesLayer.draw();
+                this.diagrammer.linksLayer.draw();
+                this.diagrammer.groupsLayer.draw();
+            }
+        });
 		this.on("dragstart",function(){
 			this.setOpacity(0.5);
 		});
@@ -131,6 +143,14 @@ Cloudwei.GenericGroup.prototype = {
     addNode: function(node){
     	node.group = this;
     	this.sprites.push(node);
+    },
+
+    hideNodes: function(){
+        for(var i=0;i<this.sprites.length;i++){
+			var node = this.sprites[i];
+			node.hide();
+            node.hideLinks();
+		}
     },
 
     updateBounds: function(){
