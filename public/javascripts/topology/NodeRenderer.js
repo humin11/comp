@@ -18,11 +18,12 @@ Cloudwei.NodeRenderer.prototype = {
         });
         var text = new Kinetic.Text({
             text: node.label,
-            width:imgWidth,
             y:imgHeight,
             fill: 'black',
             align: "center"
         });
+        if(text.getWidth()<imgWidth)
+            text.setWidth(imgWidth);
         this.setWidth(imgWidth);
         this.setHeight(imgHeight+text.getHeight());
         this.add(networkItem);

@@ -7,7 +7,7 @@ Cloudwei.GenericSprite.prototype = {
     _initialize: function(config,diagrammer){
     	config.draggable = true;
     	Kinetic.Group.call(this, config);
-        this.enableTooltip = true;
+        this.enableTooltip = false;
         this.diagrammer = diagrammer;
         this.data = config.data;
         this.label = this.data[this.diagrammer.nodeLabelField];
@@ -30,7 +30,6 @@ Cloudwei.GenericSprite.prototype = {
         this.setHeight(this.itemRenderer.getHeight());
         this._initListener();
         this.updateRenderer();
-        this.expanded = false;
         if(config.nodes){
             this.expander = new Cloudwei.GenericGroup({id:config.id+'_expander',data:config.data},diagrammer);
             this.expander.hide();
@@ -60,8 +59,9 @@ Cloudwei.GenericSprite.prototype = {
         }
         for(var i = 0; i < this.expander.links.length; i++){
             var linkConfig = this.expander.links[i];
-            if(this.diagrammer.nodesLayer.get('#'+linkConfig.source)[0]
-                && this.diagrammer.nodesLayer.get('#'+linkConfig.target)[0]){
+            var sourceNode = this.diagrammer.nodesLayer.get('#'+linkConfig.source)[0];
+            var targetNode = this.diagrammer.nodesLayer.get('#'+linkConfig.target)[0];
+            if(sourceNode && targetNode){
                 var link = new Cloudwei.GenericLink(linkConfig,this.diagrammer);
                 link.hide();
                 this.diagrammer.linksLayer.add(link);
@@ -85,7 +85,6 @@ Cloudwei.GenericSprite.prototype = {
                 }
                 this.expander.show();
                 this.diagrammer.doLayout();
-                this.expander.updateBounds();
                 this.diagrammer.nodesLayer.draw();
                 this.diagrammer.linksLayer.draw();
                 this.diagrammer.groupsLayer.draw();
@@ -237,10 +236,12 @@ Cloudwei.GenericSprite.prototype = {
 
     showLinks: function(autoRefresh){
     	for(var i=0;i<this.inLinks.length;i++){
-    		this.inLinks[i].show();
+            if(this.inLinks[i].source.isVisible())
+    		    this.inLinks[i].show();
     	}
         for(var i=0;i<this.outLinks.length;i++){
-    		this.outLinks[i].show();
+            if(this.outLinks[i].target.isVisible())
+    		    this.outLinks[i].show();
     	}
     	if(autoRefresh)
     		this.diagrammer.linksLayer.draw();

@@ -68,6 +68,10 @@ Cloudwei.TreeLayout.prototype = {
             }
             rankRow++;
         }
+        var allGroups = diagrammer.groupsLayer.getChildren();
+        for(var i = 0; i < allGroups.length; i++){
+            allGroups[i].updateBounds();
+        }
     }
 
 };
